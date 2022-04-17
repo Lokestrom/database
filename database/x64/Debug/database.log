@@ -1,0 +1,14 @@
+﻿  test.cpp
+D:\code\codeLibs\database\database\test.cpp(9,6): error C2228: left of '.pushBack' must have class/struct/union
+  Vector.tpp
+D:\code\codeLibs\database\database\Vector.tpp(7,16): error C2995: 'Database::Vector<T>::Vector(void)': function template has already been defined
+D:\code\codeLibs\database\database\Vector.hpp(12): message : see declaration of 'Database::Vector<T>::Vector'
+D:\code\codeLibs\database\database\Vector.tpp(15,17): error C2995: 'Database::Vector<T>::~Vector(void)': function template has already been defined
+D:\code\codeLibs\database\database\Vector.hpp(13): message : see declaration of 'Database::Vector<T>::~Vector'
+D:\code\codeLibs\database\database\Vector.tpp(21,18): error C2995: 'T Database::Vector<T>::operator [](int)': function template has already been defined
+D:\code\codeLibs\database\database\Vector.hpp(15): message : see declaration of 'Database::Vector<T>::operator []'
+D:\code\codeLibs\database\database\Vector.tpp(31,21): error C2995: 'void Database::Vector<T>::operator =(const Database::Vector<T>)': function template has already been defined
+D:\code\codeLibs\database\database\Vector.hpp(16): message : see declaration of 'Database::Vector<T>::operator ='
+D:\code\codeLibs\database\database\Vector.tpp(47,21): error C2995: 'void Database::Vector<T>::pushBack(T)': function template has already been defined
+D:\code\codeLibs\database\database\Vector.hpp(17): message : see declaration of 'Database::Vector<T>::pushBack'
+  Generating Code...
