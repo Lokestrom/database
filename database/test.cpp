@@ -5,7 +5,7 @@ using namespace Database;
 
 int main()
 {
-	Vector<int> vec();
+	Vector<int> vec;
 	vec.pushBack(2);
-	std::cout << "sucsex";
+	std::cout << vec[0];
 }

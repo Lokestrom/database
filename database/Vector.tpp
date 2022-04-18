@@ -1,5 +1,4 @@
-#include "Vector.hpp"
-
+#include <initializer_list>
 #include <cstdlib>
 
 namespace Database {
@@ -28,6 +27,13 @@ namespace Database {
     }
 
     template <typename T>
+    void Vector<T>::operator = (const std::initializer_list<T> x) {
+        for (T i : x) {
+            pushback(i);
+        }
+    }
+
+    template <typename T>
     void Vector<T>::operator = (const Vector<T> x)
     {
         int size = 0;
@@ -49,9 +55,9 @@ namespace Database {
         if (cur == cap) {
             T* temp;
             if (capIncrease[0] = 0)
-                temp = new T[cap + capIncrease];
+                temp = new T[cap + capIncrease[1]];
             else
-                temp = new T[cap * capIncrease];
+                temp = new T[cap * capIncrease[1]];
 
             for (auto i = 0; i < cap; i++) {
                 temp[i] = arr[i];

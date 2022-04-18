@@ -4,23 +4,8 @@ Created: 12 apr 2022
 */
 
 #pragma once
-
-#include <fstream>
-#include <unordered_map>
-#include <vector>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <limits>
-
-#include <type_traits>
-#include <typeinfo>
-#ifndef _MSC_VER
-#include <cxxabi.h>
-#endif
-#include <memory>
 #include <string>
-#include <cstdlib>
+#include <vector>
 
 namespace Database
 {

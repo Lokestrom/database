@@ -1,14 +1,50 @@
-﻿  test.cpp
-D:\code\codeLibs\database\database\test.cpp(9,6): error C2228: left of '.pushBack' must have class/struct/union
-  Vector.tpp
-D:\code\codeLibs\database\database\Vector.tpp(7,16): error C2995: 'Database::Vector<T>::Vector(void)': function template has already been defined
-D:\code\codeLibs\database\database\Vector.hpp(12): message : see declaration of 'Database::Vector<T>::Vector'
-D:\code\codeLibs\database\database\Vector.tpp(15,17): error C2995: 'Database::Vector<T>::~Vector(void)': function template has already been defined
-D:\code\codeLibs\database\database\Vector.hpp(13): message : see declaration of 'Database::Vector<T>::~Vector'
-D:\code\codeLibs\database\database\Vector.tpp(21,18): error C2995: 'T Database::Vector<T>::operator [](int)': function template has already been defined
-D:\code\codeLibs\database\database\Vector.hpp(15): message : see declaration of 'Database::Vector<T>::operator []'
-D:\code\codeLibs\database\database\Vector.tpp(31,21): error C2995: 'void Database::Vector<T>::operator =(const Database::Vector<T>)': function template has already been defined
-D:\code\codeLibs\database\database\Vector.hpp(16): message : see declaration of 'Database::Vector<T>::operator ='
-D:\code\codeLibs\database\database\Vector.tpp(47,21): error C2995: 'void Database::Vector<T>::pushBack(T)': function template has already been defined
-D:\code\codeLibs\database\database\Vector.hpp(17): message : see declaration of 'Database::Vector<T>::pushBack'
-  Generating Code...
+﻿  Vector.tpp
+D:\code\codeLibs\database\database\Vector.tpp(6,11): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(6,11): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(6,11): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(6,16): error C2039: 'Vector': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(7,1): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(7,1): error C2447: '{': missing function header (old-style formal list?)
+D:\code\codeLibs\database\database\Vector.tpp(14,11): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(14,11): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(14,11): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(14,17): error C2523: '::~Vector': destructor tag mismatch
+D:\code\codeLibs\database\database\Vector.tpp(14,17): error C2039: 'Vector': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(15,1): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(15,1): error C2447: '{': missing function header (old-style formal list?)
+D:\code\codeLibs\database\database\Vector.tpp(20,13): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(20,13): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(20,13): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(20,18): error C2039: '[]': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(21,1): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(21,1): error C2447: '{': missing function header (old-style formal list?)
+D:\code\codeLibs\database\database\Vector.tpp(30,16): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(30,16): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(30,10): error C2182: 'Vector': illegal use of type 'void'
+D:\code\codeLibs\database\database\Vector.tpp(30,10): error C2371: 'Database::Vector': redefinition; different basic types
+D:\code\codeLibs\database\database\Vector.tpp(20): message : see declaration of 'Database::Vector'
+D:\code\codeLibs\database\database\Vector.tpp(30,16): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(30,21): error C2039: '=': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(30,61): error C2065: 'T': undeclared identifier
+D:\code\codeLibs\database\database\Vector.tpp(30,44): error C2923: 'std::initializer_list': 'T' is not a valid template type argument for parameter '_Elem'
+D:\code\codeLibs\database\database\Vector.tpp(30): message : see declaration of 'T'
+D:\code\codeLibs\database\database\Vector.tpp(30,67): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(30,67): error C2447: '{': missing function header (old-style formal list?)
+D:\code\codeLibs\database\database\Vector.tpp(37,16): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(37,16): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(37,10): error C2182: 'Vector': illegal use of type 'void'
+D:\code\codeLibs\database\database\Vector.tpp(37,10): error C2371: 'Database::Vector': redefinition; different basic types
+D:\code\codeLibs\database\database\Vector.tpp(20): message : see declaration of 'Database::Vector'
+D:\code\codeLibs\database\database\Vector.tpp(37,16): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(37,21): error C2039: '=': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(38,5): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(38,5): error C2447: '{': missing function header (old-style formal list?)
+D:\code\codeLibs\database\database\Vector.tpp(53,16): error C2988: unrecognizable template declaration/definition
+D:\code\codeLibs\database\database\Vector.tpp(53,16): error C2143: syntax error: missing ';' before '<'
+D:\code\codeLibs\database\database\Vector.tpp(53,10): error C2182: 'Vector': illegal use of type 'void'
+D:\code\codeLibs\database\database\Vector.tpp(53,10): error C2371: 'Database::Vector': redefinition; different basic types
+D:\code\codeLibs\database\database\Vector.tpp(20): message : see declaration of 'Database::Vector'
+D:\code\codeLibs\database\database\Vector.tpp(53,16): error C2059: syntax error: '<'
+D:\code\codeLibs\database\database\Vector.tpp(53,21): error C2039: 'pushBack': is not a member of '`global namespace''
+D:\code\codeLibs\database\database\Vector.tpp(54,5): error C2143: syntax error: missing ';' before '{'
+D:\code\codeLibs\database\database\Vector.tpp(54,5): error C2447: '{': missing function header (old-style formal list?)
