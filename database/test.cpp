@@ -5,7 +5,10 @@ using namespace Database;
 
 int main()
 {
-	Vector<int> vec;
-	vec.pushBack(2);
-	std::cout << vec[0];
+	Vector<int> x;
+	x = { 3,2,1 };
+
+	x.mergeSort();
+
+	std::cout << x[0] << x[1] << x[2];
 }
