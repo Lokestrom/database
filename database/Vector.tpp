@@ -5,22 +5,22 @@ namespace Database {
     template <typename T>
     constexpr void Vector<T>::changeCapIncrease(const char how, const int val){
         if(how == '+')
-            this->capIncrease[0] = 0;
+            capIncrease[0] = 0;
         else if(how == '*')
-            this->capIncrease[0] = 1;
+            capIncrease[0] = 1;
         else
             std::exit(1);
         
-        this->capIncrease[1] = val;
+        capIncrease[1] = val;
     }
 
     template <typename T>
     constexpr Vector<T>::Vector()
     {
-        if(this->arr != nullptr)
-            delete[] this->arr;
-        this->arr = new T[2];
-        this->capacity = 2;
+        if(arr != nullptr)
+            delete[] arr;
+        arr = new T[2];
+        capacity = 2;
     }
 
     template<typename T>
@@ -33,9 +33,9 @@ namespace Database {
     constexpr Vector<T>::Vector(size_t capacity)
         : capacity(capacity)
     {
-        if(this->arr != nullptr)
-            delete[] this->arr;
-        this->arr = new T[capacity];
+        if(arr != nullptr)
+            delete[] arr;
+        arr = new T[capacity];
     }
 
     template <typename T>
@@ -48,7 +48,7 @@ namespace Database {
     template <typename T>
     constexpr T& Vector<T>::operator[] (const size_t index)
     {
-        if (index >= size) {
+        if (index >= currentSize) {
             std::exit(1);
         }
         return arr[index];
@@ -76,14 +76,14 @@ namespace Database {
             arr[j] = i;
             j++;
         }
-        size = x.size();
+        currentSize = x.size();
         return *this;
     }
 
     template <typename T>
     constexpr Vector<T>& Vector<T>::operator= (const Vector<T>& x)
     {
-        if (capacity < x.size) {
+        if (capacity < x.size()) {
             if(arr != nullptr)
                 delete[] arr;
             capacity = x.capacity;
@@ -91,39 +91,39 @@ namespace Database {
         }
         for (int i = 0; i < x.size; i++)
             arr[i] = x.arr[i];
-        size = x.size;
+        currentSize = x.size();
         return *this;
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator==(const Vector<T>& vec1, const Vector<T>& vec2){
-        if (vec1.size() != vec2.size())
+    constexpr bool Vector<T>::operator==(const Vector<T>& vec){
+        if (currentSize != vec.size())
             return false;
 
-        for (int i = 0; i < size; i++)
-            if (vec1[i] != vec2[i])
+        for (int i = 0; i < currentSize; i++)
+            if (*this[i] != vec[i])
                 return false;
         return true;
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator!=(const Vector<T>& vec1, const Vector<T>& vec2) {
-        return !(vec1 == vec2);
+    constexpr bool Vector<T>::operator!=(const Vector<T>& vec) {
+        return !(this == vec);
     }
 
     template<typename T>
     constexpr bool Vector<T>::empty(){
-        return size == 0;
+        return currentSize == 0;
     }
 
     template<typename T>
     constexpr int Vector<T>::size(){
-        return size;
+        return currentSize;
     }
 
     template<typename T>
     constexpr void Vector<T>::clear(){
-        size = 0;
+        currentSize = 0;
     }
 
     template<typename T>
@@ -133,13 +133,13 @@ namespace Database {
 
     template<typename T>
     constexpr T& Vector<T>::end(){
-        return *this[size-1];
+        return *this[currentSize - 1];
     }
 
     template <typename T>
     constexpr void Vector<T>::pushBack(const T val)
     {
-        if (size == capacity) {
+        if (currentSize == capacity) {
             T* temp;
             if (capIncrease[0] = 0) {
                 temp = new T[capacity + capIncrease[1]];
@@ -158,22 +158,22 @@ namespace Database {
                 delete[] arr;
             arr = temp;
         }
-        arr[size] = val;
-        size++;
+        arr[currentSize] = val;
+        currentSize++;
     }
 
     template<typename T>
     constexpr void Vector<T>::popBack(){
-        size--;
+        currentSize--;
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const T val){
-        T temp[size];
-        for(int i = index; i < size; i++)
+        T temp[currentSize];
+        for(int i = index; i < currentSize; i++)
             temp[i-index] = arr[i];
     
-        size = index+1;
+        currentSize = index+1;
         pushBack(val);
         for(T i : temp)
             pushBack(i);
@@ -181,40 +181,40 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, Vector<T> vector){
-        for(int i = vector.size(); i > 0 i--)
+        for(int i = vector.size(); i > 0; i--)
             insert(index, vector[i]);
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, std::initializer_list<T> initializerList){
-        vector<T> vec = initializerList;
+        Vector<T> vec = initializerList;
         insert(index, vec);
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, T arr[]){
-        vector<T> vec = arr;
+        Vector<T> vec = arr;
         insert(index, vec);
     }
 
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
-        T temp[size];
-        for(int i = index+1; i < size; i++)
+        T temp[currentSize];
+        for(int i = index+1; i < currentSize; i++)
             temp[i-index] = arr[i];
 
-        size = index;
+        currentSize = index;
         for(T i : temp)
             pushBack(i);
     }
 
     template<typename T>
     constexpr void Vector<T>::pop(size_t startIndex, size_t endIndex){
-        T temp[size];
-        for(int i = endIndex+1; i < size; i++)
+        T temp[currentSize];
+        for(int i = endIndex+1; i < currentSize; i++)
             temp[i-endIndex] = arr[i];
 
-        size = startIndex;
+        currentSize = startIndex;
         for(T i : temp)
             pushBack(i);
     }
@@ -223,13 +223,13 @@ namespace Database {
     template <typename T>
     constexpr Vector<T>& Vector<T>::mergeSort() 
     {
-        if (size == 1)
+        if (currentSize == 1)
             return *this;
 
         Vector<T> start;
-        start = this->operator()(0, size / 2);
+        start = this->operator()(0, currentSize / 2);
         Vector<T> end;
-        end = this->operator()(size / 2, size);
+        end = this->operator()(currentSize / 2, currentSize);
         
         start.mergeSort();
         end.mergeSort();
@@ -237,7 +237,7 @@ namespace Database {
         *this = {};
 
         size_t startPos = 0, endPos = 0;
-        while (startPos != start.size && endPos == end.size) {
+        while (startPos != start.size() && endPos == end.size()) {
             if (start[startPos] > end[endPos]) {
                 pushBack(start[startPos]);
                 startPos++;
@@ -248,9 +248,9 @@ namespace Database {
             }
         }
 
-        for (;startPos != start.size; startPos++)
+        for (;startPos != start.size(); startPos++)
             pushBack(start[startPos]);
-        for (;endPos != end.size; endPos++)
+        for (;endPos != end.size(); endPos++)
             pushBack(end[endPos]);
 
         return *this;
@@ -259,15 +259,15 @@ namespace Database {
     template<typename T>
     constexpr Vector<T>& Vector<T>::bubbleSort(){
         T temp;
-        for (auto i = 0; i < this->size(); i++)
+        for (auto i = 0; i < currentSize; i++)
         {
-            for (auto j = i + 1; j < this->size(); j++)
+            for (auto j = i + 1; j < currentSize; j++)
             {
-                if (*this[i] > *this[j])
+                if (&this[i] > &this[j])
                 {
-                    temp = *this[i];
-                    *this[i] = *this[j];
-                    *this[j] = temp;
+                    temp =  (&this.operator[](i));
+                    &this[i] = &this[j];
+                    &this[j] = temp;
                 }
             }
         }
@@ -275,9 +275,9 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr size_t Vector<T>::binarySerch(T val){
+    constexpr size_t Vector<T>::binarySerch(T target){
         size_t low = 0;
-        size_t high = this->size() - 1;
+        size_t high = currentSize - 1;
         size_t mid;
 
         while (low <= high)

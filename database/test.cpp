@@ -8,7 +8,7 @@ int main()
 	Vector<int> x;
 	x = { 3,2,1 };
 
-	x.mergeSort();
+	x.bubbleSort();
 
 	std::cout << x[0] << x[1] << x[2];
 }

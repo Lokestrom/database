@@ -8,7 +8,7 @@ namespace Database{
     {
     private:
         T* arr = nullptr;
-        size_t size = 0, capacity = 0;
+        size_t currentSize = 0, capacity = 0;
         int capIncrease[2] = { 1, 2 };
 
     public:
@@ -22,13 +22,13 @@ namespace Database{
         constexpr ~Vector();
 
         constexpr T& operator[] (const size_t index);
-        constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex);
+        constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex);
         constexpr Vector<T>& operator= (const Vector<T>& vector);
         constexpr Vector<T>& operator= (const std::initializer_list<T>& initializerList);
         constexpr Vector<T>& operator= (const T arr[]);
 
-        constexpr bool operator==(const Vector<T>& vec1, const Vector<T>& vec2);
-        constexpr bool operator!=(const Vector<T>& vec1, const Vector<T>& vec2);
+        constexpr bool operator==(const Vector<T>& vec);
+        constexpr bool operator!=(const Vector<T>& vec);
 
         constexpr bool empty();
         constexpr int size();
