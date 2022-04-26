@@ -26,8 +26,42 @@ namespace Database {
     template<typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) 
     {
-        *this = initializerList;
+        if (capacity < x.size()) {
+            if(arr != nullptr)
+                delete[] arr;
+            capacity = x.size();
+            arr = new T[capacity];
+        }
+        int j = 0;
+        for (T i : x) {
+            arr[j] = i;
+            j++;
+        }
+        currentSize = x.size();
+        return *this;
     }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(const T arr[]){
+        size_t arrSize = 0;
+        for(T i : arr)
+            arrSize++;
+        
+        if (capacity < arrSize) {
+            if(arr != nullptr)
+                delete[] arr;
+            capacity = arrSize;
+            arr = new T[capacity];
+        }
+        int j = 0;
+        for (T i : x) {
+            arr[j] = i;
+            j++;
+        }
+        currentSize = arrSize;
+        return *this;
+    }
+
 
     template<typename T>
     constexpr Vector<T>::Vector(size_t capacity)
@@ -63,24 +97,6 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& x)
-    {
-        if (capacity < x.size()) {
-            if(arr != nullptr)
-                delete[] arr;
-            capacity = x.size();
-            arr = new T[capacity];
-        }
-        int j = 0;
-        for (T i : x) {
-            arr[j] = i;
-            j++;
-        }
-        currentSize = x.size();
-        return *this;
-    }
-
-    template <typename T>
     constexpr Vector<T>& Vector<T>::operator= (const Vector<T>& x)
     {
         if (capacity < x.size()) {
@@ -93,6 +109,17 @@ namespace Database {
             arr[i] = x.arr[i];
         currentSize = x.size();
         return *this;
+    }
+
+    template <typename T>
+    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& x)
+    {
+        return Vector(x);
+    }
+
+    template<tyepname T>
+    constexpr Vector<T>& Vector<T>::operator= (const T arr[]){
+        return Vector(arr);
     }
 
     template <typename T>
