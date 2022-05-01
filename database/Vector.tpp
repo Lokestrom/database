@@ -1,5 +1,6 @@
 #include <initializer_list>
 #include <cstdlib>
+#include <iostream>
 
 namespace Database {
     template <typename T>
@@ -26,25 +27,24 @@ namespace Database {
     template<typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) 
     {
-        if (capacity < x.size()) {
+        if (capacity < initializerList.size()) {
             if(arr != nullptr)
                 delete[] arr;
-            capacity = x.size();
+            capacity = initializerList.size();
             arr = new T[capacity];
         }
         int j = 0;
-        for (T i : x) {
+        for (T i : initializerList) {
             arr[j] = i;
             j++;
         }
-        currentSize = x.size();
-        return *this;
+        currentSize = initializerList.size();
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(const T arr[]){
+    constexpr Vector<T>::Vector(const T arr_[]){
         size_t arrSize = 0;
-        for(T i : arr)
+        for(T i : arr_)
             arrSize++;
         
         if (capacity < arrSize) {
@@ -54,12 +54,11 @@ namespace Database {
             arr = new T[capacity];
         }
         int j = 0;
-        for (T i : x) {
+        for (T i : arr_) {
             arr[j] = i;
             j++;
         }
         currentSize = arrSize;
-        return *this;
     }
 
 
@@ -83,6 +82,7 @@ namespace Database {
     constexpr T& Vector<T>::operator[] (const size_t index)
     {
         if (index >= currentSize) {
+            std::cout << "index out of range\n";
             std::exit(1);
         }
         return arr[index];
@@ -112,14 +112,42 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& x)
+    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& initializerList)
     {
-        return Vector(x);
+        if (capacity < initializerList.size()) {
+            if (arr != nullptr)
+                delete[] arr;
+            capacity = initializerList.size();
+            arr = new T[capacity];
+        }
+        int j = 0;
+        for (T i : initializerList) {
+            arr[j] = i;
+            j++;
+        }
+        currentSize = initializerList.size();
+        return *this;
     }
 
-    template<tyepname T>
-    constexpr Vector<T>& Vector<T>::operator= (const T arr[]){
-        return Vector(arr);
+    template<typename T>
+    constexpr Vector<T>& Vector<T>::operator= (const T arr_[]){
+        size_t arrSize = 0;
+        for (T i : arr_)
+            arrSize++;
+
+        if (capacity < arrSize) {
+            if (arr != nullptr)
+                delete[] arr;
+            capacity = arrSize;
+            arr = new T[capacity];
+        }
+        int j = 0;
+        for (T i : arr_) {
+            arr[j] = i;
+            j++;
+        }
+        currentSize = arrSize;
+        return *this;
     }
 
     template <typename T>
@@ -144,7 +172,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr int Vector<T>::size(){
+    constexpr size_t Vector<T>::size(){
         return currentSize;
     }
 
@@ -154,7 +182,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr T& Vector<T>::front(){
+    constexpr T& Vector<T>::begin(){
         return *this[0];
     }
 
@@ -167,19 +195,17 @@ namespace Database {
     constexpr void Vector<T>::pushBack(const T val)
     {
         if (currentSize == capacity) {
-            T* temp;
-            if (capIncrease[0] = 0) {
-                temp = new T[capacity + capIncrease[1]];
-                capacity += capIncrease[1];
-            }
-            else {
-                temp = new T[capacity * capIncrease[1]];
-                capacity *= capIncrease[1];
-            }
+            T* temp = (capIncrease[0] == 0) 
+                ? new T[capacity + capIncrease[1]]
+                : new T[capacity * capIncrease[1]];
 
             for (auto i = 0; i < capacity; i++) {
                 temp[i] = arr[i];
             }
+
+            capacity = (capIncrease[0] == 0)
+                ? capacity + capIncrease[1]
+                : capacity * capIncrease[1];
 
             if(arr != nullptr)
                 delete[] arr;
@@ -226,13 +252,14 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
-        T temp[currentSize];
-        for(int i = index+1; i < currentSize; i++)
+        auto s = currentSize - index - 1;
+        T* temp = new T[s];
+        for(auto i = index; i < currentSize; i++)
             temp[i-index] = arr[i];
 
         currentSize = index;
-        for(T i : temp)
-            pushBack(i);
+        for(auto i = 0; i < s; i++)
+            pushBack(temp[i]);
     }
 
     template<typename T>

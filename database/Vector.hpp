@@ -31,10 +31,10 @@ namespace Database{
         constexpr bool operator!=(const Vector<T>& vec);
 
         constexpr bool empty();
-        constexpr int size();
+        constexpr size_t size();
         constexpr void clear();
 
-        constexpr T& front();
+        constexpr T& begin();
         constexpr T& end();
 
         constexpr void pushBack(const T val);
