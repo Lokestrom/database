@@ -24,43 +24,21 @@ namespace Database {
         capacity = 2;
     }
 
+    template <typename T>
+    constexpr Vector<T>::Vector(Vector<T>& vector){
+        this = vector;
+    }
+
     template<typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) 
     {
-        if (capacity < initializerList.size()) {
-            if(arr != nullptr)
-                delete[] arr;
-            capacity = initializerList.size();
-            arr = new T[capacity];
-        }
-        int j = 0;
-        for (T i : initializerList) {
-            arr[j] = i;
-            j++;
-        }
-        currentSize = initializerList.size();
+        this = initializerList;
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(const T arr_[]){
-        size_t arrSize = 0;
-        for(T i : arr_)
-            arrSize++;
-        
-        if (capacity < arrSize) {
-            if(arr != nullptr)
-                delete[] arr;
-            capacity = arrSize;
-            arr = new T[capacity];
-        }
-        int j = 0;
-        for (T i : arr_) {
-            arr[j] = i;
-            j++;
-        }
-        currentSize = arrSize;
+    constexpr Vector<T>::Vector(const T& arr[]){
+        this = arr;
     }
-
 
     template<typename T>
     constexpr Vector<T>::Vector(size_t capacity)
@@ -182,12 +160,25 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr T& Vector<T>::begin(){
+    constexpr void Vector<T>::setCapacity(size_t newCapacity){
+        capacity = newCapacity;
+        T temp[size];
+        for(auto i = 0; i < size; i++)
+            temp[i] = arr[i];
+
+        arr = new T[capacity];
+        for(auto i = 0; < size; i++)
+            arr[i] = temp[i];
+        
+    }
+
+    template<typename T>
+    constexpr T* Vector<T>::begin(){
         return *this[0];
     }
 
     template<typename T>
-    constexpr T& Vector<T>::end(){
+    constexpr T* Vector<T>::end(){
         return *this[currentSize - 1];
     }
 
