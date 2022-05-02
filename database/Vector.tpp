@@ -25,8 +25,8 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(Vector<T>& vector){
-        this = vector;
+    constexpr Vector<T>::Vector(const Vector<T>& vector){
+        *this = vector;
     }
 
     template<typename T>
@@ -36,13 +36,13 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(const T& arr[]){
+    constexpr Vector<T>::Vector(const T arr[]){
         this = arr;
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(size_t capacity)
-        : capacity(capacity)
+    constexpr Vector<T>::Vector(size_t capacity_)
+        : capacity(capacity_)
     {
         if(arr != nullptr)
             delete[] arr;
@@ -77,15 +77,15 @@ namespace Database {
     template <typename T>
     constexpr Vector<T>& Vector<T>::operator= (const Vector<T>& x)
     {
-        if (capacity < x.size()) {
+        if (capacity < x.currentSize) {
             if(arr != nullptr)
                 delete[] arr;
             capacity = x.capacity;
             arr = new T[capacity];
         }
-        for (int i = 0; i < x.size; i++)
+        for (int i = 0; i < x.currentSize; i++)
             arr[i] = x.arr[i];
-        currentSize = x.size();
+        currentSize = x.currentSize;
         return *this;
     }
 
@@ -167,7 +167,7 @@ namespace Database {
             temp[i] = arr[i];
 
         arr = new T[capacity];
-        for(auto i = 0; < size; i++)
+        for(auto i = 0; i < size; i++)
             arr[i] = temp[i];
         
     }
@@ -245,8 +245,8 @@ namespace Database {
     constexpr void Vector<T>::pop(const size_t index){
         auto s = currentSize - index - 1;
         T* temp = new T[s];
-        for(auto i = index; i < currentSize; i++)
-            temp[i-index] = arr[i];
+        for(auto i = index + 1; i < currentSize; i++)
+            temp[i - 1 - index] = arr[i];
 
         currentSize = index;
         for(auto i = 0; i < s; i++)
@@ -255,13 +255,14 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::pop(size_t startIndex, size_t endIndex){
-        T temp[currentSize];
-        for(int i = endIndex+1; i < currentSize; i++)
-            temp[i-endIndex] = arr[i];
+        auto s = currentSize - endIndex;
+        T* temp = new T[s];
+        for(auto i = endIndex; i < currentSize; i++)
+            temp[i - endIndex] = arr[i];
 
         currentSize = startIndex;
-        for(T i : temp)
-            pushBack(i);
+        for(auto i = 0; i < s; i++)
+            pushBack(temp[i]);
     }
 
 
@@ -279,11 +280,11 @@ namespace Database {
         start.mergeSort();
         end.mergeSort();
 
-        *this = {};
+        clear();
 
         size_t startPos = 0, endPos = 0;
-        while (startPos != start.size() && endPos == end.size()) {
-            if (start[startPos] > end[endPos]) {
+        while (startPos != start.size() && endPos != end.size()) {
+            if (start[startPos] < end[endPos]) {
                 pushBack(start[startPos]);
                 startPos++;
             }
@@ -308,11 +309,11 @@ namespace Database {
         {
             for (auto j = i + 1; j < currentSize; j++)
             {
-                if (&this[i] > &this[j])
+                if (arr[i] > arr[j])
                 {
-                    temp =  (&this.operator[](i));
-                    &this[i] = &this[j];
-                    &this[j] = temp;
+                    temp =  (arr[i]);
+                    arr[i] = arr[j];
+                    arr[j] = temp;
                 }
             }
         }
@@ -321,21 +322,21 @@ namespace Database {
 
     template<typename T>
     constexpr size_t Vector<T>::binarySerch(T target){
-        size_t low = 0;
-        size_t high = currentSize - 1;
+        long long int low = 0;
+        long long int high = currentSize - 1;
         size_t mid;
 
         while (low <= high)
         {
             mid = (low + high) / 2;
 
-            if (*this[mid] == target)
+            if (arr[mid] == target)
                 return mid;
-            else if (*this[mid] > target)
+            else if (arr[mid] > target)
                 high = mid - 1;
             else
                 low = mid + 1;
         }
-       
+        return -1;
     }
 }

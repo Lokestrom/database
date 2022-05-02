@@ -23,11 +23,19 @@ int main()
 {
 	Vector<int> x;
 
-	x.pushBack(1);
 	x.pushBack(2);
+	x.pushBack(3);
+	x.pushBack(4);
+	x.pushBack(4);
+	x.pushBack(5);
+	x.pushBack(6);
+	x.pushBack(1);
+	x.pushBack(4);
+
+	x.mergeSort();
 	printVector(x);
 
-	x.pop(0);
+	Log(x.binarySerch(6));
 
-	printVector(x);
+	Log("x");
 }

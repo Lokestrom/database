@@ -16,10 +16,10 @@ namespace Database{
         constexpr void changeCapIncrease(const char x, const int y);
 
         constexpr Vector();
-        constexpr vector(const Vector<T>& vector);
+        constexpr Vector(const Vector<T>& vector);
         constexpr Vector(const std::initializer_list<T> initializerList);
         constexpr Vector(const T arr[]);
-        constexpr Vector(const size_t capasity);
+        constexpr Vector(const size_t capacity_);
         constexpr ~Vector();
 
         constexpr T& operator[] (const size_t index);
@@ -30,15 +30,19 @@ namespace Database{
         constexpr Vector<T>& operator= (const T arr[]);
 
         constexpr bool operator==(const Vector<T>& vec);
+        constexpr bool operator==(const std::initializer_list<T>& initializerList);
+        constexpr bool operator==(const T arr[]);
         constexpr bool operator!=(const Vector<T>& vec);
+        constexpr bool operator!=(const std::initializer_list<T>& initializerList);
+        constexpr bool operator!=(const T arr[]);
 
         constexpr bool empty();
         constexpr size_t size();
         constexpr void clear();
         constexpr void setCapacity(size_t newCapacity);
 
-        constexpr T& begin();
-        constexpr T& end();
+        constexpr T* begin();
+        constexpr T* end();
 
         constexpr void pushBack(const T val);
         constexpr void popBack();
