@@ -29,12 +29,12 @@ namespace Database{
         constexpr Vector<T>& operator= (const std::initializer_list<T>& initializerList);
         constexpr Vector<T>& operator= (const T arr[]);
 
-        constexpr bool operator==(const Vector<T>& vec);
-        constexpr bool operator==(const std::initializer_list<T>& initializerList);
-        constexpr bool operator==(const T arr[]);
-        constexpr bool operator!=(const Vector<T>& vec);
-        constexpr bool operator!=(const std::initializer_list<T>& initializerList);
-        constexpr bool operator!=(const T arr[]);
+        constexpr bool operator== (const Vector<T>& vec);
+        constexpr bool operator== (const std::initializer_list<T>& initializerList);
+        constexpr bool operator== (const T arr[]);
+        constexpr bool operator!= (const Vector<T>& vec);
+        constexpr bool operator!= (const std::initializer_list<T>& initializerList);
+        constexpr bool operator!= (const T arr[]);
 
         constexpr bool empty();
         constexpr size_t size();
@@ -48,9 +48,9 @@ namespace Database{
         constexpr void popBack();
 
         constexpr void insert(const size_t index, const T val);
-        constexpr void insert(const size_t index, Vector<T> vector);
-        constexpr void insert(const size_t index, std::initializer_list<T> initializerList);
-        constexpr void insert(const size_t index, T arr[]);
+        constexpr void insert(const size_t index, const Vector<T> vector);
+        constexpr void insert(const size_t index, const std::initializer_list<T> initializerList);
+        constexpr void insert(const size_t index, const T arr[]);
 
         constexpr void pop(const size_t index);
         constexpr void pop(const size_t startIndex, const size_t endIndex);

@@ -83,7 +83,7 @@ namespace Database {
             capacity = x.capacity;
             arr = new T[capacity];
         }
-        for (int i = 0; i < x.currentSize; i++)
+        for (auto i = 0; i < x.currentSize; i++)
             arr[i] = x.arr[i];
         currentSize = x.currentSize;
         return *this;
@@ -129,19 +129,51 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator==(const Vector<T>& vec){
+    constexpr bool Vector<T>::operator== (const Vector<T>& vec){
         if (currentSize != vec.size())
             return false;
 
-        for (int i = 0; i < currentSize; i++)
+        for (auto i = 0; i < currentSize; i++)
             if (*this[i] != vec[i])
                 return false;
         return true;
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator!=(const Vector<T>& vec) {
+    constexpr bool Vector<T>::operator== (const std::initializer_list<T>& initializerList) {
+        if (currentSize != initializerList.size())
+            return false;
+
+        for (auto i = 0; i < currentSize; i++)
+            if (*this[i] != initializerList[i])
+                return false;
+        return true;
+    }
+
+    template <typename T>
+    constexpr bool Vector<T>::operator== (const T arr[]) {
+        if (currentSize != sizeof(arr) / sizeof(T))
+            return false;
+
+        for (auto i = 0; i < currentSize; i++)
+            if (*this[i] != arr[i])
+                return false;
+        return true;
+    }
+
+    template <typename T>
+    constexpr bool Vector<T>::operator!= (const Vector<T>& vec) {
         return !(this == vec);
+    }
+
+    template <typename T>
+    constexpr bool Vector<T>::operator!= (const std::initializer_list<T>& initializerList) {
+        return !(this == initializerList);
+    }
+    
+    template <typename T>
+    constexpr bool Vector<T>::operator!= (const T arr[]) {
+        return !(this == arr);
     }
 
     template<typename T>
@@ -174,12 +206,12 @@ namespace Database {
 
     template<typename T>
     constexpr T* Vector<T>::begin(){
-        return *this[0];
+        return &arr[0];
     }
 
     template<typename T>
     constexpr T* Vector<T>::end(){
-        return *this[currentSize - 1];
+        return &arr[currentSize];
     }
 
     template <typename T>
@@ -218,27 +250,28 @@ namespace Database {
         T* temp = new T[s];
         for(auto i = index; i < currentSize; i++)
             temp[i-index] = arr[i];
-    
-        pushBack(val);
+
         currentSize = index;
+        pushBack(val);
         for (auto i = 0; i < s; i++)
             pushBack(temp[i]);
+        delete[] temp;
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, Vector<T> vector){
+    constexpr void Vector<T>::insert(const size_t index, const Vector<T> vector){
         for(int i = vector.size(); i > 0; i--)
             insert(index, vector[i]);
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, std::initializer_list<T> initializerList){
+    constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList){
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, T arr[]){
+    constexpr void Vector<T>::insert(const size_t index, const T arr[]){
         Vector<T> vec = arr;
         insert(index, vec);
     }
@@ -325,7 +358,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr size_t Vector<T>::binarySerch(T target){
+    constexpr size_t Vector<T>::binarySerch(const T target){
         long long int low = 0;
         long long int high = currentSize - 1;
         size_t mid;
