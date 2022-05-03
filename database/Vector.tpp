@@ -32,12 +32,12 @@ namespace Database {
     template<typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) 
     {
-        this = initializerList;
+        *this = initializerList;
     }
 
     template<typename T>
     constexpr Vector<T>::Vector(const T arr[]){
-        this = arr;
+        *this = arr;
     }
 
     template<typename T>
@@ -160,7 +160,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr void Vector<T>::setCapacity(size_t newCapacity){
+    constexpr void Vector<T>::setCapacity(const size_t newCapacity){
         capacity = newCapacity;
         T temp[size];
         for(auto i = 0; i < size; i++)
@@ -201,6 +201,7 @@ namespace Database {
             if(arr != nullptr)
                 delete[] arr;
             arr = temp;
+            delete[] temp;
         }
         arr[currentSize] = val;
         currentSize++;
@@ -213,14 +214,15 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const T val){
-        T temp[currentSize];
-        for(int i = index; i < currentSize; i++)
+        auto s = currentSize - index;
+        T* temp = new T[s];
+        for(auto i = index; i < currentSize; i++)
             temp[i-index] = arr[i];
     
-        currentSize = index+1;
         pushBack(val);
-        for(T i : temp)
-            pushBack(i);
+        currentSize = index;
+        for (auto i = 0; i < s; i++)
+            pushBack(temp[i]);
     }
 
     template<typename T>
@@ -251,10 +253,11 @@ namespace Database {
         currentSize = index;
         for(auto i = 0; i < s; i++)
             pushBack(temp[i]);
+        delete[] temp;
     }
 
     template<typename T>
-    constexpr void Vector<T>::pop(size_t startIndex, size_t endIndex){
+    constexpr void Vector<T>::pop(const size_t startIndex, const size_t endIndex){
         auto s = currentSize - endIndex;
         T* temp = new T[s];
         for(auto i = endIndex; i < currentSize; i++)
@@ -263,6 +266,7 @@ namespace Database {
         currentSize = startIndex;
         for(auto i = 0; i < s; i++)
             pushBack(temp[i]);
+        delete[] temp;
     }
 
 

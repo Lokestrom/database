@@ -21,21 +21,9 @@ const void printVector(Vector<T>& x) {
 
 int main()
 {
-	Vector<int> x;
+	Vector<int> x = {1,2,3,4}, y = {1,2,3};
 
-	x.pushBack(2);
-	x.pushBack(3);
-	x.pushBack(4);
-	x.pushBack(4);
-	x.pushBack(5);
-	x.pushBack(6);
-	x.pushBack(1);
-	x.pushBack(4);
+	x.insert(0, 1);
 
-	x.mergeSort();
 	printVector(x);
-
-	Log(x.binarySerch(6));
-
-	Log("x");
 }

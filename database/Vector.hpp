@@ -39,7 +39,7 @@ namespace Database{
         constexpr bool empty();
         constexpr size_t size();
         constexpr void clear();
-        constexpr void setCapacity(size_t newCapacity);
+        constexpr void setCapacity(const size_t newCapacity);
 
         constexpr T* begin();
         constexpr T* end();
@@ -47,13 +47,13 @@ namespace Database{
         constexpr void pushBack(const T val);
         constexpr void popBack();
 
-        constexpr void insert(const size_t index, T val);
+        constexpr void insert(const size_t index, const T val);
         constexpr void insert(const size_t index, Vector<T> vector);
         constexpr void insert(const size_t index, std::initializer_list<T> initializerList);
         constexpr void insert(const size_t index, T arr[]);
 
-        constexpr void pop(size_t index);
-        constexpr void pop(size_t startIndex, size_t endIndex);
+        constexpr void pop(const size_t index);
+        constexpr void pop(const size_t startIndex, const size_t endIndex);
 
         constexpr Vector<T>& mergeSort();
         constexpr Vector<T>& bubbleSort();
