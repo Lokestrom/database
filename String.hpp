@@ -3,10 +3,10 @@
 #include "Vector.hpp"
 
 class String{
+private:
+    Vector<char>* stringVec;
+
 public:
-
-    Vector stringVec(0);
-
     String();
     String(String s);
     String(char *s);
@@ -27,5 +27,3 @@ public:
     constexpr size_t clear();
 
 };
-
-#include "string.tpp"
