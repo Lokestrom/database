@@ -191,8 +191,12 @@ namespace Database {
         currentSize = 0;
     }
 
+    constexpr size_t Vector<T>::capacity(){
+        return capacity;
+    }
+
     template<typename T>
-    constexpr void Vector<T>::setCapacity(const size_t newCapacity){
+    constexpr void Vector<T>::reserve(const size_t newCapacity){
         capacity = newCapacity;
         T temp[size];
         for(auto i = 0; i < size; i++)
@@ -212,6 +216,16 @@ namespace Database {
     template<typename T>
     constexpr T* Vector<T>::end(){
         return &arr[currentSize];
+    }
+
+    template<typename T>
+    constexpr T* Vector<T>::begin() const{
+        return const &arr[0];
+    }
+
+    template<typename T>
+    constexpr T* Vector<T>::end() const{
+        return const &arr[currentSize];
     }
 
     template <typename T>

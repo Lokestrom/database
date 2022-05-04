@@ -8,7 +8,7 @@ namespace Database{
     {
     private:
         T* arr = nullptr;
-        size_t currentSize = 0, capacity = 0;
+        size_t currentSize = 0, currentcapacity = 0;
         int capIncrease[2] = { 1, 2 };
 
     public:
@@ -39,10 +39,14 @@ namespace Database{
         constexpr bool empty();
         constexpr size_t size();
         constexpr void clear();
-        constexpr void setCapacity(const size_t newCapacity);
+        constexpr size_t capacity();
+        constexpr void reserve(const size_t newCapacity);
 
         constexpr T* begin();
         constexpr T* end();
+
+        constexpr T* begin() const;
+        constexpr T* end() const;
 
         constexpr void pushBack(const T val);
         constexpr void popBack();

@@ -5,10 +5,13 @@ Created: 12 apr 2022
 
 #include "include.hpp"
 
+#include "String.hpp"
+#include "Vector.hpp"
+
 namespace Database
 {
     
-    const std::string splitElement = "|";
+    const String splitElement = "|";
 
     bool terminateProgram = false;
     bool terminateWriteFile = false;
@@ -27,7 +30,7 @@ namespace Database
 
     bool canStringConvertToNumber(std::string x)
     {
-        for (char i : x)
+        for (const char i : x)
             if (i != '0' && i != '1' && i != '2' && i != '3' && i != '4' && i != '5' && i != '6' && i != '7' && i != '8' && i != '9' && i != '.' && i != '-')
                 return false;
         return true;
