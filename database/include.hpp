@@ -4,38 +4,37 @@ Created: 12 apr 2022
 */
 
 #pragma once
-#include <string>
-#include <vector>
+#include "Vector.hpp"
+#include "String.hpp" 
 
 namespace Database
 {
     void onErrorTerminateProgram(bool x);
     void onErrorTerminateWriteFile(bool x);
 
-    bool canStringConvertToNumber(std::string x);
+    bool canStringConvertToNumber(String x);
 
     //prints error msg to console
-    void errorMsg(const char* where, const char* ErrorMsg, const char* ErrorFungtion, std::vector<const char*> ErrorFungtionInput);
-    void errorMsgOperator(const char* where, const char* ErrorMsg, const char* ErrorFungtion, const char* );
+    void errorMsg(String where, String ErrorMsg, String ErrorFungtion, Vector<String> ErrorFungtionInput);
 
-    std::vector<std::string> split(std::string s, std::string x);
-    std::string splitIndex(std::string s, std::string x, int index);
+    Vector<String> split(String s, String x);
+    String splitIndex(String s, String x, int index);
 
     //template fungtions
     template <typename T>
     bool isString(T x);
 
     template <typename T>
-    std::string toS(T x);
+    String toS(T x);
 
     template <class T>
-    std::string type_name();
+    String type_name();
 
     template <typename T>
-    std::vector<std::string> toSVector(std::vector<T> x);
+    Vector<String> toSVector(Vector<T> x);
 
     template <typename T>
-    std::vector<T> mergeSort(std::vector<T>& array);
+    Vector<T> mergeSort(Vector<T>& array);
 
 }
 

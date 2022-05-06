@@ -191,6 +191,10 @@ namespace Database {
         currentSize = 0;
     }
 
+    constexpr size_t Vector<T>::capacity(){
+        return capacity;
+    }
+
     template<typename T>
     constexpr void Vector<T>::reserve(const size_t newCapacity){
         currentCapacity = newCapacity;
