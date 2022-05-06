@@ -8,7 +8,7 @@ namespace Database{
     {
     private:
         T* arr = nullptr;
-        size_t currentSize = 0, capacity = 0;
+        size_t currentSize = 0, currentCapacity = 0;
         int capIncrease[2] = { 1, 2 };
 
     public:
@@ -37,18 +37,24 @@ namespace Database{
         constexpr bool operator!= (const T arr[]);
 
         constexpr bool empty();
-        constexpr size_t size();
         constexpr void clear();
-        constexpr void setCapacity(const size_t newCapacity);
+        constexpr size_t size();
+        constexpr size_t capacity();
+        constexpr void reserve(const size_t newCapacity);
+        constexpr T* data();
+        constexpr void shrinkToFit();
 
         constexpr T* begin();
         constexpr T* end();
+
+        constexpr T* begin() const;
+        constexpr T* end() const;
 
         constexpr void pushBack(const T val);
         constexpr void popBack();
 
         constexpr void insert(const size_t index, const T val);
-        constexpr void insert(const size_t index, const Vector<T> vector);
+        constexpr void insert(const size_t index, const Vector<T>& vector);
         constexpr void insert(const size_t index, const std::initializer_list<T> initializerList);
         constexpr void insert(const size_t index, const T arr[]);
 
@@ -58,7 +64,7 @@ namespace Database{
         constexpr Vector<T>& mergeSort();
         constexpr Vector<T>& bubbleSort();
 
-        constexpr size_t binarySerch(T val);
+        constexpr size_t binarySerch(const T val);
     }; 
 }
 
