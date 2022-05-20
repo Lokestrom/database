@@ -35,10 +35,10 @@ namespace Database {
         *this = initializerList;
     }
 
-    template<typename T>
+    /*template<typename T>
     constexpr Vector<T>::Vector(const T arr[]){
         *this = arr;
-    }
+    }*/
 
     template<typename T>
     constexpr Vector<T>::Vector(const size_t capacity)
@@ -107,7 +107,7 @@ namespace Database {
         return *this;
     }
 
-    template<typename T>
+    /*template<typename T>
     constexpr Vector<T>& Vector<T>::operator= (const T arr_[]){
         size_t arrSize = 0;
         for (T i : arr_)
@@ -126,15 +126,15 @@ namespace Database {
         }
         currentSize = arrSize;
         return *this;
-    }
+    }*/
 
     template <typename T>
     constexpr bool Vector<T>::operator== (const Vector<T>& vec){
-        if (currentSize != vec.size())
+        if (currentSize != vec.currentSize)
             return false;
 
         for (auto i = 0; i < currentSize; i++)
-            if (*this[i] != vec[i])
+            if (arr[i] != vec.arr[i])
                 return false;
         return true;
     }
@@ -145,36 +145,36 @@ namespace Database {
             return false;
 
         for (auto i = 0; i < currentSize; i++)
-            if (*this[i] != initializerList[i])
+            if (arr[i] != initializerList[i])
                 return false;
         return true;
     }
 
-    template <typename T>
+    /*template <typename T>
     constexpr bool Vector<T>::operator== (const T arr[]) {
         if (currentSize != sizeof(arr) / sizeof(T))
             return false;
 
         for (auto i = 0; i < currentSize; i++)
-            if (*this[i] != arr[i])
+            if (arr[i] != arr[i])
                 return false;
         return true;
-    }
+    }*/
 
     template <typename T>
     constexpr bool Vector<T>::operator!= (const Vector<T>& vec) {
-        return !(this == vec);
+        return !(*this == vec);
     }
 
     template <typename T>
     constexpr bool Vector<T>::operator!= (const std::initializer_list<T>& initializerList) {
-        return !(this == initializerList);
+        return !(*this == initializerList);
     }
     
-    template <typename T>
+    /*template <typename T>
     constexpr bool Vector<T>::operator!= (const T arr[]) {
-        return !(this == arr);
-    }
+        return !(*this == arr);
+    }*/
 
     template<typename T>
     constexpr bool Vector<T>::empty(){
@@ -191,21 +191,36 @@ namespace Database {
         currentSize = 0;
     }
 
+    template<typename T>
     constexpr size_t Vector<T>::capacity(){
-        return capacity;
+        return currentCapacity;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::shrinkToFit() {
+        T* temp = new T[currentSize];
+        for (auto i = 0; i < currentSize; i++)
+            temp[i] = arr[i];
+        delete[] arr;
+        arr = temp;
     }
 
     template<typename T>
     constexpr void Vector<T>::reserve(const size_t newCapacity){
-        currentCapacity = newCapacity;
-        T temp[size];
-        for(auto i = 0; i < size; i++)
+        T* temp = new T[newCapacity];
+        for(auto i = 0; i < newCapacity; i++)
             temp[i] = arr[i];
 
-        arr = new T[currentCapacity];
-        for(auto i = 0; i < size; i++)
-            arr[i] = temp[i];
-        
+        delete[] arr;
+        arr = temp;
+       
+        currentCapacity = newCapacity;
+
+    }
+
+    template<typename T>
+    constexpr T* Vector<T>::data() {
+        return arr;
     }
 
     template<typename T>
@@ -283,11 +298,11 @@ namespace Database {
         insert(index, vec);
     }
 
-    template<typename T>
+    /*template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const T arr[]){
         Vector<T> vec = arr;
         insert(index, vec);
-    }
+    }*/
 
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
@@ -371,10 +386,10 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr size_t Vector<T>::binarySerch(const T target){
-        long long int low = 0;
-        long long int high = currentSize - 1;
-        size_t mid;
+    constexpr long long Vector<T>::binarySerch(const T target){
+        long long low = 0;
+        long long high = currentSize - 1;
+        long long mid;
 
         while (low <= high)
         {
@@ -388,5 +403,21 @@ namespace Database {
                 low = mid + 1;
         }
         return -1;
+    }
+
+    template<typename T>
+    constexpr long long Vector<T>::linearSearch(const T val) {
+        for (auto i = 0; i < currentSize; i++)
+            if (arr[i] == val)
+                return i;
+        return -1;
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::printVectorData(){
+        for (T i : *this) { 
+            std::cout << i << ","; 
+        } 
+        std::cout << "\n" << "size: " << currentSize << ",  cap: " << currentCapacity << ",  capIncrese: " << capIncrease[0] << ", " << capIncrease[1] << "\n";
     }
 }

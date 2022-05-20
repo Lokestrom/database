@@ -18,7 +18,7 @@ namespace Database{
         constexpr Vector();
         constexpr Vector(const Vector<T>& vector);
         constexpr Vector(const std::initializer_list<T> initializerList);
-        constexpr Vector(const T arr[]);
+        //constexpr Vector(const T arr[]);
         constexpr Vector(const size_t capacity_);
         constexpr ~Vector();
 
@@ -27,14 +27,14 @@ namespace Database{
 
         constexpr Vector<T>& operator= (const Vector<T>& vector);
         constexpr Vector<T>& operator= (const std::initializer_list<T>& initializerList);
-        constexpr Vector<T>& operator= (const T arr[]);
+        //constexpr Vector<T>& operator= (const T arr[]);
 
         constexpr bool operator== (const Vector<T>& vec);
         constexpr bool operator== (const std::initializer_list<T>& initializerList);
-        constexpr bool operator== (const T arr[]);
+        //constexpr bool operator== (const T arr[]);
         constexpr bool operator!= (const Vector<T>& vec);
         constexpr bool operator!= (const std::initializer_list<T>& initializerList);
-        constexpr bool operator!= (const T arr[]);
+        //constexpr bool operator!= (const T arr[]);
 
         constexpr bool empty();
         constexpr void clear();
@@ -56,7 +56,7 @@ namespace Database{
         constexpr void insert(const size_t index, const T val);
         constexpr void insert(const size_t index, const Vector<T>& vector);
         constexpr void insert(const size_t index, const std::initializer_list<T> initializerList);
-        constexpr void insert(const size_t index, const T arr[]);
+        //constexpr void insert(const size_t index, const T arr[]);
 
         constexpr void pop(const size_t index);
         constexpr void pop(const size_t startIndex, const size_t endIndex);
@@ -64,8 +64,12 @@ namespace Database{
         constexpr Vector<T>& mergeSort();
         constexpr Vector<T>& bubbleSort();
 
-        constexpr size_t binarySerch(const T val);
-    }; 
+        constexpr long long binarySerch(const T val);
+        constexpr long long linearSearch(const T val);
+
+        //for debuging
+        constexpr void printVectorData();
+    };
 }
 
 #include "Vector.tpp"

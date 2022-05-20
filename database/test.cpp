@@ -1,34 +1,20 @@
 #include "Vector.hpp"
+#include "String.hpp"
 #include <iostream>
-#include <vector>
-
 using namespace Database;
 
-#define Log(x) std::cout << x << "\n"
-
-const void boolcout(bool x) {
-	std::string s = (x) ? "true" : "false";
-	Log(s);
-}
-
-template<typename T>
-const void printVector(const Vector<T>& x) {
-	for (const T &i : x) {
-		std::cout << i << ", ";
-	}
-	std::cout << "\n";
-}
+#define Log(x) std::cout << x
 
 int main()
 {
-	Vector<int> y;
-	y = { 1,2,3,4 };
-	Vector<int> x = y;
+	Vector<int>* x = new Vector<int>();
+	x->pushBack(1);
+	Vector<int>* y = new Vector<int>(*x);
+	x = new Vector<int>({ 1,2,3 });
+	int arr[4] = { 4,3,2,1 };
+	x = new Vector<int>(arr);
 
-	printVector(x);
+	int z = (*x)[1];
+	y = new Vector<int>((*x)(1, 3));
 
-	x.pop(1,3);
-
-	printVector(x);
-	Log("x");
 }

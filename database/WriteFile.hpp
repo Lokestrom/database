@@ -4,37 +4,59 @@ Created: 12 apr 2022
 */
 #pragma once
 
-#include "include.hpp"
-
-using namespace DatabaseFung;
+#include "string.hpp"
+#include "Vector.hpp"
+#include <fstream>
 
 namespace Database
 {
+    constexpr char splitElementForDatabase = char(94);
+
     class WriteFile
     {
     private:
         int columnNumber = 0;
         int dataPointsOnLine = 0;
-        bool firstLine;
-        void errorMsg(const char* ErrorMsg_, const char* ErrorFungtion, std::vector<const char*> ErrorFungtionInput);
+
+        void errorMsg(String ErrorMsg, String ErrorFungtion, Vector<String> ErrorFungtionInput)
+        {
+            String error = "WriteFile: Error: " + ErrorMsg + ". Error was thrown at " + ErrorFungtion + "(";
+            if (ErrorFungtionInput.size() != 0)
+            {
+                for (auto i = 0; i < ErrorFungtionInput.size() - 1; i++)
+                    error += "\"" + ErrorFungtionInput[i] + "\", ";
+                error += "\"" + ErrorFungtionInput[ErrorFungtionInput.size() - 1] + "\");\n";
+            }
+            else
+                error += "();";
+            std::cout << error;
+        }
+
+        template <typename T>
+        Vector<String> toSVector(Vector<T> v) {
+            Vector<String> sv;
+            for (const T& i : v)
+                sv.pushBack(toS(i));
+            return sv;
+        }
 
     public:
-        std::string filename;
+        String filename;
         std::ofstream *file = new std::ofstream;
         bool addedData = false;
 
         //defalt constructor
         WriteFile();
         //constructor opens file
-        WriteFile(std::string filename);
+        WriteFile(String filename);
         ~WriteFile();
 
-        void openFile(std::string filename);
+        void openFile(String filename);
 
         //add's a column to the file
-        void addColumn(std::string columnName);
+        void addColumn(String columnName);
         //add's an array of column's to the file
-        void addColumnVector(std::vector<std::string> columnNames);
+        void addColumnVector(Vector<String> columnNames);
 
         void addNewLine();
 
@@ -59,7 +81,7 @@ namespace Database
 
         //add's an array of data to the file. adding data[0] to the first column defined and data[1] to the second...
         template <typename T>
-        void addDataVector(std::vector<T> data)
+        void addDataVector(Vector<T> data)
         {
             if (!file->is_open())
             {

@@ -5,17 +5,8 @@ Created: 12 apr 2022
 
 #include "WriteFile.hpp"
 
-extern const std::string splitElement = "|";
-
-extern bool terminateProgram = false;
-extern bool terminateWriteFile = false;
-extern bool errorHasBeenThrown = false;
-extern bool NANinData = false;
-
 namespace Database
 {
-    using namespace DatabaseFung;
-
     //defalt constructor
     WriteFile::WriteFile()
     {
@@ -23,10 +14,10 @@ namespace Database
     }
 
     //constructor opens file
-    WriteFile::WriteFile(std::string filename)
+    WriteFile::WriteFile(String filename)
     {
-        WriteFile::filename = filename;
-        file->open(filename);
+        WriteFile::filename = filename + ".db";
+        file->open(WriteFile::filename.data());
         std::cout << std::fixed;
     }
 
@@ -35,23 +26,16 @@ namespace Database
         if (file->is_open())
             file->close();
         delete file;
-        if (errorHasBeenThrown && terminateWriteFile)
-            remove(filename.c_str());
     }
 
-    void WriteFile::openFile(std::string filename)
+    void WriteFile::openFile(String filename)
     {
-        WriteFile::filename = filename;
-        file->open(filename);
-    }
-
-    void WriteFile::errorMsg(const char* ErrorMsg_, const char* ErrorFungtion, std::vector<const char*> ErrorFungtionInput)
-    {
-        DatabaseFung::errorMsg("Database::WriteFile", ErrorMsg_, ErrorFungtion, ErrorFungtionInput);
+        WriteFile::filename = filename + ".db";
+        file->open(WriteFile::filename.data());
     }
 
     //add's a column to the file
-    void WriteFile::addColumn(std::string columnName)
+    void WriteFile::addColumn(String columnName)
     {
         if (!file->is_open())
         {
@@ -69,11 +53,11 @@ namespace Database
             *file << columnName;
             return;
         }
-        *file << "|" << columnName;
+        *file << splitElementForDatabase << columnName;
     }
 
     //add's an array of column's to the file
-    void WriteFile::addColumnVector(std::vector<std::string> columnNames)
+    void WriteFile::addColumnVector(Vector<String> columnNames)
     {
         if (!file->is_open())
         {
@@ -85,13 +69,13 @@ namespace Database
             errorMsg("Can't add column data has been added", "addColumnArray", columnNames);
             return;
         }
-        for (std::string columnName : columnNames)
+        for (String columnName : columnNames)
         {
             columnNumber++;
             if (columnNumber == 1)
                 *file << columnName;
             else
-                *file << "|" << columnName;
+                *file << splitElementForDatabase << columnName;
         }
     }
 
