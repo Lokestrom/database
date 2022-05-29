@@ -105,7 +105,7 @@ namespace Database {
         return input;
     }
 
-    constexpr Vector<char> String::vectorData() {
+    Vector<char> String::vectorData() {
         return stringVec;
     }
 

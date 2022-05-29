@@ -1,8 +1,57 @@
 #include <initializer_list>
 #include <cstdlib>
 #include <iostream>
+#include <typeinfo>
+#include <string>
+#include <exception>
+
+#include <type_traits>
+#include <typeinfo>
+#ifndef _MSC_VER
+#   include <cxxabi.h>
+#endif
+#include <memory>
+#include <cstdlib>
+
+
 
 namespace Database {
+    template <typename T>
+    constexpr std::string typeOf() {
+        typedef typename std::remove_reference<T>::type TR;
+        std::unique_ptr<char, void(*)(void*)> own
+        (
+#ifndef _MSC_VER
+            abi::__cxa_demangle(typeid(TR).name(), nullptr,
+                nullptr, nullptr),
+#else
+            nullptr,
+#endif
+            std::free
+        );
+        std::string r = own != nullptr ? own.get() : typeid(TR).name();
+        if (std::is_const<TR>::value)
+            r += " const";
+        if (std::is_volatile<TR>::value)
+            r += " volatile";
+        if (std::is_lvalue_reference<T>::value)
+            r += "&";
+        else if (std::is_rvalue_reference<T>::value)
+            r += "&&";
+        return r;
+    }
+
+    template< typename T>
+    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string ErrorFungtion, const Vector<std::string> ErrorFungtionInput, const Vector<std::string> ErrorFungtionInputType) {
+        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << ErrorFungtion << "(";
+        for (const auto& i : ErrorFungtionInput)
+            std::cout << ErrorFungtionInput[i] << ", ";
+
+        std::cout << (Vector.size())
+            ? "\b\b);\n"
+            : ");\n";
+    }
+
     template <typename T>
     constexpr void Vector<T>::changeCapIncrease(const char how, const int val){
         if(how == '+')
@@ -50,7 +99,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>::~Vector()
+    Vector<T>::~Vector()
     {
         if(arr != nullptr)
             delete[] arr;
@@ -59,10 +108,9 @@ namespace Database {
     template <typename T>
     constexpr T& Vector<T>::operator[] (const size_t index)
     {
-        if (index >= currentSize) {
-            std::cout << "index out of range\n";
-            std::exit(1);
-        }
+        if (index >= currentSize) 
+            throw Error("Index out of range");
+
         return arr[index];
     }
 
@@ -99,7 +147,7 @@ namespace Database {
             arr = new T[currentCapacity];
         }
         int j = 0;
-        for (T i : initializerList) {
+        for (auto i : initializerList) {
             arr[j] = i;
             j++;
         }
@@ -199,9 +247,12 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::shrinkToFit() {
         T* temp = new T[currentSize];
+        currentCapacity = currentSize;
         for (auto i = 0; i < currentSize; i++)
             temp[i] = arr[i];
-        delete[] arr;
+
+        if (arr != nullptr)
+            delete[] arr;
         arr = temp;
     }
 
@@ -211,7 +262,8 @@ namespace Database {
         for(auto i = 0; i < newCapacity; i++)
             temp[i] = arr[i];
 
-        delete[] arr;
+        if (arr != nullptr)
+            delete[] arr;
         arr = temp;
        
         currentCapacity = newCapacity;

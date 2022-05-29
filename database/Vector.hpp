@@ -1,12 +1,20 @@
 #pragma once
 
 #include <initializer_list>
+#include <string>
 
 namespace Database{
+
+    template <class T>
+    constexpr std::string typeOf();
+
     template <typename T>
     class Vector
     {
     private:
+
+        constexpr void errorMsg(const std::string ErrorMsg, const std::string ErrorFungtion, const Vector<std::string> ErrorFungtionInput, const Vector<std::string> ErrorFungtionInputType);
+
         T* arr = nullptr;
         size_t currentSize = 0, currentCapacity = 0;
         int capIncrease[2] = { 1, 2 };
@@ -20,7 +28,7 @@ namespace Database{
         constexpr Vector(const std::initializer_list<T> initializerList);
         //constexpr Vector(const T arr[]);
         constexpr Vector(const size_t capacity_);
-        constexpr ~Vector();
+        ~Vector();
 
         constexpr T& operator[] (const size_t index);
         constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex);

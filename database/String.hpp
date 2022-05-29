@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector.hpp"
 
 namespace Database {
@@ -33,7 +34,7 @@ namespace Database {
         friend std::istream& operator>>(std::istream& input, String& s);
         friend std::ifstream& operator>>(std::ifstream& input, String& s);
 
-        constexpr Vector<char> vectorData();
+        Vector<char> vectorData();
         const char* data();
         const size_t length();
         const void clear();
