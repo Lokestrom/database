@@ -13,8 +13,6 @@
 #include <memory>
 #include <cstdlib>
 
-
-
 namespace Database {
     template <typename T>
     constexpr std::string typeOf() {
@@ -42,24 +40,39 @@ namespace Database {
     }
 
     template< typename T>
-    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string ErrorFungtion, const Vector<std::string> ErrorFungtionInput, const Vector<std::string> ErrorFungtionInputType) {
-        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << ErrorFungtion << "(";
-        for (const auto& i : ErrorFungtionInput)
-            std::cout << ErrorFungtionInput[i] << ", ";
+    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) {
+        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( ";
+        for (const auto& i : fungtionInput)
+            std::cout << "(" << fungtionInputType[i] << ") " << fungtionInput[i] <<  ", ";
 
-        std::cout << (Vector.size())
-            ? "\b\b);\n"
-            : ");\n";
+        std::cout << "\b\b );\n"
+        std::exit(1);
     }
 
+    template< typename T>
+    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) {
+        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( );\n";
+        std::exit(1);
+    }
+
+
+    constexpr std::string Vector<T>::constructStringOfVector(const vector<T> vec){
+        std::string s = "{ ";
+        for(auto i : vec)
+            s += to_string(i) + ", ";
+        s += (vec.currentSize) ? "\b\b }" : " }";
+        return s;
+    }
+
+
     template <typename T>
-    constexpr void Vector<T>::changeCapIncrease(const char how, const int val){
+    constexpr void Vector<T>::changeCapIncrease(const char how, const size_t val){
         if(how == '+')
             capIncrease[0] = 0;
         else if(how == '*')
             capIncrease[0] = 1;
         else
-            std::exit(1);
+            errorMsg("Not a valid how", "changeCapIncrease", {to_string(how), to_string(val)}, {"const char", "const size_t"});
         
         capIncrease[1] = val;
     }
@@ -109,13 +122,20 @@ namespace Database {
     constexpr T& Vector<T>::operator[] (const size_t index)
     {
         if (index >= currentSize) 
-            throw Error("Index out of range");
+            errrormsg("Index out of range", "operator[]", {to_string(index)}, {"const size_t"});
 
         return arr[index];
     }
 
     template <typename T>
-    constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
+    constexpr Vector<T>& Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
+        if(startIndex >= currentSize)
+            errorMsg("startIndex out of range", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+        if(endIndex > currentSize)
+            errorMsg("endIndex out of range", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+        if(startIndex > endIndex)
+            errorMsg("startIndex is greater than endIndex", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+
         Vector<T> x;
         for (auto i = startIndex; i < endIndex; i++)
             x.pushBack(arr[i]);
@@ -321,11 +341,17 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::popBack(){
+        if(currentSize == 0)
+            errorMsg("popBack on empty Vector", "popBack");
+
         currentSize--;
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const T val){
+        if(index >= currentSize)
+            errorMsg("Index out of range", "insert", {to_string(index), to_string(val)}, {"const size", typeOf(val)});
+
         auto s = currentSize - index;
         T* temp = new T[s];
         for(auto i = index; i < currentSize; i++)
@@ -340,12 +366,16 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector){
+        if(index >= currentSize)
+            errorMsg("Index out of range", "insert", {to_string(index), constructStringOfVector(vector)}, {"const size_t", typeOf(vector)});
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList){
+        if(index >= currentSize)
+            errorMsg("Index out of range", "insert", {to_string(index), constructStringOfVector(initializerList)}, {"const size_t", typeOf(initializerList)});
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
@@ -358,6 +388,8 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
+        if(index >= currentSize)
+            errorMsg("Index out of range", "pop", {to_string(index)}, {"const size_t"});
         auto s = currentSize - index - 1;
         T* temp = new T[s];
         for(auto i = index + 1; i < currentSize; i++)
@@ -371,6 +403,13 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::pop(const size_t startIndex, const size_t endIndex){
+        if(startIndex >= currentSize)
+            errorMsg("startIndex out of range", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+        if(endIndex > currentSize)
+            errorMsg("endIndex out of range", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+        if(startIndex > endIndex)
+            errorMsg("startIndex is greater than endIndex", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+
         auto s = currentSize - endIndex;
         T* temp = new T[s];
         for(auto i = endIndex; i < currentSize; i++)

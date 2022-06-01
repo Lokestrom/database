@@ -76,7 +76,7 @@ namespace Database
                 *file << data;
                 return;
             }
-            *file << "|" << data;
+            *file << splitElementForDatabase << data;
         }
 
         //add's an array of data to the file. adding data[0] to the first column defined and data[1] to the second...
@@ -101,10 +101,10 @@ namespace Database
             *file << std::endl;
             addedData = true;
             bool first = true;
-            for (T i : data)
+            for (const auto& i : data)
             {
                 if (!first)
-                    *file << "|";
+                    *file << splitElementForDatabase;
                 *file << i;
                 first = false;
             }

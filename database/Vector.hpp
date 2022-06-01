@@ -14,10 +14,11 @@ namespace Database{
     private:
 
         constexpr void errorMsg(const std::string ErrorMsg, const std::string ErrorFungtion, const Vector<std::string> ErrorFungtionInput, const Vector<std::string> ErrorFungtionInputType);
+        constexpr std::string constructStringOfVector(const vector<T> vec);
 
         T* arr = nullptr;
         size_t currentSize = 0, currentCapacity = 0;
-        int capIncrease[2] = { 1, 2 };
+        size_t capIncrease[2] = { 1, 2 };
 
     public:
 

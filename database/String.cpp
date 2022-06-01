@@ -7,6 +7,20 @@
 
 namespace Database {
 
+    constexpr void String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) {
+        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( ";
+        for (const auto& i : fungtionInput)
+            std::cout << "(" << fungtionInputType[i] << ") " << fungtionInput[i] <<  ", ";
+
+        std::cout << "\b\b );\n"
+        std::exit(1);
+    }
+
+    constexpr void String::errorMsg(const String ErrorMsg, const String fungtion) {
+        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( );\n";
+        std::exit(1);
+    }
+
     String::String() {}
     String::String(const String& s) {
         *this = s;
@@ -20,7 +34,13 @@ namespace Database {
         stringVec = s;
     }
 
+    Stirng::String(const std::string s){
+        for(const char& : s)
+    }
+
     constexpr char String::operator[](const size_t index) {
+        if(index >= stringVec.size())
+            errorMsg("Index out of range",)
         return stringVec[index];
     }
 

@@ -4,24 +4,25 @@ Created: 12 apr 2022
 */
 
 #include "ReadFile.hpp"
+#include "String.hpp"
 
 namespace Database
 {
     using namespace DatabaseFung;
-    void ReadFile::errorMsg(std::string ErrorMsg_, std::string ErrorFungtion, std::vector<std::string> ErrorFungtionInput)
+    void ReadFile::errorMsg(String ErrorMsg_, String ErrorFungtion, Vector<String> ErrorFungtionInput)
     {
         DatabaseFung::errorMsg("Database::ReadFile", ErrorMsg_, ErrorFungtion, ErrorFungtionInput);
     }
 
     //constructer
-    ReadFile::ReadFile(std::string fileName)
+    ReadFile::ReadFile(String fileName)
     {
-        std::string text;
+        String text;
         ReadFile::filename = fileName;
         file->open(filename);
         getline(*file, text);
 
-        for (std::string i : split(text, splitElement))
+        for (String i : split(text, splitElement))
         {
             mapOfColumns[i] = nextColumnNumber;
             nextColumnNumber++;
@@ -35,15 +36,15 @@ namespace Database
     }
 
     //double version for graff thing
-    std::vector<double> ReadFile::getAllDataFromColumnDouble(std::string columnName)
+    Vector<double> ReadFile::getAllDataFromColumnDouble(String columnName)
     {
-        std::string text, token;
+        String text, token;
         if (!mapOfColumns.count(columnName))
         {
             errorMsg("Not a column name", "getAllDataFromColumnDouble", {columnName});
             return {};
         }
-        std::vector<double> x;
+        Vector<double> x;
         file->open(filename);
         firstLine = true;
         int l = 1;
@@ -57,7 +58,7 @@ namespace Database
                     errorMsg("The column has a caracter at line: " + toS(l) + ". Can't convert to long double", "getAllDataFromColumnLongDouble", {columnName});
                     return {};
                 }
-                x.push_back(std::stold(token));
+                x.push_back(stold(token));
             }
             firstLine = false;
             l++;
@@ -67,15 +68,15 @@ namespace Database
     }
 
     //long double version for all other stuff
-    std::vector<long double> ReadFile::getAllDataFromColumnLongDouble(std::string columnName)
+    Vector<long double> ReadFile::getAllDataFromColumnLongDouble(String columnName)
     {
         if (!mapOfColumns.count(columnName))
         {
             errorMsg("Not a column name", "getAllDataFromColumnDouble", {columnName});
             return {};
         }
-        std::string text, token;
-        std::vector<long double> x;
+        String text, token;
+        Vector<long double> x;
         file->open(filename);
         firstLine = true;
         int l = 1;
@@ -89,7 +90,7 @@ namespace Database
                     errorMsg("The column has a caracter at line: " + l, "getAllDataFromColumnLongDouble", {columnName});
                     return {};
                 }
-                x.push_back(std::stold(token));
+                x.push_back(stold(token));
             }
             firstLine = false;
             l++;
@@ -98,15 +99,15 @@ namespace Database
         return x;
     }
 
-    std::vector<std::string> ReadFile::getAllDataFromColumnString(std::string columnName)
+    Vector<String> ReadFile::getAllDataFromColumnString(String columnName)
     {
         if (!mapOfColumns.count(columnName))
         {
             errorMsg("Not a column name", "getAllDataFromColumnString", {columnName});
             return {};
         }
-        std::string text;
-        std::vector<std::string> x;
+        String text;
+        Vector<String> x;
         file->open(filename);
         firstLine = true;
         while (getline(*file, text))
@@ -121,16 +122,16 @@ namespace Database
         return x;
     }
 
-    std::vector<std::vector<std::string>> ReadFile::getAllRowsWhereColumnIsEqualeToAValue(std::string columnName, std::string value)
+    Vector<Vector<String>> ReadFile::getAllRowsWhereColumnIsEqualeToAValue(String columnName, String value)
     {
         if (!mapOfColumns.count(columnName))
         {
             errorMsg("Not a column name", "getAllRowsWhereColumnIsEqualeToAValue", {columnName, value});
             return {{}};
         }
-        std::string text;
+        String text;
         file->open(filename);
-        std::vector<std::vector<std::string>> x = {};
+        Vector<Vector<String>> x = {};
         firstLine = true;
         int j = 0, i = 0;
         while (getline(*file, text))
@@ -149,9 +150,9 @@ namespace Database
         return x;
     }
 
-    std::vector<std::string> ReadFile::getRow(int row)
+    Vector<String> ReadFile::getRow(int row)
     {
-        std::string text;
+        String text;
         file->open(filename);
         for (int i = 0; i < row + 1; i++)
         {
@@ -161,11 +162,11 @@ namespace Database
         return split(text, splitElement);
     }
 
-    std::vector<std::vector<std::string>> ReadFile::getAllData()
+    Vector<Vector<String>> ReadFile::getAllData()
     {
-        std::string text;
+        String text;
         file->open(filename);
-        std::vector<std::vector<std::string>> x = {};
+        Vector<Vector<String>> x = {};
         firstLine = true;
         while (getline(*file, text))
         {
