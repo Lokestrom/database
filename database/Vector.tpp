@@ -3,7 +3,6 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
-#include <exception>
 
 #include <type_traits>
 #include <typeinfo>
@@ -12,6 +11,8 @@
 #endif
 #include <memory>
 #include <cstdlib>
+
+using std::to_string;
 
 namespace Database {
     template <typename T>
@@ -39,24 +40,53 @@ namespace Database {
         return r;
     }
 
-    template< typename T>
-    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) {
-        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( ";
-        for (const auto& i : fungtionInput)
-            std::cout << "(" << fungtionInputType[i] << ") " << fungtionInput[i] <<  ", ";
-
-        std::cout << "\b\b );\n"
-        std::exit(1);
+    template <typename T>
+    constexpr std::string typeOf(T x) {
+        typedef typename std::remove_reference<T>::type TR;
+        std::unique_ptr<char, void(*)(void*)> own
+        (
+#ifndef _MSC_VER
+            abi::__cxa_demangle(typeid(TR).name(), nullptr,
+                nullptr, nullptr),
+#else
+            nullptr,
+#endif
+            std::free
+        );
+        std::string r = own != nullptr ? own.get() : typeid(TR).name();
+        if (std::is_const<TR>::value)
+            r += " const";
+        if (std::is_volatile<TR>::value)
+            r += " volatile";
+        if (std::is_lvalue_reference<T>::value)
+            r += "&";
+        else if (std::is_rvalue_reference<T>::value)
+            r += "&&";
+        return r;
     }
 
     template< typename T>
-    constexpr void Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) {
-        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( );\n";
-        std::exit(1);
+    constexpr std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) {
+        std::string x;
+        x = "Vector<" + typeOf<T>() + ">: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
+        for (auto i = 0; i < fungtionInputType.size() || fungtionInput.size(); i++)
+             x += (i > fungtionInputType.size()) 
+                         ? "(" + (std::string)fungtionInputType[i] + "), "
+                         : "(" + (std::string)fungtionInputType[i] + ") " + (std::string)fungtionInput[i] + ", ";
+
+        x.pop_back();
+        x.pop_back();
+        x += " );\n";
+        return x;
     }
 
+    template< typename T>
+    constexpr std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) {
+        return "Vector<" + typeOf<T>() + ">: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( );\n";
+    }
 
-    constexpr std::string Vector<T>::constructStringOfVector(const vector<T> vec){
+    template< typename T>
+    constexpr std::string Vector<T>::constructStringOfVector(const Vector<T> vec){
         std::string s = "{ ";
         for(auto i : vec)
             s += to_string(i) + ", ";
@@ -119,19 +149,21 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr T& Vector<T>::operator[] (const size_t index)
+    constexpr T& Vector<T>::operator[] (const size_t index) noexcept
     {
-        if (index >= currentSize) 
-            errrormsg("Index out of range", "operator[]", {to_string(index)}, {"const size_t"});
-
         return arr[index];
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
-        if(startIndex >= currentSize)
-            errorMsg("startIndex out of range", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
-        if(endIndex > currentSize)
+    constexpr T& Vector<T>::operator[] (const size_t index) const noexcept {
+        return arr[index];
+    }
+
+    template <typename T>
+    constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
+        if (startIndex >= currentSize)
+            errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+        if (endIndex > currentSize)
             errorMsg("endIndex out of range", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
         if(startIndex > endIndex)
             errorMsg("startIndex is greater than endIndex", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
@@ -143,7 +175,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator= (const Vector<T>& x)
+    constexpr Vector<T>& Vector<T>::operator= (const Vector<T>& x) noexcept
     {
         if (currentCapacity < x.currentSize) {
             if(arr != nullptr)
@@ -158,7 +190,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& initializerList)
+    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& initializerList) noexcept
     {
         if (currentCapacity < initializerList.size()) {
             if (arr != nullptr)
@@ -197,7 +229,7 @@ namespace Database {
     }*/
 
     template <typename T>
-    constexpr bool Vector<T>::operator== (const Vector<T>& vec){
+    constexpr bool Vector<T>::operator== (const Vector<T>& vec) noexcept {
         if (currentSize != vec.currentSize)
             return false;
 
@@ -208,7 +240,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator== (const std::initializer_list<T>& initializerList) {
+    constexpr bool Vector<T>::operator== (const std::initializer_list<T>& initializerList) noexcept{
         if (currentSize != initializerList.size())
             return false;
 
@@ -230,12 +262,12 @@ namespace Database {
     }*/
 
     template <typename T>
-    constexpr bool Vector<T>::operator!= (const Vector<T>& vec) {
+    constexpr bool Vector<T>::operator!= (const Vector<T>& vec) noexcept {
         return !(*this == vec);
     }
 
     template <typename T>
-    constexpr bool Vector<T>::operator!= (const std::initializer_list<T>& initializerList) {
+    constexpr bool Vector<T>::operator!= (const std::initializer_list<T>& initializerList) noexcept {
         return !(*this == initializerList);
     }
     
@@ -244,28 +276,35 @@ namespace Database {
         return !(*this == arr);
     }*/
 
+    template <typename T>
+    constexpr T& Vector<T>::at(const size_t index) const {
+        if (index >= currentSize)
+            errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" });
+        return arr[index];
+    }
+
     template<typename T>
-    constexpr bool Vector<T>::empty(){
+    constexpr bool Vector<T>::empty() const noexcept{
         return currentSize == 0;
     }
 
     template<typename T>
-    constexpr size_t Vector<T>::size(){
+    constexpr size_t Vector<T>::size() const noexcept{
         return currentSize;
     }
 
     template<typename T>
-    constexpr void Vector<T>::clear(){
+    constexpr void Vector<T>::clear() noexcept{
         currentSize = 0;
     }
 
     template<typename T>
-    constexpr size_t Vector<T>::capacity(){
+    constexpr size_t Vector<T>::capacity() const noexcept{
         return currentCapacity;
     }
 
     template<typename T>
-    constexpr void Vector<T>::shrinkToFit() {
+    constexpr void Vector<T>::shrinkToFit() noexcept {
         T* temp = new T[currentSize];
         currentCapacity = currentSize;
         for (auto i = 0; i < currentSize; i++)
@@ -296,27 +335,32 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr T* Vector<T>::begin(){
+    constexpr T* Vector<T>::data() const {
+        return arr;
+    }
+
+    template<typename T>
+    constexpr T* Vector<T>::begin() noexcept {
         return &arr[0];
     }
 
     template<typename T>
-    constexpr T* Vector<T>::end(){
+    constexpr T* Vector<T>::end() noexcept{
         return &arr[currentSize];
     }
 
     template<typename T>
-    constexpr T* Vector<T>::begin() const {
+    constexpr T* Vector<T>::begin() const noexcept {
         return &arr[0];
     }
 
     template<typename T>
-    constexpr T* Vector<T>::end() const {
+    constexpr T* Vector<T>::end() const noexcept {
         return  &arr[currentSize];
     }
 
     template <typename T>
-    constexpr void Vector<T>::pushBack(const T val)
+    constexpr void Vector<T>::pushBack(const T val) noexcept
     {
         if (currentSize == currentCapacity) {
             T* temp = (capIncrease[0] == 0) 
@@ -367,7 +411,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector){
         if(index >= currentSize)
-            errorMsg("Index out of range", "insert", {to_string(index), constructStringOfVector(vector)}, {"const size_t", typeOf(vector)});
+            errorMsg("Index out of range", "insert", {to_string(index)}, {"const size_t", typeOf(vector)});
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
@@ -375,7 +419,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList){
         if(index >= currentSize)
-            errorMsg("Index out of range", "insert", {to_string(index), constructStringOfVector(initializerList)}, {"const size_t", typeOf(initializerList)});
+            errorMsg("Index out of range", "insert", {to_string(index)}, {"const size_t", typeOf(initializerList)});
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
@@ -423,7 +467,7 @@ namespace Database {
 
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::mergeSort() 
+    constexpr Vector<T>& Vector<T>::mergeSort() noexcept
     {
         if (currentSize == 1)
             return *this;
@@ -459,7 +503,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr Vector<T>& Vector<T>::bubbleSort(){
+    constexpr Vector<T>& Vector<T>::bubbleSort() noexcept{
         T temp;
         for (auto i = 0; i < currentSize; i++)
         {
@@ -477,7 +521,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::binarySerch(const T target){
+    constexpr long long Vector<T>::binarySerch(const T target) noexcept {
         long long low = 0;
         long long high = currentSize - 1;
         long long mid;
@@ -497,15 +541,25 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::linearSearch(const T val) {
+    constexpr long long Vector<T>::linearSearch(const T target) noexcept {
         for (auto i = 0; i < currentSize; i++)
-            if (arr[i] == val)
+            if (arr[i] == target)
                 return i;
         return -1;
     }
 
     template<typename T>
-    constexpr void Vector<T>::printVectorData(){
+    constexpr long long Vector<T>::binarySerch(const T target) const noexcept {
+        return binarySerch(target);
+    }
+
+    template<typename T>
+    constexpr long long Vector<T>::linearSearch(const T target) const  noexcept {
+        return linearSearch(target);
+    }
+
+    template<typename T>
+    constexpr void Vector<T>::printVectorData() noexcept {
         for (T i : *this) { 
             std::cout << i << ","; 
         } 

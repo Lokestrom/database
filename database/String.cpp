@@ -3,23 +3,25 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Exception.hpp"
 #include "Vector.hpp"
 
 namespace Database {
 
-    constexpr void String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) {
-        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( ";
-        for (const auto& i : fungtionInput)
-            std::cout << "(" << fungtionInputType[i] << ") " << fungtionInput[i] <<  ", ";
+    constexpr String String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) {
+        String x;
+        x = "String: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
+        for (auto i = 0; i < fungtionInputType.size() || fungtionInput.size(); i++)
+            x += (i > fungtionInputType.size())
+            ? "(" + (String)fungtionInputType[i] + "), "
+            : "(" + (String)fungtionInputType[i] + ") " + (String)fungtionInput[i] + ", ";
 
-        std::cout << "\b\b );\n"
-        std::exit(1);
+        x.pop_back();
+        x.pop_back();
+        x += " );\n";
+        return x;
     }
 
-    constexpr void String::errorMsg(const String ErrorMsg, const String fungtion) {
-        std::cout << "Vector<" << typeOf<T>() << ">: Error: " << ErrorMsg << ". Error was thrown at " << fungtion << "( );\n";
-        std::exit(1);
-    }
 
     String::String() {}
     String::String(const String& s) {
@@ -34,17 +36,22 @@ namespace Database {
         stringVec = s;
     }
 
-    Stirng::String(const std::string s){
-        for(const char& : s)
+    String::String(const std::string s){
+        for (const char& i : s)
+            stringVec.pushBack(i);
     }
 
     constexpr char String::operator[](const size_t index) {
-        if(index >= stringVec.size())
-            errorMsg("Index out of range",)
         return stringVec[index];
     }
 
     String String::operator()(const size_t startIndex, const size_t endIndex) {
+        if (startIndex >= stringVec.size())
+            errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+        if (endIndex > stringVec.size())
+            errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+        if (startIndex > endIndex)
+            errorMsg("startIndex is greater than endIndex", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
         return String(stringVec(startIndex, endIndex));
     }
 
