@@ -8,7 +8,7 @@
 
 namespace Database {
 
-    constexpr String String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) {
+    constexpr String String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) noexcept const {
         String x;
         x = "String: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
         for (auto i = 0; i < fungtionInputType.size() || fungtionInput.size(); i++)
@@ -23,44 +23,44 @@ namespace Database {
     }
 
 
-    String::String() {}
-    String::String(const String& s) {
+    constexpr String::String() noexcept {}
+    constexpr String::String(const String& s) noexcept{
         *this = s;
     }
 
-    String::String(const char* s) {
+    constexpr String::String(const char* s) noexcept{
         *this = s;
     }
 
-    String::String(const Vector<char> s) {
+    constexpr String::String(const Vector<char> s) noexcept{
         stringVec = s;
     }
 
-    String::String(const std::string s){
+    constexpr ::String(const std::string s)noexcept{
         for (const char& i : s)
             stringVec.pushBack(i);
     }
 
-    constexpr char String::operator[](const size_t index) {
+    constexpr char String::operator[](const size_t index) noexcept{
         return stringVec[index];
     }
 
     String String::operator()(const size_t startIndex, const size_t endIndex) {
         if (startIndex >= stringVec.size())
-            errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+            throw Exception(errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
         if (endIndex > stringVec.size())
-            errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+            throw Exception(errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
         if (startIndex > endIndex)
-            errorMsg("startIndex is greater than endIndex", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+            throw Exception(errorMsg("startIndex is greater than endIndex", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
         return String(stringVec(startIndex, endIndex));
     }
 
-    constexpr String& String::operator+=(const String& s) {
+    constexpr String& String::operator+=(const String& s)noexcept {
         stringVec.insert(stringVec.size(), s.stringVec);
         return *this;
     }
 
-    constexpr String& String::operator+=(const char* s) {
+    constexpr String& String::operator+=(const char* s) noexcept{
         for (const char* ptr = s; *ptr != '\0'; ptr++)
             stringVec.pushBack(*ptr);
         return *this;
@@ -72,51 +72,51 @@ namespace Database {
         return s;
     }
 
-    const String operator+(const String& l, const char* r) {
+    const String operator+(const String& l, const char* r) noexcept{
         String s(l);
         s += r;
         return s;
     }
 
-    const String operator+(const char* l, const String& r) {
+    const String operator+(const char* l, const String& r) noexcept{
         String s(l);
         s += r;
         return s;
     }
 
-    constexpr String& String::operator=(const String& s) {
+    constexpr String& String::operator=(const String& s) noexcept{
         stringVec = s.stringVec;
         return *this;
     }
 
-    constexpr String& String::operator=(const char* s) {
+    constexpr String& String::operator=(const char* s) noexcept{
         stringVec.clear();
         for (const char* ptr = s; *ptr != '\0'; ptr++)
             stringVec.pushBack(*ptr);
         return *this;
     }
 
-    bool String::operator==(const String s) {
+    bool String::operator==(const String s) noexcept{
         return stringVec == s.stringVec;
     }
 
-    bool String::operator!=(const String s) {
+    bool String::operator!=(const String s) noexcept{
         return stringVec != s.stringVec;
     }
 
-    std::ostream& operator<<(std::ostream& output, const String& s) {
+    std::ostream& operator<<(std::ostream& output, const String& s) noexcept{
         for (const char& i : s)
             output << i;
         return output;
     }
 
-    std::ofstream& operator<<(std::ofstream& output, const String& s) {
+    std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept{
         for (const char& i : s)
             output << i;
         return output;
     }
 
-    std::istream& operator>>(std::istream& input, String& s) { 
+    std::istream& operator>>(std::istream& input, String& s) noexcept{ 
         char* buff = new char[1000];
         input.getline(buff, 1000);
         s = buff;
@@ -124,7 +124,7 @@ namespace Database {
         return input;
     }
 
-    std::ifstream& operator>>(std::ifstream& input, String& s) {
+    std::ifstream& operator>>(std::ifstream& input, String& s) noexcept{
         char* buff = new char[1000];
         input.getline(buff, 1000);
         s = buff;
@@ -132,35 +132,35 @@ namespace Database {
         return input;
     }
 
-    Vector<char> String::vectorData() {
+    Vector<char> String::vectorData() noexcept{
         return stringVec;
     }
 
-    const char* String::data() {
+    const char* String::data() noexcept{
         return stringVec.data();
     }
 
-    const size_t String::length() {
+    const size_t String::length() noexcept{
         return stringVec.size();
     }
 
-    const void String::clear() {
+    const void String::clear() noexcept{
         stringVec.clear();
     }
 
-    const char* String::begin() {
+    const char* String::begin() noexcept{
         return stringVec.begin();
     }
 
-    const char* String::end() {
+    const char* String::end() noexcept{
         return stringVec.end();
     }
 
-    const char* String::begin() const {
+    const char* String::begin() const noexcept{
         return stringVec.begin();
     }
 
-    const char* String::end() const {
+    const char* String::end() const noexcept{
         return  stringVec.end();
     }
 
