@@ -1,0 +1,49 @@
+.background {
+    background-color: #1e1e1e;
+    float: left;
+    position: relative;
+    left: 25%;
+    text-align: left;
+    font-size: 18px;
+}
+
+.background br {
+    font-size: 10px;
+}
+
+.noWhiteSpace {
+    font-size: 0px;
+}
+
+.nb{
+    font-weight:normal;
+}​
+
+.underline {
+    text-decoration: underline;
+}
+
+.white {
+    color: #ced3d8;
+    font-family: Consolas;
+}
+
+.blue {
+    color: #5395c2;
+    font-family: Consolas;
+}
+
+.string {
+    color: #d1895e;
+    font-family: Consolas;
+}
+
+.classgreen {
+    color: #49bc8c;
+    font-family: Consolas;
+}
+
+.fungtion {
+    color: #dad799;
+    font-family: Consolas;
+}

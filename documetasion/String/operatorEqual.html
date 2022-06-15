@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../documentationStyles/all.css">
+    <link rel="stylesheet" href="../documentationStyles/fungtion.css">
+</head>
+
+<header>
+    <a class="homeButton" href="../main.html">Home</a>
+    <a class="toClassButton" href="../classes/String.html">String</a>
+    <h1 class="white underline">String documentation</h1>
+    <h2 class="white">operator=</h2>
+</header>
+
+<body class="background white">
+    <table class="definitionTable">
+        <tr>
+            <th>
+                <span class="blue">constexpr </span>
+                <span class="fungtion">operator=</span>
+                <span>(<span class="blue">const </span><span class="classgreen">String</span>& s) </span>
+                <span class="blue">noexcept</span>
+                <span>;</span>
+            </th>
+            <th>
+                <span>(1)</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span class="blue">constexpr </span>
+                <span class="fungtion">operator=</span>
+                <span>(<span class="blue">const</span> <span class="blue">char</span>* s) </span>
+                <span class="blue">noexcept</span>
+                <span>;</span>
+            </th>
+            <th>
+                <span>(2)</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span class="fungtion">operator=</span>
+                <span>(<span class="blue">const </span><a class="classgreen" href="../classes/Vector.html">Vector</a>
+                    <<span class="blue">char
+                </span>>& v) </span>
+                <span class="blue">noexcept</span>
+                <span>;</span>
+            </th>
+            <th>
+                <span>(3)</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span class="blue">constexpr </span>
+                <span class="fungtion">operator=</span>
+                <span>(<span class="blue">const</span> std::<span class="classgreen">string</span>& s) </span>
+                <span class="blue">noexcept</span>
+                <span>;</span>
+            </th>
+            <th>
+                <span>(4)</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span class="blue">constexpr </span>
+                <span class="fungtion">operator=</span>
+                <span>(<span class="blue">const</span> std::<span class="classgreen">initializer_list</span>
+                    <<span class="blue">char
+                </span>>& iList) </span>
+                <span class="blue">noexcept</span>
+                <span>;</span>
+            </th>
+            <th>
+                <span>(5)</span>
+            </th>
+        </tr>
+    </table>
+    <br><br>
+    <table class="textTable">
+        <tr>
+            <th>
+                <span>(1)</span>
+            </th>
+            <th>
+                <span class="nb">Replaces the characters of the <span class="classgreen">String</span> to the characters of the <span class="classgreen">String</span> s.</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(2)</span>
+            </th>
+            <th>
+                <span class="nb">Replaces the characters of the <span class="classgreen">String</span> to the characters between the<br><span class="blue">char</span>* s pointer and first <span class="string">'/0'</span> character.</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(3)</span>
+            </th>
+            <th>
+                <span class="nb">Replaces the characters of the <span class="classgreen">String</span> to the characters stored in the <a class="classgreen" href="../classes/Vector.html">Vector</a>.</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(4)</span>
+            </th>
+            <th>
+                <span class="nb">Replaces the characters of the <span class="classgreen">String</span> to the characters of the std::<span class="classgreen">string</span> s.</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(5)</span>
+            </th>
+            <th>
+                <span class="nb">Replaces the characters of the <span class="classgreen">String</span> to the characters in the<br>std::<span class="classgreen">initializer_list</span><<span class=blue>char</span>> iList.</span>
+            </th>
+        </tr>
+    </table>
+
+    <h3 class="underline">Complexity</h3>
+    <table class="textTable">
+        <tr>
+            <th>
+                <span>(1)</span>
+            </th>
+            <th>
+                <span class="nb">linear in s.<span class="fungtion">length</span>().</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(2)</span>
+            </th>
+            <th>
+                <span class="nb">linear in length between <span class="blue">char</span>* s pointer and nearest <span class="string">'\0'</span>
+                character.</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(3)</span>
+            </th>
+            <th>
+                <span class="nb">linear in v.<a class="fungtion" href="../Vector/size.html">size</a>().</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(4)</span>
+            </th>
+            <th>
+                <span class="nb">linear in s.<span class="fungtion">length</span>().</span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span>(5)</span>
+            </th>
+            <th>
+                <span class="nb">linear in iList.<span class="fungtion">size</span>().</span>
+            </th>
+        </tr>
+    </table>
+</body>

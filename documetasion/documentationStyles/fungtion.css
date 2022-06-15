@@ -1,0 +1,60 @@
+.homeButton {
+    float: left;
+    position: fixed;
+    left: 3%;
+    color: #5395c2;
+    font-family: Consolas;
+    font-size: 35px;
+}
+
+.toClassButton {
+    float: left;
+    float: top;
+    position: fixed;
+    left: 3%;
+    top: 10%;
+    color: #5395c2;
+    font-family: Consolas;
+    font-size: 35px;
+}
+
+.definitionTable {
+    font-size: 0px;
+    border-collapse: collapse;
+    line-height: 24px;
+}
+
+.definitionTable tr {
+    border: solid;
+    border-width: 1px 0;
+}
+
+.definitionTable th span {
+    font-size: 20px;
+}
+
+.definitionTable th a {
+    font-size: 20px;
+}
+
+.textTable {
+    border-collapse: collapse;
+    line-height: 18px;
+}
+
+.textTable tr {
+    border: none;
+    border-width: 1px 0;
+}
+
+.textTable tr th {
+    font-size: 0px;
+}
+
+.textTable tr th span{
+    font-size: 17px;
+}
+
+.textTable tr th a{
+    font-size: 17px;
+}

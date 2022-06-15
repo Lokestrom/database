@@ -7,15 +7,15 @@ namespace Database {
     private:
         Vector<char> stringVec;
 
-        constexpr String errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) noexcept;
-        constexpr String errorMsg(const String ErrorMsg, const String fungtion) noexcept;
+        String errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept;
+        String errorMsg(const String ErrorMsg, const String fungtion) const noexcept;
 
     public:
-        String() noexcept;
-        String(const String& s) noexcept;
-        String(const char* s) noexcept;
-        String(const Vector<char> s) noexcept;
-        String(const std::string) noexcept;
+        constexpr String() noexcept;
+        constexpr String(const String& s) noexcept;
+        constexpr String(const char* s) noexcept;
+        String(const Vector<char>& v) noexcept;
+        constexpr String(const std::string& s) noexcept;
 
         constexpr char operator[](const size_t index) noexcept;
         constexpr char operator[](const size_t index) const noexcept;
@@ -30,14 +30,17 @@ namespace Database {
 
         constexpr String& operator=(const String& s) noexcept;
         constexpr String& operator=(const char* s) noexcept;
+        constexpr String& operator=(const std::string& s) noexcept;
+        constexpr String& operator=(const Vector<char>& s) noexcept;
+        constexpr String& operator=(const std::initializer_list<char>& iList) noexcept;
 
         bool operator==(const String s) noexcept;
         bool operator!=(const String s) noexcept;
 
-        friend std::ostream& operator<<(std::ostream& output, const String& s);
-        friend std::ofstream& operator<<(std::ofstream& output, const String& s);
-        friend std::istream& operator>>(std::istream& input, String& s);
-        friend std::ifstream& operator>>(std::ifstream& input, String& s);
+        friend std::ostream& operator<<(std::ostream& output, const String& s) noexcept;
+        friend std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept;
+        friend std::istream& operator>>(std::istream& input, String& s) noexcept;
+        friend std::ifstream& operator>>(std::ifstream& input, String& s) noexcept;
 
         constexpr char& at(const size_t index);
         constexpr char& at(const size_t index) const;
@@ -49,30 +52,33 @@ namespace Database {
         const char* data() noexcept;
         const char* data() const noexcept;
         const size_t length() const noexcept;
-        const void clear() const noexcept;
+        const void clear() noexcept;
 
-        const char* begin() noexcept;
-        const char* end() noexcept;
+        char* begin() noexcept;
+        char* end() noexcept;
 
-        const char* begin() const noexcept;
-        const char* end() const noexcept;
+        char* begin() const noexcept;
+        char* end() const noexcept;
 
         constexpr void pushBack(const char val) noexcept;
         constexpr void popBack();
 
-        constexpr void insert(const size_t index, const String s);
-        constexpr void insert(const size_t index, const char* s);
+        void insert(const size_t index, const String s);
+        void insert(const size_t index, const char* s);
         constexpr void insert(const size_t index, const Vector<char>& vector);
         constexpr void insert(const size_t index, const std::initializer_list<char> initializerList);
-        //constexpr void insert(const size_t index, const T arr[]);
 
         constexpr void pop(const size_t index);
         constexpr void pop(const size_t startIndex, const size_t endIndex);
 
-        constexpr long long binarySerch(const char val) noexcept;
-        constexpr long long linearSearch(const char val) noexcept;
         constexpr long long binarySerch(const char val) const noexcept;
         constexpr long long linearSearch(const char val) const noexcept;
+
+        constexpr void mergeSort() noexcept;
+        constexpr void bubbleSort() noexcept;
+
+        const String lower();
+        const String upper();
     };
 
     //extra String fungtions
@@ -95,5 +101,7 @@ namespace Database {
     double STod(String s);
     long double STold(String s);
 
+    long long substringIndex(const String s, const String subS);
+    bool substringExsist(String s, String subS);
     bool canStringConvertToNumber(String x);
 }

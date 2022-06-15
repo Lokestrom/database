@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="../documentationStyles/all.css">
+    <link rel="stylesheet" href="../documentationStyles/class.css">
+</head>
+
+<header>
+    <a class="homeButton" href="../main.html">Home</a>
+    <h1 class="white underline">String documentation</h1>
+</header>
+
+<body class="background white">
+    <div>
+        <p class="header">
+            <span>Defined in header</span>
+            <a href="https://github.com/Lokemotiv/database/blob/main/database/String.hpp">"String.hpp"</a>
+            <br>
+            <span>Code in</span>
+            <a href="https://github.com/Lokemotiv/database/blob/main/database/String.cpp">"String.cpp"</a>
+        </p>
+        <p class="definition">
+            <span class="blue">class </span>
+            <span class="classgreen">String</span>
+            <span>;</span>
+        </p>
+    </div>
+    <hr>
+    <span class="description">The string class stores a <a class="classgreen" href="../classes/Vector.html">Vector</a>
+        of
+        chars.</span>
+    <br><br>
+    <h2 style="line-height: 0px;">Member fungtions</h2>
+
+    <table class="linkToFungtionsTable">
+        <tr>
+            <th><a class="blue" href="../String/constructor.html">constructor</a></th>
+            <th><span>constructs a String</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="../String/operatorEqual.html">operator=</a></th>
+            <th><span>assignes a value to the String</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">Element access</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operator[].html">operator[]</a></th>
+            <th><span>accesses the specified index</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/at.html">at</a></th>
+            <th><span>accesses the specified index with range checking</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/data.html">data</a></th>
+            <th><span>returns a pointer to the first character</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/vectorData.html">vectorData</a></th>
+            <th><span>returns the <a class="classgreen" href="VectorDocumentation.html">Vector</a> of the String</span>
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">iterator</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/begin.html">begin</a></th>
+            <th><span>returns a pointer to the first character</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/end.html">end</a></th>
+            <th><span>returns a pointer to the last+1 character</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">capacity</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/empty.html">empty</a></th>
+            <th><span>checks if the String is empty</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/capacity.html">capacity</a></th>
+            <th><span>returns the number of characters that can be held in currently<br>allocated storage(capacity
+                    of
+                    the <a class="classgreen" href="VectorDocumentation.html">Vector</a>)</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/length.html">length</a></th>
+            <th><span>returns the number of characters</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/reserve.html">reserve</a></th>
+            <th><span>reserves storage</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/empty.html">shrinkToFit</a></th>
+            <th><span>shrinks the storage use to the number of characters;<br>freeing up memory</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">Operations</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/pushBack.html">pushBack</a></th>
+            <th><span>pushes a character to the end of the String</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/popBack.html">popBack</a></th>
+            <th><span>pops the character at the end of the String</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/insert.html">insert</a></th>
+            <th><span>inserts characters</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/empty.html">pop</a></th>
+            <th><span>pops characters</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/clear.html">clear</a></th>
+            <th><span>clears the String</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operator().html">operator()</a></th>
+            <th><span>returns a substring</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/lower.html">lower</a></th>
+            <th><span>converts the String to lowercase</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/upper.html">upper</a></th>
+            <th><span>converts the String to uppercase</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operator+=.html">operator+=</a></th>
+            <th><span>appends characters to the end</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">Search</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/contains.html">contains</a></th>
+            <th><span>checks if the String contains a substring</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/linearSearch.html">linearSearch</a></th>
+            <th><span>find the first occurrence of a substring</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/linearSearch.html">rLinearSearch</a></th>
+            <th><span>find the last occurrence of a substring</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/binarySearch.html">binarySearch</a></th>
+            <th><span>search for a character in a sorted String</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">sort</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/mergeSort.html">mergeSort</a></th>
+            <th><span>merge sorts the String</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/bubbleSort.html">bubbleSort</a></th>
+            <th><span>bubble sorts the String</span></th>
+        </tr>
+    </table>
+
+    <br>
+    <h2 style="line-height: 0px;">Non-Member fungtions</h2>
+    <table class="linkToFungtionsTable">
+        <tr>
+            <th><a class="blue" href="Vector/operator+.html">operator+</a></th>
+            <th><span>merges to Strings</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operator==.html">operator==</a></th>
+            <th><span>checks if to Strings are equal</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operator!=.html">operator!=</a></th>
+            <th><span>checks if to Strings are not equal</span></th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">input/output</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/operatorInputOutput.html">operator<<<br>operator>></a></th>
+            <th><span>handles input and output from std::iostream</th>
+        </tr>
+
+        <tr>
+            <th>
+                <h4 style="line-height: 0px;">conversions</h4>
+            </th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/stoSignedInteger.html">stoi<br>stol<br>stoll</a></th>
+            <th><span>converts a String to a signed integer</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/stoUnignedInteger.html">stoul<br>stoull</a></th>
+            <th><span>converts a String to an unsigned integer</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/stoFloat.html">stof<br>stod<br>stold</a></th>
+            <th><span>converts a String to a float</span></th>
+        </tr>
+        <tr>
+            <th><a class="blue" href="Vector/stoFloat.html">toS</a></th>
+            <th><span>converts number to String</span></th>
+        </tr>
+    </table>
+    <br><br><br><br><br><br><br><br><br>
+</body>
