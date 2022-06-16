@@ -17,8 +17,8 @@ namespace Database {
         String(const Vector<char>& v) noexcept;
         constexpr String(const std::string& s) noexcept;
 
-        constexpr char operator[](const size_t index) noexcept;
-        constexpr char operator[](const size_t index) const noexcept;
+        constexpr char& operator[](const size_t index) noexcept;
+        constexpr char& operator[](const size_t index) const noexcept;
         String operator()(const size_t startIndex, const size_t endIndex);
 
         constexpr String& operator+=(const String& s) noexcept;
@@ -47,8 +47,8 @@ namespace Database {
            
         constexpr void shrinkToFit() noexcept;
         constexpr void reserve(const size_t newCapacity) noexcept;
-        Vector<char> vectorData() noexcept;
-        Vector<char> vectorData() const noexcept;
+        Vector<char>& vectorData() noexcept;
+        Vector<char>& vectorData() const noexcept;
         const char* data() noexcept;
         const char* data() const noexcept;
         const size_t length() const noexcept;
