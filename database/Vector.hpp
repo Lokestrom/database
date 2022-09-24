@@ -1,6 +1,5 @@
 #pragma once
 
-#include <initializer_list>
 #include <string>
 #include <vector>
 
@@ -15,13 +14,13 @@ namespace Database{
     class Vector
     {
     private:
+        std::string errorString;
         T* arr = nullptr;
         size_t currentSize = 0, currentCapacity = 0;
         size_t capIncrease[2] = { 1, 2 };
 
-        constexpr std::string errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType);
-        constexpr std::string errorMsg(const std::string ErrorMsg, const std::string fungtion);
-        constexpr std::string constructStringOfVector(const Vector<T> vec);
+        std::string errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) noexcept;
+        std::string errorMsg(const std::string ErrorMsg, const std::string fungtion) noexcept;
 
     public:
 
@@ -33,7 +32,7 @@ namespace Database{
         constexpr Vector(const std::vector<T>& vector);
         //constexpr Vector(const T arr[]);
         constexpr Vector(const size_t capacity);
-        constexpr Vector(const size_t amount, const T x);
+        constexpr Vector(const size_t count, const T value);
         ~Vector();
 
         constexpr T& operator[] (const size_t index) noexcept;
@@ -41,14 +40,14 @@ namespace Database{
         constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex);
 
         constexpr Vector<T>& operator= (const Vector<T>& vector) noexcept;
-        constexpr Vector<T>& operator= (const std::initializer_list<T>& initializerList) noexcept;
+        constexpr Vector<T>& operator= (const std::initializer_list<T> initializerList) noexcept;
         //constexpr Vector<T>& operator= (const T arr[]);
 
-        constexpr bool operator== (const Vector<T>& vec) noexcept;
-        constexpr bool operator== (const std::initializer_list<T>& initializerList) noexcept;
+        constexpr Vector<T>& operator+= (const Vector<T>& vector) noexcept;
+
+        constexpr bool operator== (const Vector<T> vec) noexcept;
         //constexpr bool operator== (const T arr[]);
-        constexpr bool operator!= (const Vector<T>& vec) noexcept;
-        constexpr bool operator!= (const std::initializer_list<T>& initializerList) noexcept;
+        constexpr bool operator!= (const Vector<T> vec) noexcept;
         //constexpr bool operator!= (const T arr[]);
 
         constexpr T& at(const size_t index) const;
@@ -71,7 +70,7 @@ namespace Database{
         constexpr void popBack();
 
         constexpr void insert(const size_t index, const T val);
-        constexpr void insert(const size_t index, const Vector<T>& vector);
+        constexpr void insert(const size_t index, const Vector<T> vector);
         constexpr void insert(const size_t index, const std::initializer_list<T> initializerList);
         //constexpr void insert(const size_t index, const T arr[]);
 
@@ -83,13 +82,12 @@ namespace Database{
         constexpr Vector<T>& mergeSort() const noexcept;
         constexpr Vector<T>& bubbleSort() const noexcept;
 
-        constexpr long long binarySerch(const T val) noexcept;
-        constexpr long long linearSearch(const T val) noexcept;
-        constexpr long long binarySerch(const T val) const noexcept;
-        constexpr long long linearSearch(const T val) const noexcept;
-
-        //for debuging
-        constexpr void printVectorData() noexcept;
+        constexpr long long binarySerch(const T target) noexcept;
+        constexpr long long linearSearch(const T target) noexcept;
+        constexpr long long linearSearchR(const T target) noexcept;
+        constexpr long long binarySerch(const T target) const noexcept;
+        constexpr long long linearSearch(const T target) const noexcept;
+        constexpr long long linearSearchR(const T target) const noexcept;
     };
 }
 

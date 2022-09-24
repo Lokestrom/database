@@ -6,6 +6,8 @@ Created: 12 apr 2022
 
 #include "WriteFile.hpp"
 
+#include <unordered_map>
+
 namespace Database
 {
     //used to read a file in the database
@@ -16,23 +18,21 @@ namespace Database
         std::ifstream *file = new std::ifstream;
         bool firstLine;
 
-        void errorMsg(std::string ErrorMsg_, std::string ErrorFungtion, std::vector<std::string> ErrorFungtionInput);
-
     public:
-        std::unordered_map<std::string, int> mapOfColumns = {};
-        std::string filename;
+        std::unordered_map<String, int> mapOfColumns;
+        String filename;
 
         //constructer
-        ReadFile(std::string fileName);
+        ReadFile(String fileName);
         ~ReadFile();
 
         //double version for graff thing
-        std::vector<double> getAllDataFromColumnDouble(std::string columnName);
+        Vector<double> getAllDataFromColumnDouble(String columnName);
         //long double version for all other stuff
-        std::vector<long double> getAllDataFromColumnLongDouble(std::string columnName);
-        std::vector<std::string> getAllDataFromColumnString(std::string columnName);
-        std::vector<std::vector<std::string>> getAllRowsWhereColumnIsEqualeToAValue(std::string columnName, std::string value);
-        std::vector<std::string> getRow(int row);
-        std::vector<std::vector<std::string>> getAllData();
+        Vector<long double> getAllDataFromColumnLongDouble(String columnName);
+        Vector<String> getAllDataFromColumnString(String columnName);
+        Vector<Vector<String>> getAllRowsWhereColumnIsEqualeToAValue(String columnName, String value);
+        Vector<String> getRow(int row);
+        Vector<Vector<String>> getAllData();
     };
 }

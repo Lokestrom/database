@@ -3,6 +3,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
+#include "Exception.hpp"
 
 #include <type_traits>
 #include <typeinfo>
@@ -65,35 +66,25 @@ namespace Database {
         return r;
     }
 
-    template< typename T>
-    constexpr std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) {
-        std::string x;
-        x = "Vector<" + typeOf<T>() + ">: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
-        for (auto i = 0; i < fungtionInputType.size() || fungtionInput.size(); i++)
-             x += (i > fungtionInputType.size()) 
-                         ? "(" + (std::string)fungtionInputType[i] + "), "
-                         : "(" + (std::string)fungtionInputType[i] + ") " + (std::string)fungtionInput[i] + ", ";
+    template <typename T>
+    std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) noexcept {
+        errorString = "Vector: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
+        for (auto i = 0; i < fungtionInputType.size() || i < fungtionInput.size(); i++)
+            errorString += (i > fungtionInputType.size())
+            ? "(" + (std::string)fungtionInputType[i] + "), "
+            : "(" + (std::string)fungtionInputType[i] + ") " + (std::string)fungtionInput[i] + ", ";
 
-        x.pop_back();
-        x.pop_back();
-        x += " );\n";
-        return x;
+        errorString.pop_back();
+        errorString.pop_back();
+        errorString += " );\n";
+        return errorString;
     }
 
-    template< typename T>
-    constexpr std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) {
-        return "Vector<" + typeOf<T>() + ">: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( );\n";
+    template <typename T>
+    std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) noexcept {
+        errorString = "Vector: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "();\n";
+        return errorString;
     }
-
-    template< typename T>
-    constexpr std::string Vector<T>::constructStringOfVector(const Vector<T> vec){
-        std::string s = "{ ";
-        for(auto i : vec)
-            s += to_string(i) + ", ";
-        s += (vec.currentSize) ? "\b\b }" : " }";
-        return s;
-    }
-
 
     template <typename T>
     constexpr void Vector<T>::changeCapIncrease(const char how, const size_t val){
@@ -102,7 +93,7 @@ namespace Database {
         else if(how == '*')
             capIncrease[0] = 1;
         else
-            errorMsg("Not a valid how", "changeCapIncrease", {to_string(how), to_string(val)}, {"const char", "const size_t"});
+            throw InvalidArgument(errorMsg("Not a valid how", "changeCapIncrease", { to_string(how), to_string(val) }, { "const char", "const size_t" }));
         
         capIncrease[1] = val;
     }
@@ -122,9 +113,17 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) 
+    constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList)
     {
         *this = initializerList;
+    }
+
+    template <typename T>
+    constexpr Vector<T>::Vector(const std::vector<T>& vector) {
+        reserve(vector.size());
+        for (const T& i : vector) {
+            pushBack(vector[i]);
+        }
     }
 
     /*template<typename T>
@@ -139,6 +138,13 @@ namespace Database {
         if(arr != nullptr)
             delete[] arr;
         arr = new T[currentCapacity];
+    }
+
+    template<typename T>
+    constexpr Vector<T>::Vector(const size_t count, const T value) {
+        reserve(count);
+        for (auto i = 0; i < count; i++)
+            pushBack(value);
     }
 
     template <typename T>
@@ -162,11 +168,11 @@ namespace Database {
     template <typename T>
     constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
         if (startIndex >= currentSize)
-            errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" });
+            throw OutOfRange(errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
         if (endIndex > currentSize)
-            errorMsg("endIndex out of range", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+            throw OutOfRange(errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
         if(startIndex > endIndex)
-            errorMsg("startIndex is greater than endIndex", "operator()", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+            throw OutOfRange(errorMsg("startIndex is greater than endIndex", "operator()",  {to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
 
         Vector<T> x;
         for (auto i = startIndex; i < endIndex; i++)
@@ -190,7 +196,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T>& initializerList) noexcept
+    constexpr Vector<T>& Vector<T>::operator= (const std::initializer_list<T> initializerList) noexcept
     {
         if (currentCapacity < initializerList.size()) {
             if (arr != nullptr)
@@ -229,23 +235,21 @@ namespace Database {
     }*/
 
     template <typename T>
-    constexpr bool Vector<T>::operator== (const Vector<T>& vec) noexcept {
+    constexpr Vector<T>& Vector<T>::operator+= (const Vector<T>& vector) noexcept {
+        this->reserve(this->currentSize + vector.currentSize);
+        for (const T& i : vector)
+            this->pushBack(i);
+        return *this;
+    }
+
+
+    template <typename T>
+    constexpr bool Vector<T>::operator== (const Vector<T> vec) noexcept {
         if (currentSize != vec.currentSize)
             return false;
 
         for (auto i = 0; i < currentSize; i++)
             if (arr[i] != vec.arr[i])
-                return false;
-        return true;
-    }
-
-    template <typename T>
-    constexpr bool Vector<T>::operator== (const std::initializer_list<T>& initializerList) noexcept{
-        if (currentSize != initializerList.size())
-            return false;
-
-        for (auto i = 0; i < currentSize; i++)
-            if (arr[i] != initializerList[i])
                 return false;
         return true;
     }
@@ -262,13 +266,8 @@ namespace Database {
     }*/
 
     template <typename T>
-    constexpr bool Vector<T>::operator!= (const Vector<T>& vec) noexcept {
+    constexpr bool Vector<T>::operator!= (const Vector<T> vec) noexcept {
         return !(*this == vec);
-    }
-
-    template <typename T>
-    constexpr bool Vector<T>::operator!= (const std::initializer_list<T>& initializerList) noexcept {
-        return !(*this == initializerList);
     }
     
     /*template <typename T>
@@ -279,7 +278,7 @@ namespace Database {
     template <typename T>
     constexpr T& Vector<T>::at(const size_t index) const {
         if (index >= currentSize)
-            errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" });
+            //throw OutOfRange(errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" }).c_str());
         return arr[index];
     }
 
@@ -317,8 +316,11 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::reserve(const size_t newCapacity){
+        if (newCapacity < currentCapacity) {
+            throw LengthError(errorMsg("newCapacity is less than currentCapacity", "reserve", { newCapacity }, { "const size_t" }).c_str());
+        }
         T* temp = new T[newCapacity];
-        for(auto i = 0; i < newCapacity; i++)
+        for(auto i = 0; i < currentCapacity; i++)
             temp[i] = arr[i];
 
         if (arr != nullptr)
@@ -326,7 +328,6 @@ namespace Database {
         arr = temp;
        
         currentCapacity = newCapacity;
-
     }
 
     template<typename T>
@@ -386,15 +387,15 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::popBack(){
         if(currentSize == 0)
-            errorMsg("popBack on empty Vector", "popBack");
+            throw LengthError(errorMsg("popBack on empty Vector", "popBack").c_str());
 
         currentSize--;
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, const T val){
-        if(index >= currentSize)
-            errorMsg("Index out of range", "insert", {to_string(index), to_string(val)}, {"const size", typeOf(val)});
+    constexpr void Vector<T>::insert(const size_t index, const T val) {
+        if (index > currentSize)
+            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size", typeOf(val) }).c_str());
 
         auto s = currentSize - index;
         T* temp = new T[s];
@@ -409,17 +410,17 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector){
-        if(index >= currentSize)
-            errorMsg("Index out of range", "insert", {to_string(index)}, {"const size_t", typeOf(vector)});
+    constexpr void Vector<T>::insert(const size_t index, const Vector<T> vector) {
+        if (index > currentSize)
+            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size_t", typeOf(vector) }).c_str());
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList){
-        if(index >= currentSize)
-            errorMsg("Index out of range", "insert", {to_string(index)}, {"const size_t", typeOf(initializerList)});
+    constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) {
+        if (index >= currentSize)
+            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size_t", typeOf(initializerList) }).c_str());
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
@@ -433,7 +434,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
         if(index >= currentSize)
-            errorMsg("Index out of range", "pop", {to_string(index)}, {"const size_t"});
+            throw OutOfRange(errorMsg("Index out of range", "pop", { to_string(index) }, { "const size_t" }).c_str());
         auto s = currentSize - index - 1;
         T* temp = new T[s];
         for(auto i = index + 1; i < currentSize; i++)
@@ -448,11 +449,11 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::pop(const size_t startIndex, const size_t endIndex){
         if(startIndex >= currentSize)
-            errorMsg("startIndex out of range", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+            throw OutOfRange(errorMsg("startIndex out of range", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
         if(endIndex > currentSize)
-            errorMsg("endIndex out of range", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+            throw OutOfRange(errorMsg("endIndex out of range", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
         if(startIndex > endIndex)
-            errorMsg("startIndex is greater than endIndex", "pop", {to_string(startIndex), to_string(endIndex)}, {"const size_t", "const size_t"});
+            throw OutOfRange(errorMsg("startIndex is greater than endIndex", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
 
         auto s = currentSize - endIndex;
         T* temp = new T[s];
@@ -483,6 +484,7 @@ namespace Database {
         clear();
 
         size_t startPos = 0, endPos = 0;
+
         while (startPos != start.size() && endPos != end.size()) {
             if (start[startPos] < end[endPos]) {
                 pushBack(start[startPos]);
@@ -507,12 +509,12 @@ namespace Database {
         T temp;
         for (auto i = 0; i < currentSize; i++)
         {
-            for (auto j = i + 1; j < currentSize; j++)
+            for (auto j = 0; j < currentSize - i - 1; j++)
             {
-                if (arr[i] > arr[j])
+                if (arr[j] > arr[j + 1])
                 {
-                    temp =  (arr[i]);
-                    arr[i] = arr[j];
+                    temp = arr[j + 1];
+                    arr[j + 1] = arr[j];
                     arr[j] = temp;
                 }
             }
@@ -549,6 +551,15 @@ namespace Database {
     }
 
     template<typename T>
+    constexpr long long Vector<T>::linearSearchR(const T target) noexcept {
+        for (auto i = currentSize-1; i > -1; i--)
+            if (arr[i] == target)
+                return i;
+        return -1;
+    }
+
+
+    template<typename T>
     constexpr long long Vector<T>::binarySerch(const T target) const noexcept {
         return binarySerch(target);
     }
@@ -556,13 +567,5 @@ namespace Database {
     template<typename T>
     constexpr long long Vector<T>::linearSearch(const T target) const  noexcept {
         return linearSearch(target);
-    }
-
-    template<typename T>
-    constexpr void Vector<T>::printVectorData() noexcept {
-        for (T i : *this) { 
-            std::cout << i << ","; 
-        } 
-        std::cout << "\n" << "size: " << currentSize << ",  cap: " << currentCapacity << ",  capIncrese: " << capIncrease[0] << ", " << capIncrease[1] << "\n";
     }
 }

@@ -1,30 +1,29 @@
 #pragma once
 
-#include "String.hpp"
-
 namespace Database {
 	class Exception {
 	private:
-		String msg;
+		char* msg = nullptr;
 	public:
-		Exception(const String ExceptionMsg);
+		Exception(const char* ExceptionMsg);
+		~Exception();
 
-		String what() const;
+		char* what() const noexcept;
 	};
 
 	class OutOfRange : public Exception {
 	public:
-		OutOfRange(const String ExceptionMsg);
+		OutOfRange(const char* ExceptionMsg);
 	};
 
 	class InvalidArgument : public Exception {
 	public:
-		InvalidArgument(const String ExceptionMsg);
+		InvalidArgument(const char* ExceptionMsg);
 	};
 
 	class LengthError : public Exception {
 	public:
-		LengthError(const String ExceptionMsg);
+		LengthError(const char* ExceptionMsg);
 	};
 }
 

@@ -1,91 +1,84 @@
 #include "Vector.hpp"
+#include "String.hpp"
 #include <iostream>
+#include <vector>
 
 #define Log(x) std::cout << x << "\n";
 
 using namespace Database;
 
-int main() {
-	//ekstras
-	Vector<int> test({ 1,2,3 });
+String foo(bool b) {
+	return b ? "good, " : "fail, ";
+}
+
+void testVector() {
+	std::vector<int> stdv = { 1,1,1 };
 
 	//constructors
-	Vector<int> v1 = { 1,1,1 };
-	Vector<int> v2(test);
+	Vector<int> v1(stdv);
+	Vector<int> v2(v1);
 	Vector<int> v3({ 1, 2, 3 });
-	Vector<int> v4(7);
-	v1.printVectorData();
-	v2.printVectorData();
-	v3.printVectorData();
-	v4.printVectorData();
-
-	Log(v3[4]);
-	v2 = test(0, 2);
-	v2.printVectorData();
-
-	v2 = { 1,2,3,4 };
-	v2.printVectorData();
-
-	std::string x;
-	if (test == v3)
-		x += "y    ";
-	if (test == v2)
-		x += "n    ";
-	if (test != v2)
-		x += "y    ";
-	if (test != v3)
-		x += "n    ";
-
+	Vector<int> v4(7); 
+	Vector<int> v5(6, 123);
+	
+	String x("constructors: ");
+	x += foo(v1 == Vector<int>(stdv));
+	x += foo(v2 == v1);
+	x += foo(v3 == Vector<int>{1, 2, 3});
+	x += foo(v4.capacity() == 7);
+	x += foo(v5 == Vector<int>{123, 123, 123, 123, 123, 123});
 	Log(x);
 
-	Log(v1.empty());
-	v1.clear();
-	v1.printVectorData();
-	Log(v1.empty());
+	v2 = v1;
+	v3 = { 3, 2, 1 };
 
-	v2.printVectorData();
-	Log(v2.size());
-	Log(v2.capacity());
-	v2.reserve(100);
-	Log(v2.capacity());
-	v2.shrinkToFit();
-	v2.printVectorData();
-	Log(v2.capacity());
+	x = "operator=: ";
+	x += foo(v2 == v1);
+	x += foo(v3 == Vector<int>{3, 2, 1});
+	Log(x);
 
-	int* vecdata = v2.data();
-
-	for (int& i : v3)
-		Log(i);
-	for (const int& i : v3)
-		Log(i);
-
+	v4.clear();
+	x = "pushBack: ";
 	v4.pushBack(3);
-	v4.printVectorData();
+	x += foo(v4[0] = 3);
+	Log(x);
+
+	x = "popBack: ";
 	v4.popBack();
-	v4.printVectorData();
+	x += foo(v4.size() == 0);
+	Log(x);
 
-	v4 = { 8,4,2,3,5,7,4,2 };
-	v1 = {1};
-
+	v1 = { 1,2 };
+	v3 = { 3,2,1 };
+	x = "insert: ";
 	v1.insert(1, 4);
-	v1.printVectorData();
-	v1.insert(1, v4);
-	v1.printVectorData();
+	x += foo(v1 == Vector<int>{ 1,4,2 });
+	v1.insert(1, v3);
+	x += foo(v1 == Vector<int>{ 1,3,2,1,4,2 });
 	v1.insert(1, { 2,3,4 });
-	v1.printVectorData();
+	x += foo(v1 == Vector<int>{ 1,2,3,4,3,2,1,4,2 });
+	Log(x);
 
+	x = "pop: ";
 	v1.pop(4);
-	v1.printVectorData();
+	x += foo(v1 == Vector<int>{ 1, 2, 3, 4, 2, 1, 4, 2 });
 	v1.pop(1, 3);
-	v1.printVectorData();
+	x += foo(v1 == Vector<int>{ 1, 4, 2, 1, 4, 2 });
+	Log(x);
 
+	x = "mergeSort: ";
 	v1.mergeSort();
-	v1.printVectorData();
-	
+	x += foo(v1 == Vector<int>{1, 1, 2, 2, 4, 4});
+	Log(x)
+
+	x = "bobbleSort: ";
 	v2 = { 4,3,1,7,5,3 };
 	v2.bubbleSort();
-	v2.printVectorData();
+	x += foo(v2 == Vector<int>{1,3,3,4,5,7});
+	Log(x);
 
-	Log(v2.binarySerch(5));
-	Log(v2.linearSearch(5));
+	x = "search: ";
+	x += foo(v2.binarySerch(5) == 4);
+	x += foo(v2.linearSearch(5) == 4);
+	Log(x);
 }

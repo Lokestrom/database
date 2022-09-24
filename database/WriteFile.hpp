@@ -6,6 +6,7 @@ Created: 12 apr 2022
 
 #include "string.hpp"
 #include "Vector.hpp"
+#include "Exception.hpp"
 #include <fstream>
 
 namespace Database
@@ -18,18 +19,18 @@ namespace Database
         int columnNumber = 0;
         int dataPointsOnLine = 0;
 
-        void errorMsg(String ErrorMsg, String ErrorFungtion, Vector<String> ErrorFungtionInput)
-        {
-            String error = "WriteFile: Error: " + ErrorMsg + ". Error was thrown at " + ErrorFungtion + "(";
-            if (ErrorFungtionInput.size() != 0)
-            {
-                for (auto i = 0; i < ErrorFungtionInput.size() - 1; i++)
-                    error += "\"" + ErrorFungtionInput[i] + "\", ";
-                error += "\"" + ErrorFungtionInput[ErrorFungtionInput.size() - 1] + "\");\n";
-            }
-            else
-                error += "();";
-            std::cout << error;
+        const char* errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept{
+            String s;
+            s = "WriteFile: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
+            for (auto i = 0; i < fungtionInputType.size() || i < fungtionInput.size(); i++)
+                s += (i > fungtionInputType.size())
+                ? "(" + (String)fungtionInputType[i] + "), "
+                : "(" + (String)fungtionInputType[i] + ") " + (String)fungtionInput[i] + ", ";
+
+            s.popBack();
+            s.popBack();
+            s += " );\n";
+            return s.data();
         }
 
         template <typename T>

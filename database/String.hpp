@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "Vector.hpp"
 
 namespace Database {
@@ -7,32 +8,33 @@ namespace Database {
     private:
         Vector<char> stringVec;
 
-        String errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept;
-        String errorMsg(const String ErrorMsg, const String fungtion) const noexcept;
+        const char* errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept;
+        const char* errorMsg(const String ErrorMsg, const String fungtion) const noexcept;
 
     public:
         constexpr String() noexcept;
-        constexpr String(const String& s) noexcept;
+        String(const String& s) noexcept;
         constexpr String(const char* s) noexcept;
-        String(const Vector<char>& v) noexcept;
-        constexpr String(const std::string& s) noexcept;
+        String(Vector<char> v) noexcept;
+        String(const std::string& s) noexcept;
 
         constexpr char& operator[](const size_t index) noexcept;
         constexpr char& operator[](const size_t index) const noexcept;
-        String operator()(const size_t startIndex, const size_t endIndex);
+        String operator()(const size_t startIndex, const size_t endIndex) const;
 
-        constexpr String& operator+=(const String& s) noexcept;
+        String& operator+=(const String s) noexcept;
         constexpr String& operator+=(const char* s) noexcept;
 
         const friend String operator+(const String& l, const String& r) noexcept;
         const friend String operator+(const String& l, const char* r) noexcept;
+        const friend String operator+(const String& l, const char r) noexcept;
         const friend String operator+(const char* l, const String& r) noexcept;
 
-        constexpr String& operator=(const String& s) noexcept;
+        String& operator=(const String& s) noexcept;
         constexpr String& operator=(const char* s) noexcept;
-        constexpr String& operator=(const std::string& s) noexcept;
-        constexpr String& operator=(const Vector<char>& s) noexcept;
-        constexpr String& operator=(const std::initializer_list<char>& iList) noexcept;
+        String& operator=(const std::string& s);
+        String& operator=(const Vector<char>& s);
+        String& operator=(const std::initializer_list<char>& iList) noexcept;
 
         bool operator==(const String s) noexcept;
         bool operator!=(const String s) noexcept;
@@ -48,9 +50,9 @@ namespace Database {
         constexpr void shrinkToFit() noexcept;
         constexpr void reserve(const size_t newCapacity) noexcept;
         Vector<char>& vectorData() noexcept;
-        Vector<char>& vectorData() const noexcept;
-        const char* data() noexcept;
-        const char* data() const noexcept;
+        Vector<char> vectorData() const noexcept;
+        const char* cstr() noexcept;
+        const char* cstr() const noexcept;
         const size_t length() const noexcept;
         const void clear() noexcept;
 
@@ -71,14 +73,18 @@ namespace Database {
         constexpr void pop(const size_t index);
         constexpr void pop(const size_t startIndex, const size_t endIndex);
 
-        constexpr long long binarySerch(const char val) const noexcept;
-        constexpr long long linearSearch(const char val) const noexcept;
+        const bool contains(const String target) noexcept;
+        constexpr long long binarySerch(const char target) const noexcept;
+        constexpr long long linearSearch(const char target) const noexcept;
+        constexpr long long linearSearchR(const char target) const noexcept;
 
         constexpr void mergeSort() noexcept;
         constexpr void bubbleSort() noexcept;
 
-        const String lower();
-        const String upper();
+        const void lower() noexcept;
+        const void upper() noexcept;
+
+        const Vector<String> split(const char splitElement) const noexcept;
     };
 
     //extra String fungtions
@@ -92,6 +98,8 @@ namespace Database {
     String toS(double x);
     String toS(long double x);
 
+    std::string toSTD(String s);
+
     int SToi(String s);
     long STol(String s);
     long long SToll(String s);
@@ -102,6 +110,7 @@ namespace Database {
     long double STold(String s);
 
     long long substringIndex(const String s, const String subS);
-    bool substringExsist(String s, String subS);
     bool canStringConvertToNumber(String x);
+    bool getline(std::ifstream* file, String& string);s
+
 }
