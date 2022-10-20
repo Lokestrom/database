@@ -25,5 +25,15 @@ namespace Database {
 	public:
 		LengthError(const char* ExceptionMsg);
 	};
+
+	class SystemError : public Exception {
+	public:
+		SystemError(const char* ExceptionMsg);
+	};
+
+	class WriteFileError : public Exception {
+	public:
+		WriteFileError(const char* ExceptionMsg);
+	};
 }
 

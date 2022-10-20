@@ -20,7 +20,7 @@ namespace Database {
 
         constexpr char& operator[](const size_t index) noexcept;
         constexpr char& operator[](const size_t index) const noexcept;
-        String operator()(const size_t startIndex, const size_t endIndex) const;
+        String operator()(const size_t startIndex, const size_t endIndex);
 
         String& operator+=(const String s) noexcept;
         constexpr String& operator+=(const char* s) noexcept;
@@ -36,8 +36,8 @@ namespace Database {
         String& operator=(const Vector<char>& s);
         String& operator=(const std::initializer_list<char>& iList) noexcept;
 
-        bool operator==(const String s) noexcept;
-        bool operator!=(const String s) noexcept;
+        const friend bool operator==(const String& lhs, const String& rhs) noexcept;
+        const friend bool operator!=(const String& lhs, const String& rhs) noexcept;
 
         friend std::ostream& operator<<(std::ostream& output, const String& s) noexcept;
         friend std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept;
@@ -55,6 +55,7 @@ namespace Database {
         const char* cstr() const noexcept;
         const size_t length() const noexcept;
         const void clear() noexcept;
+        const bool empty() noexcept;
 
         char* begin() noexcept;
         char* end() noexcept;
@@ -111,6 +112,10 @@ namespace Database {
 
     long long substringIndex(const String s, const String subS);
     bool canStringConvertToNumber(String x);
-    bool getline(std::ifstream* file, String& string);s
-
+    bool getline(std::ifstream* file, String& string);
 }
+
+template<>
+struct std::hash<Database::String> {
+    size_t operator()(Database::String const& s) const noexcept;
+};

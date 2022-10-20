@@ -242,43 +242,26 @@ namespace Database {
         return *this;
     }
 
-
     template <typename T>
-    constexpr bool Vector<T>::operator== (const Vector<T> vec) noexcept {
-        if (currentSize != vec.currentSize)
+    bool operator==(const Vector<T>& lsh, const Vector<T>& rsh) noexcept {
+        if (lsh.size() != rsh.size())
             return false;
 
-        for (auto i = 0; i < currentSize; i++)
-            if (arr[i] != vec.arr[i])
+        for (auto i = 0; i < lsh.size(); i++)
+            if (lsh[i] != rsh[i])
                 return false;
         return true;
     }
 
-    /*template <typename T>
-    constexpr bool Vector<T>::operator== (const T arr[]) {
-        if (currentSize != sizeof(arr) / sizeof(T))
-            return false;
-
-        for (auto i = 0; i < currentSize; i++)
-            if (arr[i] != arr[i])
-                return false;
-        return true;
-    }*/
-
     template <typename T>
-    constexpr bool Vector<T>::operator!= (const Vector<T> vec) noexcept {
-        return !(*this == vec);
+    bool operator!=(const Vector<T>& lsh, const Vector<T>& rsh) noexcept {
+        return !(lsh == rsh);
     }
-    
-    /*template <typename T>
-    constexpr bool Vector<T>::operator!= (const T arr[]) {
-        return !(*this == arr);
-    }*/
 
     template <typename T>
     constexpr T& Vector<T>::at(const size_t index) const {
         if (index >= currentSize)
-            //throw OutOfRange(errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" }).c_str());
+            throw OutOfRange(errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" }).c_str());
         return arr[index];
     }
 

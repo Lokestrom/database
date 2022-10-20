@@ -25,4 +25,8 @@ namespace Database {
 	InvalidArgument::InvalidArgument(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
 
 	LengthError::LengthError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+
+    SystemError::SystemError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+
+    WriteFileError::WriteFileError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
 } 

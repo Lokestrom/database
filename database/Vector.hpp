@@ -45,11 +45,6 @@ namespace Database{
 
         constexpr Vector<T>& operator+= (const Vector<T>& vector) noexcept;
 
-        constexpr bool operator== (const Vector<T> vec) noexcept;
-        //constexpr bool operator== (const T arr[]);
-        constexpr bool operator!= (const Vector<T> vec) noexcept;
-        //constexpr bool operator!= (const T arr[]);
-
         constexpr T& at(const size_t index) const;
         constexpr bool empty() const noexcept;
         constexpr void clear() noexcept;
@@ -89,6 +84,11 @@ namespace Database{
         constexpr long long linearSearch(const T target) const noexcept;
         constexpr long long linearSearchR(const T target) const noexcept;
     };
+
+    template <class T>
+    bool operator== (const Vector<T>& lhs, const Vector<T>& rhs) noexcept;
+    template <class T>
+    bool operator!= (const Vector<T>& lhs, const Vector<T>& rhs) noexcept;
 }
 
 #include "Vector.tpp"

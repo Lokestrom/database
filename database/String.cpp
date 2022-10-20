@@ -54,7 +54,7 @@ namespace Database {
         return stringVec[index];
     }
 
-    String String::operator()(const size_t startIndex, const size_t endIndex) const{
+    String String::operator()(const size_t startIndex, const size_t endIndex){
         if (startIndex >= stringVec.size())
             throw OutOfRange(errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
         if (endIndex > stringVec.size())
@@ -124,11 +124,11 @@ namespace Database {
     }
     
     //
-    bool String::operator==(const String s) noexcept {
-        return stringVec == s.stringVec;
+    const bool operator==(const String& lsh, const String& rsh) noexcept {
+        return lsh.stringVec == rsh.stringVec;
     }
-    bool String::operator!=(const String s) noexcept {
-        return stringVec != s.stringVec;
+    const bool operator!=(const String& lsh, const String& rsh) noexcept {
+        return lsh.stringVec == rsh.stringVec;
     }
 
     //
@@ -205,6 +205,12 @@ namespace Database {
     //clear
     const void String::clear() noexcept {
         stringVec.clear();
+    }
+
+    const bool String::empty() noexcept {
+        if (stringVec.size() == 0)
+            return true;
+        return false;
     }
 
     //begin
@@ -482,4 +488,8 @@ namespace Database {
         string = text;
         return true;
     }
+}
+
+size_t std::hash<Database::String>::operator()(Database::String const& s) const noexcept {
+    return std::hash<std::string>{}(Database::toSTD(s));
 }
