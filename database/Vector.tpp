@@ -1,90 +1,10 @@
+/*
+Athor: Loke Strøm
+*/
 #include <initializer_list>
-#include <cstdlib>
-#include <iostream>
-#include <typeinfo>
-#include <string>
 #include "Exception.hpp"
 
-#include <type_traits>
-#include <typeinfo>
-#ifndef _MSC_VER
-#   include <cxxabi.h>
-#endif
-#include <memory>
-#include <cstdlib>
-
-using std::to_string;
-
 namespace Database {
-    template <typename T>
-    constexpr std::string typeOf() {
-        typedef typename std::remove_reference<T>::type TR;
-        std::unique_ptr<char, void(*)(void*)> own
-        (
-#ifndef _MSC_VER
-            abi::__cxa_demangle(typeid(TR).name(), nullptr,
-                nullptr, nullptr),
-#else
-            nullptr,
-#endif
-            std::free
-        );
-        std::string r = own != nullptr ? own.get() : typeid(TR).name();
-        if (std::is_const<TR>::value)
-            r += " const";
-        if (std::is_volatile<TR>::value)
-            r += " volatile";
-        if (std::is_lvalue_reference<T>::value)
-            r += "&";
-        else if (std::is_rvalue_reference<T>::value)
-            r += "&&";
-        return r;
-    }
-
-    template <typename T>
-    constexpr std::string typeOf(T x) {
-        typedef typename std::remove_reference<T>::type TR;
-        std::unique_ptr<char, void(*)(void*)> own
-        (
-#ifndef _MSC_VER
-            abi::__cxa_demangle(typeid(TR).name(), nullptr,
-                nullptr, nullptr),
-#else
-            nullptr,
-#endif
-            std::free
-        );
-        std::string r = own != nullptr ? own.get() : typeid(TR).name();
-        if (std::is_const<TR>::value)
-            r += " const";
-        if (std::is_volatile<TR>::value)
-            r += " volatile";
-        if (std::is_lvalue_reference<T>::value)
-            r += "&";
-        else if (std::is_rvalue_reference<T>::value)
-            r += "&&";
-        return r;
-    }
-
-    template <typename T>
-    std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) noexcept {
-        errorString = "Vector: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
-        for (auto i = 0; i < fungtionInputType.size() || i < fungtionInput.size(); i++)
-            errorString += (i > fungtionInputType.size())
-            ? "(" + (std::string)fungtionInputType[i] + "), "
-            : "(" + (std::string)fungtionInputType[i] + ") " + (std::string)fungtionInput[i] + ", ";
-
-        errorString.pop_back();
-        errorString.pop_back();
-        errorString += " );\n";
-        return errorString;
-    }
-
-    template <typename T>
-    std::string Vector<T>::errorMsg(const std::string ErrorMsg, const std::string fungtion) noexcept {
-        errorString = "Vector: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "();\n";
-        return errorString;
-    }
 
     template <typename T>
     constexpr void Vector<T>::changeCapIncrease(const char how, const size_t val){
@@ -93,7 +13,7 @@ namespace Database {
         else if(how == '*')
             capIncrease[0] = 1;
         else
-            throw InvalidArgument(errorMsg("Not a valid how", "changeCapIncrease", { to_string(how), to_string(val) }, { "const char", "const size_t" }));
+            throw InvalidArgument("Not a valid how. Only \"+\" or \"*\" is accepted");
         
         capIncrease[1] = val;
     }
@@ -168,11 +88,11 @@ namespace Database {
     template <typename T>
     constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
         if (startIndex >= currentSize)
-            throw OutOfRange(errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("startIndex out of range");
         if (endIndex > currentSize)
-            throw OutOfRange(errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("endIndex out of range");
         if(startIndex > endIndex)
-            throw OutOfRange(errorMsg("startIndex is greater than endIndex", "operator()",  {to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("startIndex can't be greater than endIndex");
 
         Vector<T> x;
         for (auto i = startIndex; i < endIndex; i++)
@@ -261,7 +181,7 @@ namespace Database {
     template <typename T>
     constexpr T& Vector<T>::at(const size_t index) const {
         if (index >= currentSize)
-            throw OutOfRange(errorMsg("Index out of range", "operator[]", { to_string(index) }, { "const size_t" }).c_str());
+            throw OutOfRange("Index out of range");
         return arr[index];
     }
 
@@ -300,7 +220,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::reserve(const size_t newCapacity){
         if (newCapacity < currentCapacity) {
-            throw LengthError(errorMsg("newCapacity is less than currentCapacity", "reserve", { newCapacity }, { "const size_t" }).c_str());
+            throw LengthError("newCapacity can't be less than currentCapacity");
         }
         T* temp = new T[newCapacity];
         for(auto i = 0; i < currentCapacity; i++)
@@ -370,7 +290,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::popBack(){
         if(currentSize == 0)
-            throw LengthError(errorMsg("popBack on empty Vector", "popBack").c_str());
+            throw LengthError("Can't popBack on empty Vector");
 
         currentSize--;
     }
@@ -378,7 +298,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const T val) {
         if (index > currentSize)
-            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size", typeOf(val) }).c_str());
+            throw OutOfRange("Index out of range");
 
         auto s = currentSize - index;
         T* temp = new T[s];
@@ -395,7 +315,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const Vector<T> vector) {
         if (index > currentSize)
-            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size_t", typeOf(vector) }).c_str());
+            throw OutOfRange("Index out of range");
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
@@ -403,7 +323,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) {
         if (index >= currentSize)
-            throw OutOfRange(errorMsg("Index out of range", "insert", { to_string(index) }, { "const size_t", typeOf(initializerList) }).c_str());
+            throw OutOfRange("Index out of range");
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
@@ -417,7 +337,7 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::pop(const size_t index){
         if(index >= currentSize)
-            throw OutOfRange(errorMsg("Index out of range", "pop", { to_string(index) }, { "const size_t" }).c_str());
+            throw OutOfRange("Index out of range");
         auto s = currentSize - index - 1;
         T* temp = new T[s];
         for(auto i = index + 1; i < currentSize; i++)
@@ -432,11 +352,11 @@ namespace Database {
     template<typename T>
     constexpr void Vector<T>::pop(const size_t startIndex, const size_t endIndex){
         if(startIndex >= currentSize)
-            throw OutOfRange(errorMsg("startIndex out of range", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("startIndex out of range");
         if(endIndex > currentSize)
-            throw OutOfRange(errorMsg("endIndex out of range", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("endIndex out of range");
         if(startIndex > endIndex)
-            throw OutOfRange(errorMsg("startIndex is greater than endIndex", "pop", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }).c_str());
+            throw OutOfRange("startIndex can't be greater than endIndex");
 
         auto s = currentSize - endIndex;
         T* temp = new T[s];

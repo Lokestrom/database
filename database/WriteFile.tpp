@@ -33,7 +33,14 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::addcolumns(Vector<String> columnNames);
+	void WriteFile<T>::addcolumns(Vector<String> columnNames) {
+		for (const auto& i : columnNames) {
+			for (const char c : i)
+				buffer.pushBack(c);
+			buffer.pushBack(splitByte);
+		}
+		
+	}
 
 	template<typename T>
 	void WriteFile<T>::addData(Vector<T> data);

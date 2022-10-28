@@ -3,6 +3,9 @@ Athor: Loke Strøm
 */
 #pragma once
 
+#include "Vector.hpp"
+#include "String.hpp"
+
 namespace Database
 {
     template<typename T>

@@ -1,3 +1,6 @@
+/*
+Athor: Loke Strøm
+*/
 #pragma once
 
 #include <string>
@@ -7,10 +10,6 @@ namespace Database {
     class String {
     private:
         Vector<char> stringVec;
-
-        const char* errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept;
-        const char* errorMsg(const String ErrorMsg, const String fungtion) const noexcept;
-
     public:
         constexpr String() noexcept;
         String(const String& s) noexcept;

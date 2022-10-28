@@ -1,3 +1,6 @@
+/*
+Athor: Loke Strøm
+*/
 #pragma once
 
 namespace Database {

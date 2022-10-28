@@ -1,6 +1,5 @@
 /*
 Athor: Loke Strøm
-Created: 12 apr 2022
 */
 #pragma once
 

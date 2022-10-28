@@ -1,26 +1,15 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
 namespace Database{
-
-    template <class T>
-    constexpr std::string typeOf(T x);
-    template <class T>
-    constexpr std::string typeOf();
-
     template <typename T>
     class Vector
     {
     private:
-        std::string errorString;
         T* arr = nullptr;
         size_t currentSize = 0, currentCapacity = 0;
         size_t capIncrease[2] = { 1, 2 };
-
-        std::string errorMsg(const std::string ErrorMsg, const std::string fungtion, const Vector<std::string> fungtionInput, const Vector<std::string> fungtionInputType) noexcept;
-        std::string errorMsg(const std::string ErrorMsg, const std::string fungtion) noexcept;
 
     public:
 

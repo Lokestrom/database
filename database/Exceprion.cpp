@@ -1,3 +1,6 @@
+/*
+Athor: Loke Strøm
+*/
 #include "Exception.hpp"
 
 namespace Database {

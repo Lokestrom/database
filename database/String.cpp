@@ -1,3 +1,6 @@
+/*
+Athor: Loke Strøm
+*/
 #include "string.hpp"
 
 #include <iostream>
@@ -7,28 +10,6 @@
 #include "Vector.hpp"
 
 namespace Database {
-
-    const char* String::errorMsg(const String ErrorMsg, const String fungtion, const Vector<String> fungtionInput, const Vector<String> fungtionInputType) const noexcept {
-        String s;
-        s = "String: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "( ";
-        for (auto i = 0; i < fungtionInputType.size() || i < fungtionInput.size(); i++)
-            s += (i > fungtionInputType.size())
-            ? "(" + (String)fungtionInputType[i] + "), "
-            : "(" + (String)fungtionInputType[i] + ") " + (String)fungtionInput[i] + ", ";
-
-        s.popBack();
-        s.popBack();
-        s += " );\n";
-        return s.cstr();
-    }
-
-    const char* String::errorMsg(const String ErrorMsg, const String fungtion) const noexcept {
-        String s;
-        s = "String: Error: " + ErrorMsg + ". Error was thrown at " + fungtion + "();\n";
-        return s.cstr();
-    }
-
-
     constexpr String::String() noexcept {}
     String::String(const String& s) noexcept {
         *this = s;
@@ -56,11 +37,11 @@ namespace Database {
 
     String String::operator()(const size_t startIndex, const size_t endIndex){
         if (startIndex >= stringVec.size())
-            throw OutOfRange(errorMsg("startIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
+            throw OutOfRange("startIndex out of range");
         if (endIndex > stringVec.size())
-            throw OutOfRange(errorMsg("endIndex out of range", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
+            throw OutOfRange("endIndex out of range");
         if (startIndex > endIndex)
-            throw OutOfRange(errorMsg("startIndex is greater than endIndex", "operator()", { to_string(startIndex), to_string(endIndex) }, { "const size_t", "const size_t" }));
+            throw OutOfRange("startIndex can't be greater than endIndex");
         return String(stringVec(startIndex, endIndex));
     }
 
@@ -162,12 +143,12 @@ namespace Database {
     //at
     constexpr char& String::at(const size_t index) {
         if (index >= stringVec.size())
-            throw OutOfRange(errorMsg("Index out of range", "at", { toS(index) }, { "size_t" }));
+            throw OutOfRange("Index out of range");
         return stringVec[index];
     }
     constexpr char& String::at(const size_t index) const {
         if (index >= stringVec.size())
-            throw OutOfRange(errorMsg("Index out of range", "at", { toS(index) }, { "size_t" }));
+            throw OutOfRange("Index out of range");
         return stringVec[index];
     }
 
@@ -237,14 +218,14 @@ namespace Database {
     //popBack
     constexpr void String::popBack() {
         if (stringVec.size() == 0)
-            throw LengthError(errorMsg("popBack on empty String", "popBack"));
+            throw LengthError("popBack on empty String");
         stringVec.popBack();
     }
 
     //insert
     void String::insert(const size_t index, const String s) {
         if (index > stringVec.size())
-            throw OutOfRange(errorMsg("Index out of range", "insert", { toS(index), s }, { "const size_t", "const String" }));
+            throw OutOfRange("Index out of range");
         stringVec.insert(index, s.stringVec);
     }
     void String::insert(const size_t index, const char* s) {
