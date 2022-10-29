@@ -85,6 +85,8 @@ namespace Database {
     }
     constexpr String& String::operator=(const char* s) noexcept {
         stringVec.clear();
+        if (s == nullptr)
+            return *this;
         for (const char* ptr = s; *ptr != '\0'; ptr++)
             stringVec.pushBack(*ptr);
         return *this;

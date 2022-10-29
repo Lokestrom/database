@@ -1,16 +1,23 @@
+#include "Queue.hpp"
 #include "String.hpp"
-#include "Vector.hpp"
-#include <unordered_map>
 #include <iostream>
 
 using namespace Database;
 
+void a(Vector<int> v) {
+	for(int i : v)
+		std::cout << i << "\t";
+	std::cout << "\n";
+}
+
 int main() {
-	std::unordered_map<String, int> x;
-	String s = "asd";
-
-	x["hello"] = 3;
-	x[s] = 13;
-
-	std::cout << x["hello"] << "\t" << x["asd"];
+	Queue<Vector<int>> q;
+	q.pushOn({1,2});
+	q.pushOn({3,4});
+	q.pushOn({5,6});
+	q.pushOn({7,8});
+	a(q.pushOff());
+	a(q.pushOff());
+	a(q.pushOff());
+	a(q.pushOff());
 }
