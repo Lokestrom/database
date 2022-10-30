@@ -5,6 +5,9 @@ Athor: Loke Strøm
 
 #include "Vector.hpp"
 #include "String.hpp"
+#include "Queue.hpp"
+#include <atomic>
+#include <thread>
 
 namespace Database
 {
@@ -14,7 +17,11 @@ namespace Database
     private:
         const char splitByte = char(178);
         std::ofstream* file;
-        Vector<char>* buffer;
+        Queue<char>* buffer;
+        std::thread* tWrite;
+        std::atomic<bool> joined;
+
+        void write();
 
     public:
         WriteFile();
@@ -23,11 +30,11 @@ namespace Database
         ~WriteFile();
 
         void open(String file);
+        void close();
 
         void addcolumns(Vector<String> columnNames);
 
         void addData(Vector<T> data);
-        void addData(T data);
     };
 }
 
