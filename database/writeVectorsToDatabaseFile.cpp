@@ -1,4 +1,3 @@
-#include "D:\code\codeProsjekt\flightControler\algorithm.hpp"
 #include <chrono>
 using namespace arraySorting;
 

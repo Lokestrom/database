@@ -1,37 +1,33 @@
 /*
-Athor: Loke StrÃ¸m
+Athor: Loke Strøm
 */
 #pragma once
 
-#include "WriteFile.hpp"
-
-#include <unordered_map>
+#include "String.hpp"
+#include "Vector.hpp"
 
 namespace Database
 {
-    //used to read a file in the database
+    template <typename T>
     class ReadFile
     {
     private:
-        int nextColumnNumber = 0;
-        std::ifstream *file = new std::ifstream;
-        bool firstLine;
+        std::ifstream* file;
+        String fileName;
+        unsigned int dataStart;
+        Vector<String> ColumnNames;
+        const char splitByte = char(178);
 
     public:
-        std::unordered_map<String, int> mapOfColumns;
-        String filename;
-
-        //constructer
+        ReadFile();
         ReadFile(String fileName);
         ~ReadFile();
 
-        //double version for graff thing
-        Vector<double> getAllDataFromColumnDouble(String columnName);
-        //long double version for all other stuff
-        Vector<long double> getAllDataFromColumnLongDouble(String columnName);
-        Vector<String> getAllDataFromColumnString(String columnName);
-        Vector<Vector<String>> getAllRowsWhereColumnIsEqualeToAValue(String columnName, String value);
-        Vector<String> getRow(int row);
-        Vector<Vector<String>> getAllData();
+        void getAllDataFromColumn(Vector<T>& data, String columnName) noexcept;
+        void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, String columnName, T value) noexcept;
+        void getRow(Vector<T>& data, unsigned int row) noexcept;
+        void getAllData(Vector<Vector<T>>& data) noexcept;
     };
 }
+
+#include "ReadFile.tpp"

@@ -1,0 +1,26 @@
+﻿  test.cpp
+D:\code\codeLibs\database\database\test.cpp(8,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+D:\code\codeLibs\database\database\WriteFile.tpp(43,1): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\code\codeLibs\database\database\WriteFile.tpp(42): message : while compiling class template member function 'void Database::WriteFile<double>::addcolumns(Database::Vector<Database::String>)'
+D:\code\codeLibs\database\database\test.cpp(15): message : see reference to function template instantiation 'void Database::WriteFile<double>::addcolumns(Database::Vector<Database::String>)' being compiled
+D:\code\codeLibs\database\database\test.cpp(13): message : see reference to class template instantiation 'Database::WriteFile<double>' being compiled
+D:\code\codeLibs\database\database\ReadFile.tpp(23,21): warning C4018: '<': signed/unsigned mismatch
+D:\code\codeLibs\database\database\ReadFile.tpp(15): message : while compiling class template member function 'Database::ReadFile<double>::ReadFile(Database::String)'
+D:\code\codeLibs\database\database\test.cpp(26): message : see reference to function template instantiation 'Database::ReadFile<double>::ReadFile(Database::String)' being compiled
+D:\code\codeLibs\database\database\test.cpp(26): message : see reference to class template instantiation 'Database::ReadFile<double>' being compiled
+D:\code\codeLibs\database\database\ReadFile.tpp(62,29): warning C4244: 'initializing': conversion from '__int64' to 'unsigned int', possible loss of data
+D:\code\codeLibs\database\database\ReadFile.tpp(58): message : while compiling class template member function 'void Database::ReadFile<double>::getAllRowsWhereColumnIsEqualeToAValue(Database::Vector<Database::Vector<T>> &,Database::String,T) noexcept'
+          with
+          [
+              T=double
+          ]
+D:\code\codeLibs\database\database\test.cpp(28): message : see reference to function template instantiation 'void Database::ReadFile<double>::getAllRowsWhereColumnIsEqualeToAValue(Database::Vector<Database::Vector<T>> &,Database::String,T) noexcept' being compiled
+          with
+          [
+              T=double
+          ]
+  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 273 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  database.vcxproj -> D:\code\codeLibs\database\x64\Release\database.exe

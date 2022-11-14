@@ -4,11 +4,13 @@ Athor: Loke Strøm
 #pragma once
 
 #include "Vector.hpp"
-#include "String.hpp"
-#include "Queue.hpp"
-#include <atomic>
-#include <thread>
+/*
+Athor: Loke Strøm
+*/
+#pragma once
 
+#include "Vector.hpp"
+#include "String.hpp"
 namespace Database
 {
     template<typename T>
@@ -17,11 +19,6 @@ namespace Database
     private:
         const char splitByte = char(178);
         std::ofstream* file;
-        Queue<char>* buffer;
-        std::thread* tWrite;
-        std::atomic<bool> joined;
-
-        void write();
 
     public:
         WriteFile();
