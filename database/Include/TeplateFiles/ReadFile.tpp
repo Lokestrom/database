@@ -41,6 +41,25 @@ namespace Database
 	}
 
 	template<typename T>
+	void ReadFile<T>::open(String fileName) {
+		if (file->is_open())
+			throw SystemError("A file is alredy open");
+		this(fileName);
+	}
+
+	template<typename T>
+	void ReadFile<T>::close() {
+		if (file->is_open())
+			file->close();
+		file->close();
+	}
+
+	template<typename T>
+	bool ReadFile<T>::isOpen() {
+		return file->is_open();
+	}
+
+	template<typename T>
 	void ReadFile<T>::getAllDataFromColumn(Vector<T>& data, String columnName) noexcept {
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
@@ -84,19 +103,22 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getRow(Vector<T>& data, unsigned int row) noexcept {
+	void ReadFile<T>::getRow(Vector<T>& data, unsigned int row) {
 		file->seekg(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
+
 		data.clear();
 		data.reserve(ColumnNames.size());
 		T x;
 		for (auto i = 0; i < ColumnNames.size(); i++) {
+			if (file->eof())
+				throw OutOfRange("Row does not exist in file");
 			file->read(reinterpret_cast<char*>(&x), sizeof(T));
 			data.pushBack(x);
 		}
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAllData(Vector<Vector<T>>& data) noexcept {
+	void ReadFile<T>::getAll(Vector<Vector<T>>& data) noexcept {
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
 		T x;

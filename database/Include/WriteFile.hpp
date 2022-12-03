@@ -4,12 +4,6 @@ Athor: Loke Strøm
 #pragma once
 
 #include "Vector.hpp"
-/*
-Athor: Loke Strøm
-*/
-#pragma once
-
-#include "Vector.hpp"
 #include "String.hpp"
 namespace Database
 {
@@ -35,4 +29,4 @@ namespace Database
     };
 }
 
-#include "WriteFile.tpp"
+#include "TeplateFiles/WriteFile.tpp"

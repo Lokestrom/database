@@ -1,7 +1,7 @@
 /.vs
-/x64
+/bin/database.pdb
+/bin/intermediats
 /database.sln
-/database/x64/Debug
 /database/database.vcxproj
 /database/database.vcxproj.filters
 /database/database.vcxproj.user

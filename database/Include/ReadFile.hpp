@@ -23,11 +23,15 @@ namespace Database
         ReadFile(String fileName);
         ~ReadFile();
 
+        void open(String fileName);
+        void close();
+        bool isOpen();
+
         void getAllDataFromColumn(Vector<T>& data, String columnName) noexcept;
         void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, String columnName, T value) noexcept;
-        void getRow(Vector<T>& data, unsigned int row) noexcept;
-        void getAllData(Vector<Vector<T>>& data) noexcept;
+        void getRow(Vector<T>& data, unsigned int row);
+        void getAll(Vector<Vector<T>>& data) noexcept;
     };
 }
 
-#include "ReadFile.tpp"
+#include "TeplateFiles/ReadFile.tpp"
