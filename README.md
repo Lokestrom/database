@@ -7,4 +7,5 @@ A library for some data structures and storing data.<br>
 * Queue
 * WriteFile
 * ReadFile
+* EditFile
 #### [Documentation for Database](https://github.com/Lokestrom/documentationForCPP)
