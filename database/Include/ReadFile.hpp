@@ -31,7 +31,9 @@ namespace Database
         void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, String columnName, T value) noexcept;
         void getRow(Vector<T>& data, unsigned int row);
         void getAll(Vector<Vector<T>>& data) noexcept;
+
+        Vector<String> getColumnNames() noexcept;
     };
 }
 
-#include "TeplateFiles/ReadFile.tpp"
+#include "TemplateFiles/ReadFile.tpp"

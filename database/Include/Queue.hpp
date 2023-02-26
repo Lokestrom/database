@@ -25,4 +25,4 @@ namespace Database {
 	};
 }
 
-#include "TeplateFiles/Queue.tpp"
+#include "TemplateFiles/Queue.tpp"

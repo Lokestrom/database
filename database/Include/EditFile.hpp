@@ -1,24 +1,35 @@
 /*
 Athor: Loke Strøm
-Created: 13 apr 2022
 */
-
 #pragma once
 
-#include "ReadFile.hpp"
+#include "Vector.hpp"
+#include "String.hpp"
 
 namespace Database
 {
+    template<typename T>
     class EditFile
     {
     private:
-        std::string filename;
-        bool firstLine;
+        String _fileName;
+        Vector<String> columnNames;
+        size_t dataStart;
+        const char splitByte = char(178);
+
 
     public:
-        std::unordered_map<std::string, std::vector<std::string>> data;
+        EditFile();
+        EditFile(String fileName);
 
-        EditFile(std::string filename);
-        ~EditFile();
+        void open(String fileName);
+        void close();
+
+        void EditCell(T data, String column, size_t row);
+        void EditRow(Vector<T> data, size_t row);
+
+        Vector<size_t> SearchInColumn(T data, String column);
     };
 }
+
+#include "TemplateFiles/EditFile.tpp"

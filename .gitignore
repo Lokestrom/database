@@ -1,7 +1,10 @@
+#vs files
 /.vs
-/bin/database.pdb
-/bin/intermediats
 /database.sln
 /database/database.vcxproj
 /database/database.vcxproj.filters
 /database/database.vcxproj.user
+
+#others
+/bin/database.pdb
+/bin/intermediats

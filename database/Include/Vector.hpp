@@ -9,11 +9,8 @@ namespace Database{
     private:
         T* arr = nullptr;
         size_t currentSize = 0, currentCapacity = 0;
-        size_t capIncrease[2] = { 1, 2 };
 
     public:
-
-        constexpr void changeCapIncrease(const char x, const size_t y);
 
         constexpr Vector();
         constexpr Vector(const Vector<T>& vector);
@@ -26,12 +23,12 @@ namespace Database{
 
         constexpr T& operator[] (const size_t index) noexcept;
         constexpr T& operator[] (const size_t index) const noexcept;
-        constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex);
+        constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex) const;
 
         constexpr Vector<T>& operator= (const Vector<T>& vector) noexcept;
         constexpr Vector<T>& operator= (const std::initializer_list<T> initializerList) noexcept;
         //constexpr Vector<T>& operator= (const T arr[]);
-
+                         
         constexpr Vector<T>& operator+= (const Vector<T>& vector) noexcept;
 
         constexpr T& at(const size_t index) const;
@@ -63,13 +60,11 @@ namespace Database{
 
         constexpr Vector<T>& mergeSort() noexcept;
         constexpr Vector<T>& bubbleSort() noexcept;
-        constexpr Vector<T>& mergeSort() const noexcept;
-        constexpr Vector<T>& bubbleSort() const noexcept;
 
-        constexpr long long binarySerch(const T target) noexcept;
+        constexpr long long binarySearch(const T target) noexcept;
         constexpr long long linearSearch(const T target) noexcept;
         constexpr long long linearSearchR(const T target) noexcept;
-        constexpr long long binarySerch(const T target) const noexcept;
+        constexpr long long binarySearch(const T target) const noexcept;
         constexpr long long linearSearch(const T target) const noexcept;
         constexpr long long linearSearchR(const T target) const noexcept;
     };
@@ -80,5 +75,5 @@ namespace Database{
     bool operator!= (const Vector<T>& lhs, const Vector<T>& rhs) noexcept;
 }
 
-#include "TeplateFiles/Vector.tpp"
+#include "TemplateFiles/Vector.tpp"
 

@@ -1,5 +1,5 @@
 /*
-Athor: Loke Strøm
+Athor: Loke Strï¿½m
 */
 #include "string.hpp"
 
@@ -14,71 +14,16 @@ namespace Database {
     String::String(const String& s) noexcept {
         *this = s;
     }
-
     constexpr String::String(const char* s) noexcept {
         *this = s;
     }
-
     String::String(Vector<char> v) noexcept {
         stringVec = v;
     }
-
     String::String(const std::string& s) noexcept {
         *this = s;
     }
 
-    constexpr char& String::operator[](const size_t index) noexcept {
-        return stringVec[index];
-    }
-
-    constexpr char& String::operator[](const size_t index) const noexcept {
-        return stringVec[index];
-    }
-
-    String String::operator()(const size_t startIndex, const size_t endIndex){
-        if (startIndex >= stringVec.size())
-            throw OutOfRange("startIndex out of range");
-        if (endIndex > stringVec.size())
-            throw OutOfRange("endIndex out of range");
-        if (startIndex > endIndex)
-            throw OutOfRange("startIndex can't be greater than endIndex");
-        return String(stringVec(startIndex, endIndex));
-    }
-
-    //operator+=
-    String& String::operator+=(const String s) noexcept {
-        stringVec.insert(stringVec.size(), s.stringVec);
-        return *this;
-    }
-    constexpr String& String::operator+=(const char* s) noexcept {
-        for (const char* ptr = s; *ptr != '\0'; ptr++)
-            stringVec.pushBack(*ptr);
-        return *this;
-    }
-
-    //operator+
-    const String operator+(const String& l, const String& r) noexcept {
-        String s(l);
-        s += r;
-        return s;
-    }
-    const String operator+(const String& l, const char* r) noexcept {
-        String s(l);
-        s += r;
-        return s;
-    }
-    const String operator+(const String& l, const char r) noexcept {
-        String s(l);
-        s.pushBack(r);
-        return s;
-    }
-    const String operator+(const char* l, const String& r) noexcept {
-        String s(l);
-        s += r;
-        return s;
-    }
-
-    //operator=
     String& String::operator=(const String& s) noexcept {
         stringVec = s.stringVec;
         return *this;
@@ -105,13 +50,225 @@ namespace Database {
         stringVec = iList;
         return *this;
     }
+
+
+    constexpr char& String::operator[](const size_t index) noexcept {
+        return stringVec[index];
+    }
+    constexpr char& String::operator[](const size_t index) const noexcept {
+        return stringVec[index];
+    }
+
+    String String::operator()(const size_t startIndex, const size_t endIndex) const {
+        if (startIndex >= stringVec.size())
+            throw OutOfRange("startIndex out of range");
+        if (endIndex > stringVec.size())
+            throw OutOfRange("endIndex out of range");
+        if (startIndex > endIndex)
+            throw OutOfRange("startIndex can't be greater than endIndex");
+        return String(stringVec(startIndex, endIndex));
+    }
+
+    constexpr char& String::at(const size_t index) {
+        if (index >= stringVec.size())
+            throw OutOfRange("index out of range");
+        return stringVec[index];
+    }
+    constexpr char& String::at(const size_t index) const {
+        if (index >= stringVec.size())
+            throw OutOfRange("index out of range");
+        return stringVec[index];
+    }
+
+    const char* String::cstr() noexcept {
+        stringVec.pushBack('\0');
+        return stringVec.data();
+    }
+    const char* String::cstr() const noexcept {
+        Vector<char> temp = stringVec;
+        temp.pushBack('\0');
+        return temp.data();
+    }
+
+    Vector<char>& String::vectorData() noexcept {
+        return stringVec;
+    }
+    Vector<char> String::vectorData() const noexcept {
+        return stringVec;
+    }
+
+    char* String::begin() noexcept {
+        return stringVec.begin();
+    }
+    char* String::begin() const noexcept {
+        return stringVec.begin();
+    }
+
+    char* String::end() noexcept {
+        return stringVec.end();
+    }
+    char* String::end() const noexcept {
+        return stringVec.end();
+    }
+
+    const bool String::empty() noexcept {
+        return stringVec.empty();
+    }
+
+    size_t String::capacity() noexcept {
+        return stringVec.capacity();
+    }
+
+    const size_t String::length() const noexcept {
+        return stringVec.size();
+    }
+
+    constexpr void String::reserve(const size_t newCapacity) noexcept {
+        stringVec.reserve(newCapacity);
+    }
+    constexpr void String::shrinkToFit() noexcept {
+        stringVec.shrinkToFit();
+    }
+
+    String& String::operator+=(const String s) noexcept {
+        stringVec.insert(stringVec.size(), s.stringVec);
+        return *this;
+    }
+
+    constexpr String& String::operator+=(const char* s) noexcept {
+        for (const char* ptr = s; *ptr != '\0'; ptr++)
+            stringVec.pushBack(*ptr);
+        return *this;
+    }
+
+    constexpr void String::pushBack(const char val) noexcept {
+        stringVec.pushBack(val);
+    }
+
+    void String::insert(const size_t index, const String s) {
+        stringVec.insert(index, s.stringVec);
+    }
+    void String::insert(size_t index, const char* s) {
+        if (index > stringVec.size())
+            throw OutOfRange("index out of range");
+        for (const char* ptr = s; *ptr != '\0'; ptr++)
+            stringVec.insert(index++, *ptr);
+    }
+    constexpr void String::insert(const size_t index, const Vector<char>& vector) {
+        stringVec.insert(index, vector);
+    }
+    constexpr void String::insert(const size_t index, const std::initializer_list<char> initializerList) {
+        stringVec.insert(index, initializerList);
+    }
+
+    void String::popBack() {
+        stringVec.popBack();
+    }
+
+    void String::pop(const size_t index) {
+        stringVec.pop(index);
+    }
+    void String::pop(const size_t startIndex, const size_t endIndex) {
+        stringVec.pop(startIndex, endIndex);
+    }
+
+    const void String::clear() noexcept {
+        stringVec.clear();
+    }
+
+    const bool String::contains(const String target) noexcept {
+        bool isSubS = false;
+        for (auto i = 0; i < (*this).length(); i++) {
+            if ((*this)[i] == target[0]) {
+                isSubS = true;
+                for (auto j = 0; j < target.length(); j++)
+                    if ((*this)[j + i] != target[j])
+                        isSubS = false;
+            }
+            if (isSubS)
+                return true;
+        }
+        return false;
+    }
+
+    const void String::lower() noexcept {
+        for (char& i : *this)
+            if (i <= 'Z' && i >= 'A')
+                i += 32;
+    }
+
+    const void String::upper() noexcept {
+        for (char& i : *this)
+            if (i <= 'z' && i >= 'a')
+                i -= 32;
+    }
+
+    long long String::binarySearch(const char target) noexcept {
+        return stringVec.binarySearch(target);
+    }
+
+    long long String::linearSearch(const char target) noexcept {
+        return stringVec.linearSearch(target);
+    }
+    constexpr long long String::linearSearchR(const char target) noexcept {
+        return stringVec.linearSearchR(target);
+    }
+
+    constexpr void String::mergeSort() noexcept {
+        stringVec.mergeSort();
+    }
+
+    constexpr void String::bubbleSort() noexcept {
+        stringVec.bubbleSort();
+    }
+
+    const Vector<String> String::split(const char splitElement) const noexcept {
+        Vector<String> splitStrings;
+        String currentString;
+        for (const char& c : stringVec) {
+            if (c == splitElement) {
+                splitStrings.pushBack(currentString);
+                currentString.clear();
+            }
+            else {
+                currentString.pushBack(c);
+            }
+        }
+        splitStrings.pushBack(currentString);
+        return splitStrings;
+    }
+}
+
+namespace Database {
+
+    //operator+
+    const String operator+(const String& l, const String& r) noexcept {
+        String s(l);
+        s += r;
+        return s;
+    }
+    const String operator+(const String& l, const char* r) noexcept {
+        String s(l);
+        s += r;
+        return s;
+    }
+    const String operator+(const String& l, const char r) noexcept {
+        String s(l);
+        s.pushBack(r);
+        return s;
+    }
+    const String operator+(const char* l, const String& r) noexcept {
+        String s(l);
+        s += r;
+        return s;
+    }
     
     //
     const bool operator==(const String& lsh, const String& rsh) noexcept {
         return lsh.stringVec == rsh.stringVec;
     }
     const bool operator!=(const String& lsh, const String& rsh) noexcept {
-        return lsh.stringVec == rsh.stringVec;
+        return lsh.stringVec != rsh.stringVec;
     }
 
     //
@@ -142,177 +299,12 @@ namespace Database {
         return input;
     }
 
-    //at
-    constexpr char& String::at(const size_t index) {
-        if (index >= stringVec.size())
-            throw OutOfRange("Index out of range");
-        return stringVec[index];
-    }
-    constexpr char& String::at(const size_t index) const {
-        if (index >= stringVec.size())
-            throw OutOfRange("Index out of range");
-        return stringVec[index];
-    }
-
-    //shrinkToFit
-    constexpr void String::shrinkToFit() noexcept {
-        stringVec.shrinkToFit();
-    }
-
-    //reserve
-    constexpr void String::reserve(const size_t newCapacity) noexcept {
-        stringVec.reserve(newCapacity);
-    }
-
-    //vectorData
-    Vector<char>& String::vectorData() noexcept {
-        return stringVec;
-    }
-    Vector<char> String::vectorData() const noexcept {
-        return stringVec;
-    }
-
-    //data
-    const char* String::cstr() noexcept {
-        return stringVec.data();
-    }
-    const char* String::cstr() const noexcept {
-        return stringVec.data();
-    }
-
-    //length
-    const size_t String::length() const noexcept {
-        return stringVec.size();
-    }
-
-    //clear
-    const void String::clear() noexcept {
-        stringVec.clear();
-    }
-
-    const bool String::empty() noexcept {
-        if (stringVec.size() == 0)
-            return true;
-        return false;
-    }
-
-    //begin
-    char* String::begin() noexcept {
-        return stringVec.begin();
-    }
-    char* String::begin() const noexcept {
-        return stringVec.begin();
-    }
-
-    //end
-    char* String::end() const noexcept {
-        return  stringVec.end();
-    }
-    char* String::end() noexcept {
-        return stringVec.end();
-    }
-
-    //pushBack
-    constexpr void String::pushBack(const char val) noexcept {
-        stringVec.pushBack(val);
-    }
-
-    //popBack
-    constexpr void String::popBack() {
-        if (stringVec.size() == 0)
-            throw LengthError("popBack on empty String");
-        stringVec.popBack();
-    }
-
-    //insert
-    void String::insert(const size_t index, const String s) {
-        if (index > stringVec.size())
-            throw OutOfRange("Index out of range");
-        stringVec.insert(index, s.stringVec);
-    }
-    void String::insert(const size_t index, const char* s) {
-        insert(index, String(s));
-    }
-    constexpr void String::insert(const size_t index, const Vector<char>& vector) {
-        stringVec.insert(index, vector);
-    }
-    constexpr void String::insert(const size_t index, const std::initializer_list<char> initializerList) {
-        stringVec.insert(index, initializerList);
-    }
-
-    //pop
-    constexpr void String::pop(const size_t index) {
-        stringVec.pop(index);
-    }
-    constexpr void String::pop(const size_t startIndex, const size_t endIndex) {
-        stringVec.pop(startIndex, endIndex);
-    }
-
-    //search
-    const bool String::contains(const String target) noexcept {
-        bool isSubS = false;
-        for (auto i = 0; i < (*this).length(); i++) {
-            if ((*this)[i] == target[0]) {
-                isSubS = true;
-                for (auto j = 0; j < target.length(); j++)
-                    if ((*this)[j + i] != target[j])
-                        isSubS = false;
-            }
-            if (isSubS)
-                return true;
-        }
-        return false;
-    }
-
-    constexpr long long String::binarySerch(const char target) const noexcept {
-        return stringVec.binarySerch(target);
-    }
-    constexpr long long String::linearSearch(const char target) const noexcept {
-        return stringVec.linearSearch(target);
-    }
-
-    constexpr long long String::linearSearchR(const char target) const noexcept {
-        return stringVec.linearSearchR(target);
-    }
-
-    //sort
-    constexpr void String::mergeSort() noexcept {
-        stringVec.mergeSort();
-    }
-    constexpr void String::bubbleSort() noexcept {
-        stringVec.bubbleSort();
-    }
-
-    //lower
-    const void String::lower() noexcept {
-        for (char& i : *this)
-            if (i <= 'Z' && i >= 'A')
-                i += 32;
-    }
-
-    //upper
-    const void String::upper() noexcept {
-        for (char& i : *this)
-            if (i <= 'z' && i >= 'a')
-                i -= 32;
-    }
-
-    const Vector<String> String::split(const char splitElement) const noexcept {
-        Vector<String> v;
-        String s = "";
-
-        for (const char& c : *this) {
-            if (splitElement == c) {
-                v.pushBack(s);
-                s = "";
-            }
-            else {
-                s.pushBack(c);
-            }
-        }
-        if(!s.empty())
-            v.pushBack(s);
-        return v;
+    std::string toSTD(String s) {
+        std::string r;
+        r.reserve(s.length());
+        for (const char& c : s)
+            r.push_back(c);
+        return r;
     }
 
     //tos
@@ -371,14 +363,6 @@ namespace Database {
         ss << x;
         ss >> s;
         return s;
-    }
-
-    std::string toSTD(String s) {
-        std::string r;
-        r.reserve(s.length());
-        for (const char& c : s)
-            r.push_back(c);
-        return r;
     }
 
     //to number
@@ -462,12 +446,12 @@ namespace Database {
         return true;
     }
 
-    bool getline(std::ifstream *file, String& string)
+    bool getline(std::ifstream& file, String& string)
     {
-        if (file->eof())
+        if (file.eof())
             return false;
         std::string text;
-        std::getline(*file, text);
+        std::getline(file, text);
         string = text;
         return true;
     }

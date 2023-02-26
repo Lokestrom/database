@@ -7,18 +7,6 @@ Athor: Loke Strøm
 namespace Database {
 
     template <typename T>
-    constexpr void Vector<T>::changeCapIncrease(const char how, const size_t val){
-        if(how == '+')
-            capIncrease[0] = 0;
-        else if(how == '*')
-            capIncrease[0] = 1;
-        else
-            throw InvalidArgument("Not a valid how. Only \"+\" or \"*\" is accepted");
-        
-        capIncrease[1] = val;
-    }
-
-    template <typename T>
     constexpr Vector<T>::Vector()
     {
         if(arr != nullptr)
@@ -86,7 +74,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) {
+    constexpr Vector<T> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) const {
         if (startIndex >= currentSize)
             throw OutOfRange("startIndex out of range");
         if (endIndex > currentSize)
@@ -267,17 +255,13 @@ namespace Database {
     constexpr void Vector<T>::pushBack(const T val) noexcept
     {
         if (currentSize == currentCapacity) {
-            T* temp = (capIncrease[0] == 0) 
-                ? new T[currentCapacity + capIncrease[1]]
-                : new T[currentCapacity * capIncrease[1]];
+            T* temp = new T[currentCapacity * 2];
 
             for (auto i = 0; i < currentCapacity; i++) {
                 temp[i] = arr[i];
             }
 
-            currentCapacity = (capIncrease[0] == 0)
-                ? currentCapacity + capIncrease[1]
-                : currentCapacity * capIncrease[1];
+            currentCapacity *= 2;
 
             if(arr != nullptr)
                 delete[] arr;
@@ -426,7 +410,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::binarySerch(const T target) noexcept {
+    constexpr long long Vector<T>::binarySearch(const T target) noexcept {
         long long low = 0;
         long long high = currentSize - 1;
         long long mid;
@@ -463,12 +447,17 @@ namespace Database {
 
 
     template<typename T>
-    constexpr long long Vector<T>::binarySerch(const T target) const noexcept {
-        return binarySerch(target);
+    constexpr long long Vector<T>::binarySearch(const T target) const noexcept {
+        return binarySearch(target);
     }
 
     template<typename T>
     constexpr long long Vector<T>::linearSearch(const T target) const  noexcept {
         return linearSearch(target);
+    }
+
+    template<typename T>
+    constexpr long long Vector<T>::linearSearchR(const T target) const  noexcept {
+        return linearSearchR(target);
     }
 }

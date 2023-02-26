@@ -107,11 +107,12 @@ namespace Database
 		file->seekg(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
 
 		data.clear();
-		data.reserve(ColumnNames.size());
+		if(data.size() < ColumnNames.size())
+			data.reserve(ColumnNames.size());
 		T x;
 		for (auto i = 0; i < ColumnNames.size(); i++) {
 			if (file->eof())
-				throw OutOfRange("Row does not exist in file");
+				throw InvalidArgument("Row does not exist in file");
 			file->read(reinterpret_cast<char*>(&x), sizeof(T));
 			data.pushBack(x);
 		}
@@ -127,5 +128,10 @@ namespace Database
 			for (auto j = 0; j < ColumnNames.size() && file->read(reinterpret_cast<char*>(&x), sizeof(T)); j++)
 				data[i].pushBack(x);
 		}
+	}
+
+	template<typename T>
+	Vector<String> ReadFile<T>::getColumnNames() noexcept {
+		return ColumnNames;
 	}
 }

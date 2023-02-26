@@ -29,4 +29,4 @@ namespace Database
     };
 }
 
-#include "TeplateFiles/WriteFile.tpp"
+#include "TemplateFiles/WriteFile.tpp"
