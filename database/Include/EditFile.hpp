@@ -27,8 +27,18 @@ namespace Database
 
         void EditCell(T data, String column, size_t row);
         void EditRow(Vector<T> data, size_t row);
+        void EditColumn(Vector<T> data, String name);
 
-        Vector<size_t> SearchInColumn(T data, String column);
+        void insertRow(Vector<T> data, size_t row);
+        void insertColumn(Vector<T> data, String name);
+
+        void popRow(size_t row);
+        void popColumn(String name);
+
+        Vector<size_t> SearchInColumn(T target, String column);
+        Vector<Vector<size_t>> Search(T target);
+        size_t getRowAmount();
+
     };
 }
 

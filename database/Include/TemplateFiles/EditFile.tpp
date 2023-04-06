@@ -64,7 +64,39 @@ namespace Database {
     void EditFile<T>::EditRow(Vector<T> data, size_t row) {
         std::ofstream* file = new std::ofstream(toSTD(_fileName));
         if (data.size() > ColumnNames.size())
-            throw InvalidArgument("Column does not exist in file");
+            throw InvalidArgument("Data too big");
+        file->seekp(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
+
+        for (const& i : data) {
+            if (file->eof())
+                throw InvalidArgument("Row does not exist in file");
+            file->write(reinterpret_cast<const char*>(&i), sizeof(T));
+        }
+
+        delete file;
+    }
+
+    template<typename T>
+    void EditFile<T>::insertRow(Vector<T> data, size_t row) {
+        std::ofstream* file = new std::ofstream(toSTD(_fileName), std::ios::app);
+        if (data.size() != ColumnNames.size())
+            throw InvalidArgument("data.size() != ColumnNames.size()");
+        file->seekp(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
+
+        for (const& i : data) {
+            if (file->eof())
+                throw InvalidArgument("Row does not exist in file");
+            file->write(reinterpret_cast<const char*>(&i), sizeof(T));
+        }
+
+        delete file;
+    }
+
+    template<typename T>
+    void EditFile<T>::insertColumn(Vector<T> data, String name) {
+        std::ofstream* file = new std::ofstream(toSTD(_fileName), std::ios::app);
+        if (data.size() != ColumnNames.size())
+            throw InvalidArgument("data.size() != ColumnNames.size()");
         file->seekp(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
 
         for (const& i : data) {
@@ -83,14 +115,50 @@ namespace Database {
         file->seekg(dataStart + (columnNames.linearSearch(column) * sizeof(T)), std::ios::beg);
 
         T x;
-        for (auto i = 0;; i++) {    
-            
+        for (auto i = 0; !file->eof(); i++) { 
             file->read(reinterpret_cast<char*>(&x), sizeof(T));
             if (x = data)
                 rows.pushBack(i);
-            if (file->eof())
-                throw InvalidArgument("Row does not exist in file");
             file->seekg(columnNames.size() * sizeof(T), std::ios::cur);
         }
+        delete file;
+        return rows;
+    }
+
+    template<typename T>
+    Vector<Vector<size_t>> EditFile<T>::Search(T target) {
+        std::ifstream* file = new std::ifstream(toSTD(_fileName));
+        Vector<Vector<size_t>> cells;
+
+        file->seekg(dataStart, std::ios::beg);
+
+        T x;
+        for (auto i = 0;; i++) {
+
+            file->read(reinterpret_cast<char*>(&x), sizeof(T));
+            if (x = data)
+                rows.pushBack({ i%columnNames.size(), int(i/columnNames.size()) });
+            if (file->eof())
+                break;
+        }
+
+        delete file;
+        return cells;
+    }
+
+    template<typename T>
+    size_t EditFile<T>::getRowAmount() {
+        std::ifstream* file = new std::ifstream(toSTD(_fileName));
+        file->seekg(dataStart, std::ios::beg);
+
+        auto i = 0;
+        T x;
+        while (!file->eof()) {
+            file->read(reinterpret_cast<char*>(&x), columnNames.size() * sizeof(T));
+            i++;
+        }
+
+        delete file;
+        return i;
     }
 }

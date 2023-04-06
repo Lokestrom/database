@@ -16,11 +16,11 @@ namespace Database
 
     public:
         WriteFile();
-        WriteFile(String file);
+        WriteFile(String filename);
 
         ~WriteFile();
 
-        void open(String file);
+        void open(String filename);
         void close();
 
         void addcolumns(Vector<String> columnNames);
