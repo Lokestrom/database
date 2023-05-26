@@ -14,7 +14,7 @@ namespace Database {
         constexpr String() noexcept;
         String(const String& s) noexcept;
         constexpr String(const char* s) noexcept;
-        String(Vector<char> v) noexcept;
+        String(const Vector<char>& v) noexcept;
         String(const std::string& s) noexcept;
 
         String& operator=(const String& s) noexcept;
@@ -65,10 +65,10 @@ namespace Database {
 
         constexpr void pushBack(const char val) noexcept;
 
-        void insert(const size_t index, const String s);
+        void insert(const size_t index, const String& s);
         void insert(size_t index, const char* s);
         constexpr void insert(const size_t index, const Vector<char>& vector);
-        constexpr void insert(const size_t index, const std::initializer_list<char> initializerList);
+        constexpr void insert(const size_t index, const std::initializer_list<char>& initializerList);
 
         void popBack();
 
@@ -81,7 +81,7 @@ namespace Database {
         const void upper() noexcept;
 
         //search
-        const bool contains(const String target) noexcept;
+        const bool contains(const String& target) noexcept;
         long long binarySearch(const char target) noexcept;
         long long linearSearch(const char target) noexcept;
         constexpr long long linearSearchR(const char target) noexcept;
@@ -92,6 +92,7 @@ namespace Database {
 
 
         const Vector<String> split(const char splitElement) const noexcept;
+        const String remove(const char element) const noexcept;
 
         //non member fungtions
         const friend bool operator==(const String& lhs, const String& rhs) noexcept;
@@ -130,8 +131,8 @@ namespace Database {
     double STod(String s);
     long double STold(String s);
 
-    long long substringIndex(const String s, const String subS);
-    bool canStringConvertToNumber(String x);
+    long long substringIndex(const String& s, const String& subS);
+    bool canStringConvertToNumber(const String& x);
     bool getline(std::ifstream& file, String& string);
 }
 

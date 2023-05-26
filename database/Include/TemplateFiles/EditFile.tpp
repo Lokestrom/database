@@ -11,7 +11,7 @@ namespace Database {
     EditFile<T>::EditFile() {}
 
     template<typename T>
-    EditFile<T>::EditFile(String fileName) {
+    EditFile<T>::EditFile(const String& fileName) {
         _fileName = fileName;
         std::ifstream* file = new std::ifstream(toSTD(fileName));
         unsigned int columnNummber = 0;
@@ -34,7 +34,7 @@ namespace Database {
     }
 
     template<typename T>
-    void EditFile<T>::open(String fileName) {
+    void EditFile<T>::open(const String& fileName) {
         if (_fileName != NULL))
             throw SystemError("A file is alredy open");
         this(fileName);
@@ -47,7 +47,7 @@ namespace Database {
 
 
     template<typename T>
-    void EditFile<T>::EditCell(T data, String column, size_t row) {
+    void EditFile<T>::EditCell(const T& data, const String& column, size_t row) {
         std::ofstream* file = new std::ofstream(toSTD(_fileName));
         if (columnNames.linearSearch(column) == -1)
             throw InvalidArgument("Column does not exist in file");
@@ -61,7 +61,7 @@ namespace Database {
         delete file;
     }
     template<typename T>
-    void EditFile<T>::EditRow(Vector<T> data, size_t row) {
+    void EditFile<T>::EditRow(const Vector<T>& data, size_t row) {
         std::ofstream* file = new std::ofstream(toSTD(_fileName));
         if (data.size() > ColumnNames.size())
             throw InvalidArgument("Data too big");
@@ -77,7 +77,7 @@ namespace Database {
     }
 
     template<typename T>
-    void EditFile<T>::insertRow(Vector<T> data, size_t row) {
+    void EditFile<T>::insertRow(const Vector<T>& data, size_t row) {
         std::ofstream* file = new std::ofstream(toSTD(_fileName), std::ios::app);
         if (data.size() != ColumnNames.size())
             throw InvalidArgument("data.size() != ColumnNames.size()");
@@ -93,7 +93,7 @@ namespace Database {
     }
 
     template<typename T>
-    void EditFile<T>::insertColumn(Vector<T> data, String name) {
+    void EditFile<T>::insertColumn(const Vector<T>& data, const String& name) {
         std::ofstream* file = new std::ofstream(toSTD(_fileName), std::ios::app);
         if (data.size() != ColumnNames.size())
             throw InvalidArgument("data.size() != ColumnNames.size()");
@@ -109,7 +109,7 @@ namespace Database {
     }
 
     template<typename T>
-    Vector<size_t> EditFile<T>::SearchInColumn(T data, String column) {
+    Vector<size_t> EditFile<T>::SearchInColumn(const T& data, const String& column) {
         std::ifstream* file = new std::ifstream(toSTD(_fileName));
         Vector<size_t> rows;
         file->seekg(dataStart + (columnNames.linearSearch(column) * sizeof(T)), std::ios::beg);
@@ -126,7 +126,7 @@ namespace Database {
     }
 
     template<typename T>
-    Vector<Vector<size_t>> EditFile<T>::Search(T target) {
+    Vector<Vector<size_t>> EditFile<T>::Search(const T& target) {
         std::ifstream* file = new std::ifstream(toSTD(_fileName));
         Vector<Vector<size_t>> cells;
 

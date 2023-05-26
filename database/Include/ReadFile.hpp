@@ -20,17 +20,17 @@ namespace Database
 
     public:
         ReadFile();
-        ReadFile(String fileName);
+        ReadFile(const String& fileName);
         ~ReadFile();
 
-        void open(String fileName);
+        void open(const String& fileName);
         void close();
         bool isOpen();
 
-        void getAllDataFromColumn(Vector<T>& data, String columnName) noexcept;
-        void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, String columnName, T value) noexcept;
-        void getRow(Vector<T>& data, unsigned int row);
-        void getAll(Vector<Vector<T>>& data) noexcept;
+        void getAllDataFromColumn(const Vector<T>& data, const String& columnName) noexcept;
+        void getAllRowsWhereColumnIsEqualeToAValue(const Vector<Vector<T>>& data, const String& columnName, T value) noexcept;
+        void getRow(const Vector<T>& data, unsigned int row);
+        void getAll(const Vector<Vector<T>>& data) noexcept;
 
         Vector<String> getColumnNames() noexcept;
     };

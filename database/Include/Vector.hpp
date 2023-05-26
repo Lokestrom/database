@@ -51,7 +51,7 @@ namespace Database{
         constexpr void popBack();
 
         constexpr void insert(const size_t index, const T val);
-        constexpr void insert(const size_t index, const Vector<T> vector);
+        constexpr void insert(const size_t index, const Vector<T>& vector);
         constexpr void insert(const size_t index, const std::initializer_list<T> initializerList);
         //constexpr void insert(const size_t index, const T arr[]);
 

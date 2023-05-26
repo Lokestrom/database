@@ -20,23 +20,23 @@ namespace Database
 
     public:
         EditFile();
-        EditFile(String fileName);
+        EditFile(const String& fileName);
 
-        void open(String fileName);
+        void open(const String& fileName);
         void close();
 
-        void EditCell(T data, String column, size_t row);
-        void EditRow(Vector<T> data, size_t row);
-        void EditColumn(Vector<T> data, String name);
+        void EditCell(const T& data, const String& column, size_t row);
+        void EditRow(const Vector<T>& data, size_t row);
+        void EditColumn(const Vector<T>& data, const String& name);
 
-        void insertRow(Vector<T> data, size_t row);
-        void insertColumn(Vector<T> data, String name);
+        void insertRow(const Vector<T>& data, size_t row);
+        void insertColumn(const Vector<T>& data, const String& name);
 
         void popRow(size_t row);
-        void popColumn(String name);
+        void popColumn(const String& name);
 
-        Vector<size_t> SearchInColumn(T target, String column);
-        Vector<Vector<size_t>> Search(T target);
+        Vector<size_t> SearchInColumn(const T& target, const String& column);
+        Vector<Vector<size_t>> Search(const T& target);
         size_t getRowAmount();
 
     };

@@ -297,7 +297,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, const Vector<T> vector) {
+    constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector) {
         if (index > currentSize)
             throw OutOfRange("Index out of range");
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)

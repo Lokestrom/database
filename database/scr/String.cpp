@@ -17,7 +17,7 @@ namespace Database {
     constexpr String::String(const char* s) noexcept {
         *this = s;
     }
-    String::String(Vector<char> v) noexcept {
+    String::String(const Vector<char>& v) noexcept {
         stringVec = v;
     }
     String::String(const std::string& s) noexcept {
@@ -145,7 +145,7 @@ namespace Database {
         stringVec.pushBack(val);
     }
 
-    void String::insert(const size_t index, const String s) {
+    void String::insert(const size_t index, const String& s) {
         stringVec.insert(index, s.stringVec);
     }
     void String::insert(size_t index, const char* s) {
@@ -157,7 +157,7 @@ namespace Database {
     constexpr void String::insert(const size_t index, const Vector<char>& vector) {
         stringVec.insert(index, vector);
     }
-    constexpr void String::insert(const size_t index, const std::initializer_list<char> initializerList) {
+    constexpr void String::insert(const size_t index, const std::initializer_list<char>& initializerList) {
         stringVec.insert(index, initializerList);
     }
 
@@ -176,7 +176,7 @@ namespace Database {
         stringVec.clear();
     }
 
-    const bool String::contains(const String target) noexcept {
+    const bool String::contains(const String& target) noexcept {
         bool isSubS = false;
         for (auto i = 0; i < (*this).length(); i++) {
             if ((*this)[i] == target[0]) {
@@ -236,6 +236,14 @@ namespace Database {
         }
         splitStrings.pushBack(currentString);
         return splitStrings;
+    }
+
+    const String String::remove(const char element) const noexcept {
+        String removedString;
+        for (const char& c : stringVec)
+            if (c != element)
+                removedString.pushBack(c);
+        return removedString;
     }
 }
 
@@ -424,7 +432,7 @@ namespace Database {
     }
 
     //subStringIndex
-    long long substringIndex(String s, String subS) {
+    long long substringIndex(const String& s, const String& subS) {
         long long isSubS = 0;
         for (auto i = 0; i < s.length(); i++) {
             if (s[i] == subS[0]) {
@@ -439,7 +447,7 @@ namespace Database {
         return -1;
     }
 
-    bool canStringConvertToNumber(const String s) {
+    bool canStringConvertToNumber(const String& s) {
         for (const char& i : s)
             if (i != '0' && i != '1' && i != '2' && i != '3' && i != '4' && i != '5' && i != '6' && i != '7' && i != '8' && i != '9' && i != '.' && i != '-')
                 return false;

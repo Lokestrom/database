@@ -4,7 +4,26 @@
 #include "WriteFile.hpp"
 
 namespace Database {
-    void AlgorythemsFile::mergeSortFileNum(std::string fileName, std::string columnName)
+    String csvTodbFile(String fileName) {
+        std::ifstream csvFile(toSTD(fileName));
+        WriteFile<double> dbFile(fileName.split('.')[0] + ".db");
+
+        String data;
+        getline(csvFile, data);
+        dbFile.addcolumns(data.split(','));
+
+        while (getline(csvFile, data)) {
+            Vector<double> ldData;
+            for (String i : data.split(','))
+                ldData.pushBack(STold(i));
+            dbFile.addData(ldData);
+        }
+        csvFile.close();
+        dbFile.close();
+        return fileName.split('.')[0] + ".db";
+    }
+
+    /*void AlgorythemsFile::mergeSortFileNum(std::string fileName, std::string columnName)
     {
         std::unordered_map<long double, int> x = {};
         std::vector<long double> columnData = {};
@@ -36,5 +55,5 @@ namespace Database {
         wFile.addColumnArray(columnNames);
         for (std::vector<std::string> i : sortedData)
             wFile.addDataVector(i);
-    }
+    }*/
 }

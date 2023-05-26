@@ -12,9 +12,9 @@ namespace Database
 	}
 
 	template<typename T>
-	ReadFile<T>::ReadFile(String fileName) {
+	ReadFile<T>::ReadFile(const String& fileName) {
 		ReadFile::fileName = fileName;
-		file = new std::ifstream(toSTD(fileName));
+		file = new std::ifstream(toSTD(fileName), std::ios::binary);
 		unsigned int columnNummber = 0;
 		file->read(reinterpret_cast<char*>(&columnNummber), sizeof(unsigned int));
 		dataStart = 4;
@@ -41,7 +41,7 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::open(String fileName) {
+	void ReadFile<T>::open(const String& fileName) {
 		if (file->is_open())
 			throw SystemError("A file is alredy open");
 		this(fileName);
@@ -60,7 +60,8 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAllDataFromColumn(Vector<T>& data, String columnName) noexcept {
+	void ReadFile<T>::getAllDataFromColumn(const Vector<T>& data, const String& columnName) noexcept {
+		file->clear();
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
 		T x;
@@ -74,36 +75,39 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, String columnName, T value) noexcept
+	void ReadFile<T>::getAllRowsWhereColumnIsEqualeToAValue(const Vector<Vector<T>>& data, const String& columnName, T value) noexcept
 	{
+		file->clear();
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
 		T x;
 		auto columnNumber = ColumnNames.linearSearch(columnName);
 		data.pushBack(Vector<T>(ColumnNames.size()));
 		for (auto i = 0; !file->eof();) {
-			for (auto j = 0; j < ColumnNames.size() && file->read(reinterpret_cast<char*>(&x), sizeof(T)); j++) {
+			for (auto j = 0; j < ColumnNames.size(); j++) {
+				file->read(reinterpret_cast<char*>(&x), sizeof(T));
 				data[i].pushBack(x);
 				if (j != columnNumber)
 					continue;
-				if (j == columnNumber && value != x) {
+				if (x != value) {
 					data[i].clear();
+					for (j++; j < ColumnNames.size(); j++)
+						file->read(reinterpret_cast<char*>(&x), sizeof(T));
 					break;
 				}
-				j++;
-				while (j < ColumnNames.size() && file->read(reinterpret_cast<char*>(&x), sizeof(T))) {
-					data[i].pushBack(x);
-					j++;
-				}
+			}
+			if (!data[i].empty()) {
 				data.pushBack(Vector<T>(ColumnNames.size()));
 				i++;
-				break;
 			}
+
 		}
+		data.popBack(); 
 	}
 
 	template<typename T>
-	void ReadFile<T>::getRow(Vector<T>& data, unsigned int row) {
+	void ReadFile<T>::getRow(const Vector<T>& data, unsigned int row) {
+		file->clear();
 		file->seekg(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
 
 		data.clear();
@@ -119,7 +123,8 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAll(Vector<Vector<T>>& data) noexcept {
+	void ReadFile<T>::getAll(const Vector<Vector<T>>& data) noexcept {
+		file->clear();
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
 		T x;

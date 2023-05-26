@@ -12,7 +12,7 @@ namespace Database {
 		file = new std::ofstream();
 	}
 	template<typename T>
-	WriteFile<T>::WriteFile(String filename) {
+	WriteFile<T>::WriteFile(const String& filename) {
 		file = new std::ofstream(toSTD(filename), std::ios::binary);
 	}
 
@@ -25,7 +25,7 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::open(String filename) {
+	void WriteFile<T>::open(const String& filename) {
 		if (file->is_open)
 			throw WriteFileError("File is alredy open");
 		file->open(filename, std::ios::binary);
@@ -39,7 +39,7 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::addcolumns(Vector<String> columnNames) {
+	void WriteFile<T>::addcolumns(const Vector<String>& columnNames) {
 		unsigned int s = columnNames.size();
 		file->write(reinterpret_cast<const char*>(&s), sizeof(unsigned int));
 		for (const String& i : columnNames) {
@@ -50,7 +50,7 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::addData(Vector<T> data) {
+	void WriteFile<T>::addData(const Vector<T>& data) {
 		for (T i : data) {
 			file->write(reinterpret_cast<const char*>(&i),sizeof(i));
 		}

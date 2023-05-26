@@ -16,16 +16,16 @@ namespace Database
 
     public:
         WriteFile();
-        WriteFile(String filename);
+        WriteFile(const String& filename);
 
         ~WriteFile();
 
-        void open(String filename);
+        void open(const String& filename);
         void close();
 
-        void addcolumns(Vector<String> columnNames);
+        void addcolumns(const Vector<String>& columnNames);
 
-        void addData(Vector<T> data);
+        void addData(const Vector<T>& data);
     };
 }
 

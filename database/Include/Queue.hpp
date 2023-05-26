@@ -22,6 +22,8 @@ namespace Database {
 		unsigned int size();
 		bool empty();
 		void clear();
+
+		
 	};
 }
 

@@ -1,12 +1,16 @@
 #pragma once
 
-#include "include.hpp"
+#include "String.hpp"
+
 namespace Database {
-    class AlgorythemsFile
+
+    String csvTodbFile(String fileName);
+
+    /*class AlgorythemsFile
     {
         public:
             void mergeSortFileNum(std::string fileName, std::string columnName);
     
-    }; 
+    };*/
 }
 
