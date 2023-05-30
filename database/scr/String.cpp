@@ -154,6 +154,9 @@ namespace Database {
         for (const char* ptr = s; *ptr != '\0'; ptr++)
             stringVec.insert(index++, *ptr);
     }
+    void String::insert(size_t index, const char c) {
+        stringVec.insert(index, { c });
+    }
     constexpr void String::insert(const size_t index, const Vector<char>& vector) {
         stringVec.insert(index, vector);
     }
@@ -293,8 +296,8 @@ namespace Database {
 
     //
     std::istream& operator>>(std::istream& input, String& s) noexcept { 
-        char* buff = new char[input.gcount()];
-        input.getline(buff, input.gcount());
+        char* buff = new char[1000];
+        input.getline(buff, 1000);
         s = buff;
         delete[] buff;
         return input;
@@ -307,7 +310,7 @@ namespace Database {
         return input;
     }
 
-    std::string toSTD(String s) {
+    std::string toSTD(const String& s) {
         std::string r;
         r.reserve(s.length());
         for (const char& c : s)
@@ -320,110 +323,110 @@ namespace Database {
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const long x) {
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const long long x){
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const unsigned x){
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const unsigned long x){
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const unsigned long long x){
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const double x) {
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
     String toS(const long double x) {
         std::stringstream ss;
         String s;
         ss << x;
-        ss >> s;
+        s = ss.str();
         return s;
     }
 
     //to number
-    int SToi(const String s) {
+    int SToi(const String& s) {
         std::stringstream ss;
         int x;
         ss << s;
         ss >> x;
         return x;
     }
-    long STol(const String s) {
+    long STol(const String& s) {
         std::stringstream ss;
         long x;
         ss << s;
         ss >> x;
         return x;
     }
-    long long SToll(const String s) {
+    long long SToll(const String& s) {
         std::stringstream ss;
         long long x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned STou(const String s) {
+    unsigned STou(const String& s) {
         std::stringstream ss;
         unsigned x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned long SToul(const String s) {
+    unsigned long SToul(const String& s) {
         std::stringstream ss;
         unsigned long x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned long long SToull(const String s){
+    unsigned long long SToull(const String& s){
         std::stringstream ss;
         unsigned long long x;
         ss << s;
         ss >> x;
         return x;
     }
-    double STod(const String s){
+    double STod(const String& s){
         std::stringstream ss;
         double x;
         ss << s;
         ss >> x;
         return x;
     }
-    long double STold(const String s){
+    long double STold(const String& s){
         std::stringstream ss;
         long double x;
         ss << s;

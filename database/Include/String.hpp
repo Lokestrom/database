@@ -67,6 +67,7 @@ namespace Database {
 
         void insert(const size_t index, const String& s);
         void insert(size_t index, const char* s);
+        void insert(size_t index, const char c);
         constexpr void insert(const size_t index, const Vector<char>& vector);
         constexpr void insert(const size_t index, const std::initializer_list<char>& initializerList);
 
@@ -111,7 +112,7 @@ namespace Database {
 
     //extra String fungtions
 
-    std::string toSTD(String s);
+    std::string toSTD(const String& s);
 
     String toS(int x);
     String toS(long x);
@@ -122,14 +123,14 @@ namespace Database {
     String toS(double x);
     String toS(long double x);
 
-    int SToi(String s);
-    long STol(String s);
-    long long SToll(String s);
-    unsigned STou(String s);
-    unsigned long SToul(String s);
-    unsigned long long SToull(String s);
-    double STod(String s);
-    long double STold(String s);
+    int SToi(const String& s);
+    long STol(const String& s);
+    long long SToll(const String& s);
+    unsigned STou(const String& s);
+    unsigned long SToul(const String& s);
+    unsigned long long SToull(const String& s);
+    double STod(const String& s);
+    long double STold(const String& s);
 
     long long substringIndex(const String& s, const String& subS);
     bool canStringConvertToNumber(const String& x);

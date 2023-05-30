@@ -2,6 +2,7 @@
 Athor: Loke Strøm
 */
 #include "Exception.hpp"
+#include "string.hpp"
 #include <fstream>
 
 

@@ -298,16 +298,12 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector) {
-        if (index > currentSize)
-            throw OutOfRange("Index out of range");
         for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) {
-        if (index >= currentSize)
-            throw OutOfRange("Index out of range");
         Vector<T> vec = initializerList;
         insert(index, vec);
     }
