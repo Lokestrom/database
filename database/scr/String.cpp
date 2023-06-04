@@ -14,6 +14,9 @@ namespace Database {
     String::String(const String& s) noexcept {
         *this = s;
     }
+    String::String(String&& s) noexcept {
+        *this = s;
+    }
     constexpr String::String(const char* s) noexcept {
         *this = s;
     }
@@ -25,6 +28,10 @@ namespace Database {
     }
 
     String& String::operator=(const String& s) noexcept {
+        stringVec = s.stringVec;
+        return *this;
+    }
+    String& String::operator=(String&& s) noexcept {
         stringVec = s.stringVec;
         return *this;
     }
@@ -465,6 +472,22 @@ namespace Database {
         std::getline(file, text);
         string = text;
         return true;
+    }
+    String lower(const String& s) noexcept
+    {
+        String ans = s;
+        for (char& i : ans)
+            if (i <= 'z' && i >= 'a')
+                i -= 32;
+        return ans;
+    }
+    String upper(const String& s) noexcept
+    {
+        String ans = s;
+        for (char& i : ans)
+            if (i <= 'Z' && i >= 'A')
+                i += 32;
+        return ans;
     }
 }
 

@@ -13,11 +13,13 @@ namespace Database {
     public:
         constexpr String() noexcept;
         String(const String& s) noexcept;
+        String(String&& s) noexcept;
         constexpr String(const char* s) noexcept;
         String(const Vector<char>& v) noexcept;
         String(const std::string& s) noexcept;
 
         String& operator=(const String& s) noexcept;
+        String& operator=(String&& s) noexcept;
         constexpr String& operator=(const char* s) noexcept;
         String& operator=(const std::string& s);
         String& operator=(const Vector<char>& s);
@@ -135,6 +137,9 @@ namespace Database {
     long long substringIndex(const String& s, const String& subS);
     bool canStringConvertToNumber(const String& x);
     bool getline(std::ifstream& file, String& string);
+
+    String lower(const String& s) noexcept;
+    String upper(const String& s) noexcept;
 }
 
 template<>

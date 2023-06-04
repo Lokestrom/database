@@ -14,9 +14,10 @@ namespace Database{
 
         constexpr Vector();
         constexpr Vector(const Vector<T>& vector);
+        constexpr Vector(Vector<T>&& vector) noexcept;
         constexpr Vector(const std::initializer_list<T> initializerList);
         constexpr Vector(const std::vector<T>& vector);
-        //constexpr Vector(const T arr[]);
+        constexpr Vector(T&& arr, size_t size);
         constexpr Vector(const size_t capacity);
         constexpr Vector(const size_t count, const T value);
         ~Vector();
@@ -26,6 +27,7 @@ namespace Database{
         constexpr Vector<T> operator() (const size_t startIndex, const size_t endIndex) const;
 
         constexpr Vector<T>& operator= (const Vector<T>& vector) noexcept;
+        constexpr Vector<T>& operator= (Vector<T>&& vector) noexcept;
         constexpr Vector<T>& operator= (const std::initializer_list<T> initializerList) noexcept;
         //constexpr Vector<T>& operator= (const T arr[]);
                          

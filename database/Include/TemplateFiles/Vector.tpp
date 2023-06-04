@@ -2,6 +2,7 @@
 Athor: Loke Strøm
 */
 #include <initializer_list>
+#include <utility>
 #include "Exception.hpp"
 
 namespace Database {
@@ -20,6 +21,10 @@ namespace Database {
     constexpr Vector<T>::Vector(const Vector<T>& vector){
         *this = vector;
     }
+    template <typename T>
+    constexpr Vector<T>::Vector(Vector<T>&& vector) noexcept{
+        *this = vector;
+    }
 
     template <typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList)
@@ -35,10 +40,13 @@ namespace Database {
         }
     }
 
-    /*template<typename T>
-    constexpr Vector<T>::Vector(const T arr[]){
-        *this = arr;
-    }*/
+    template<typename T>
+    constexpr Vector<T>::Vector(T&& arr, size_t size){
+        *this->arr = arr;
+        *this->currentSize = size;
+        *this->currentCapacity = size;
+        arr = nullptr;
+    }
 
     template <typename T>
     constexpr Vector<T>::Vector(const size_t capacity)
@@ -101,6 +109,19 @@ namespace Database {
         for (auto i = 0; i < x.currentSize; i++)
             arr[i] = x.arr[i];
         currentSize = x.currentSize;
+        return *this;
+    }
+
+    template<typename T>
+    constexpr Vector<T>& Vector<T>::operator= (Vector<T>&& vector) noexcept {
+
+
+        this->arr = vector.arr;
+        this->currentSize = vector.currentSize;
+        this->currentCapacity = vector.currentCapacity;
+        vector.arr = nullptr;
+        vector.currentSize = 0;
+        vector.currentCapacity = 0;
         return *this;
     }
 
@@ -287,7 +308,7 @@ namespace Database {
 
         currentSize++;
         if (currentSize > currentCapacity) {
-            size_t newCap = currentCapacity + (currentCapacity / 2);
+            size_t newCap = currentSize + (currentCapacity / 2);
             T* temp = new T[newCap];
 
             for (auto i = 0; i < currentSize; i++) {
@@ -309,9 +330,10 @@ namespace Database {
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const Vector<T>& vector) {
-        for(auto it = vector.end() - 1; it != vector.begin() - 1; it--)
+        for (auto it = vector.end() - 1; it != vector.begin() - 1; it--)
             insert(index, *it);
     }
+
 
     template<typename T>
     constexpr void Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) {
@@ -435,7 +457,7 @@ namespace Database {
 
     template<typename T>
     constexpr long long Vector<T>::linearSearchR(const T target) noexcept {
-        for (auto i = currentSize-1; i > -1; i--)
+        for (long long i = currentSize-1; i > -1; i--)
             if (arr[i] == target)
                 return i;
         return -1;
