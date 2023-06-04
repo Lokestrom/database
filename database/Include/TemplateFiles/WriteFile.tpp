@@ -41,7 +41,7 @@ namespace Database {
 
 	template<typename T>
 	void WriteFile<T>::addcolumns(const Vector<String>& columnNames) {
-		unsigned int s = columnNames.size();
+		size_t s = columnNames.size();
 		file->write(reinterpret_cast<const char*>(&s), sizeof(unsigned int));
 		for (const String& i : columnNames) {
 			for (const char c : i)

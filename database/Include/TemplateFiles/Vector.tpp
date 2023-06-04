@@ -13,6 +13,7 @@ namespace Database {
             delete[] arr;
         arr = new T[2];
         currentCapacity = 2;
+        currentSize = 0;
     }
 
     template <typename T>
@@ -20,7 +21,7 @@ namespace Database {
         *this = vector;
     }
 
-    template<typename T>
+    template <typename T>
     constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList)
     {
         *this = initializerList;
@@ -30,7 +31,7 @@ namespace Database {
     constexpr Vector<T>::Vector(const std::vector<T>& vector) {
         reserve(vector.size());
         for (const T& i : vector) {
-            pushBack(vector[i]);
+            pushBack(i);
         }
     }
 
@@ -39,7 +40,7 @@ namespace Database {
         *this = arr;
     }*/
 
-    template<typename T>
+    template <typename T>
     constexpr Vector<T>::Vector(const size_t capacity)
         : currentCapacity(capacity)
     {
@@ -48,7 +49,7 @@ namespace Database {
         arr = new T[currentCapacity];
     }
 
-    template<typename T>
+    template <typename T>
     constexpr Vector<T>::Vector(const size_t count, const T value) {
         reserve(count);
         for (auto i = 0; i < count; i++)
@@ -252,19 +253,19 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr void Vector<T>::pushBack(const T val) noexcept
+    constexpr void Vector<T>::pushBack(const T& val) noexcept
     {
-        if (currentSize == currentCapacity) {
-            T* temp = new T[currentCapacity * 2];
+        if (currentSize >= currentCapacity) {
+            size_t newCap = currentCapacity + (currentCapacity / 2);
+            T* temp = new T[newCap];
 
             for (auto i = 0; i < currentCapacity; i++) {
                 temp[i] = arr[i];
             }
 
-            currentCapacity *= 2;
+            currentCapacity = newCap;
 
-            if(arr != nullptr)
-                delete[] arr;
+            delete[] arr;
             arr = temp;
         }
         arr[currentSize] = val;
@@ -280,20 +281,30 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr void Vector<T>::insert(const size_t index, const T val) {
+    constexpr void Vector<T>::insert(const size_t index, T val) {
         if (index > currentSize)
             throw OutOfRange("Index out of range");
 
-        auto s = currentSize - index;
-        T* temp = new T[s];
-        for(auto i = index; i < currentSize; i++)
-            temp[i-index] = arr[i];
+        currentSize++;
+        if (currentSize > currentCapacity) {
+            size_t newCap = currentCapacity + (currentCapacity / 2);
+            T* temp = new T[newCap];
 
-        currentSize = index;
-        pushBack(val);
-        for (auto i = 0; i < s; i++)
-            pushBack(temp[i]);
-        delete[] temp;
+            for (auto i = 0; i < currentSize; i++) {
+                temp[i] = arr[i];
+            }
+
+            currentCapacity = newCap;
+
+            delete[] arr;
+            arr = temp;
+        }
+        T lastVal;
+        for (auto i = index; i < currentSize; i++) {
+            lastVal = arr[i];
+            arr[i] = val;
+            val = lastVal;
+        }
     }
 
     template<typename T>
@@ -318,15 +329,9 @@ namespace Database {
     constexpr void Vector<T>::pop(const size_t index){
         if(index >= currentSize)
             throw OutOfRange("Index out of range");
-        auto s = currentSize - index - 1;
-        T* temp = new T[s];
-        for(auto i = index + 1; i < currentSize; i++)
-            temp[i - 1 - index] = arr[i];
-
-        currentSize = index;
-        for(auto i = 0; i < s; i++)
-            pushBack(temp[i]);
-        delete[] temp;
+        currentSize--;
+        for (auto i = index; i < currentSize; i++)
+            arr[i] = arr[i + 1];
     }
 
     template<typename T>
@@ -337,16 +342,11 @@ namespace Database {
             throw OutOfRange("endIndex out of range");
         if(startIndex > endIndex)
             throw OutOfRange("startIndex can't be greater than endIndex");
-
-        auto s = currentSize - endIndex;
-        T* temp = new T[s];
-        for(auto i = endIndex; i < currentSize; i++)
-            temp[i - endIndex] = arr[i];
-
-        currentSize = startIndex;
-        for(auto i = 0; i < s; i++)
-            pushBack(temp[i]);
-        delete[] temp;
+        
+        size_t diff = endIndex - startIndex;
+        currentSize -= diff;
+        for (auto i = startIndex; i < currentSize; i++)
+            arr[i] = arr[i + diff];
     }
 
 
