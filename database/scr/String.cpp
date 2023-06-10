@@ -220,7 +220,7 @@ namespace Database {
     long long String::linearSearch(const char target) noexcept {
         return stringVec.linearSearch(target);
     }
-    constexpr long long String::linearSearchR(const char target) noexcept {
+    long long String::linearSearchR(const char target) noexcept {
         return stringVec.linearSearchR(target);
     }
 
@@ -477,16 +477,16 @@ namespace Database {
     {
         String ans = s;
         for (char& i : ans)
-            if (i <= 'z' && i >= 'a')
-                i -= 32;
+            if (i <= 'Z' && i >= 'A')
+                i += 32;
         return ans;
     }
     String upper(const String& s) noexcept
     {
         String ans = s;
         for (char& i : ans)
-            if (i <= 'Z' && i >= 'A')
-                i += 32;
+            if (i <= 'z' && i >= 'a')
+                i -= 32;
         return ans;
     }
 }

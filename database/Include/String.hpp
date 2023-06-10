@@ -87,7 +87,7 @@ namespace Database {
         const bool contains(const String& target) noexcept;
         long long binarySearch(const char target) noexcept;
         long long linearSearch(const char target) noexcept;
-        constexpr long long linearSearchR(const char target) noexcept;
+        long long linearSearchR(const char target) noexcept;
 
         //sort
         constexpr void mergeSort() noexcept;

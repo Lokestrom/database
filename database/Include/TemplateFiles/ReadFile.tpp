@@ -60,7 +60,7 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAllDataFromColumn(const Vector<T>& data, const String& columnName) noexcept {
+	void ReadFile<T>::getAllDataFromColumn(Vector<T>& data, const String& columnName) noexcept {
 		file->clear();
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();
@@ -75,7 +75,7 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAllRowsWhereColumnIsEqualeToAValue(const Vector<Vector<T>>& data, const String& columnName, T value) noexcept
+	void ReadFile<T>::getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, const String& columnName, T value) noexcept
 	{
 		file->clear();
 		file->seekg(dataStart, std::ios::beg);
@@ -106,7 +106,7 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getRow(const Vector<T>& data, unsigned int row) {
+	void ReadFile<T>::getRow(Vector<T>& data, unsigned int row) {
 		file->clear();
 		file->seekg(dataStart + (row * sizeof(T) * ColumnNames.size()), std::ios::beg);
 
@@ -123,7 +123,7 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::getAll(const Vector<Vector<T>>& data) noexcept {
+	void ReadFile<T>::getAll(Vector<Vector<T>>& data) noexcept {
 		file->clear();
 		file->seekg(dataStart, std::ios::beg);
 		data.clear();

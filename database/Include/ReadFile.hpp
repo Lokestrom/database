@@ -27,10 +27,10 @@ namespace Database
         void close();
         bool isOpen();
 
-        void getAllDataFromColumn(const Vector<T>& data, const String& columnName) noexcept;
-        void getAllRowsWhereColumnIsEqualeToAValue(const Vector<Vector<T>>& data, const String& columnName, T value) noexcept;
-        void getRow(const Vector<T>& data, unsigned int row);
-        void getAll(const Vector<Vector<T>>& data) noexcept;
+        void getAllDataFromColumn(Vector<T>& data, const String& columnName) noexcept;
+        void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, const String& columnName, T value) noexcept;
+        void getRow(Vector<T>& data, unsigned int row);
+        void getAll(Vector<Vector<T>>& data) noexcept;
 
         Vector<String> getColumnNames() noexcept;
     };
