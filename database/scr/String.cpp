@@ -248,12 +248,12 @@ namespace Database {
         return splitStrings;
     }
 
-    const String String::remove(const char element) const noexcept {
+    const void String::remove(const char element) noexcept {
         String removedString;
         for (const char& c : stringVec)
             if (c != element)
                 removedString.pushBack(c);
-        return removedString;
+        *this = std::move(removedString);
     }
 }
 

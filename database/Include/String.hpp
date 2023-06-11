@@ -95,7 +95,7 @@ namespace Database {
 
 
         const Vector<String> split(const char splitElement) const noexcept;
-        const String remove(const char element) const noexcept;
+        const void remove(const char element) noexcept;
 
         //non member fungtions
         const friend bool operator==(const String& lhs, const String& rhs) noexcept;
