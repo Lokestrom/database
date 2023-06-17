@@ -33,6 +33,15 @@ namespace Database
 		}
 	}
 
+	template <typename T>
+	ReadFile<T>::ReadFile(ReadFile<T>&& readFile) {
+		file = readFile.file;
+		readFile.file = nullptr;
+		fileName = std::move(readFile.fileName);
+		dataStart = dataStart;
+		ColumnNames = std::move(readFile.ColumnNames);
+	}
+
 	template<typename T>
 	ReadFile<T>::~ReadFile() {
 		if (file->is_open())

@@ -233,7 +233,7 @@ namespace Database {
             throw LengthError("newCapacity can't be less than currentCapacity");
         }
         T* temp = new T[newCapacity];
-        for(auto i = 0; i < currentCapacity; i++)
+        for(auto i = 0; i < currentSize; i++)
             temp[i] = arr[i];
 
         if (arr != nullptr)
@@ -278,16 +278,7 @@ namespace Database {
     {
         if (currentSize >= currentCapacity) {
             size_t newCap = currentCapacity + (currentCapacity / 2);
-            T* temp = new T[newCap];
-
-            for (auto i = 0; i < currentCapacity; i++) {
-                temp[i] = arr[i];
-            }
-
-            currentCapacity = newCap;
-
-            delete[] arr;
-            arr = temp;
+            this->reserve(newCap);
         }
         arr[currentSize] = val;
         currentSize++;

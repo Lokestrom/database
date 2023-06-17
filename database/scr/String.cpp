@@ -10,180 +10,237 @@ Athor: Loke Str�m
 #include "Vector.hpp"
 
 namespace Database {
-    constexpr String::String() noexcept {}
+    constexpr String::String() noexcept {
+        _arr = new char[3];
+        _currentCapacity = 3;
+        _currentSize = 1;
+        _arr[0] = '\0';
+    }
     String::String(const String& s) noexcept {
+        _arr = new char[3];
+        _currentCapacity = 3;
+        _currentSize = 1;
+        _arr[0] = '\0';
         *this = s;
     }
     String::String(String&& s) noexcept {
-        *this = s;
+        *this = std::move(s);
     }
-    constexpr String::String(const char* s) noexcept {
+    String::String(const char* s) noexcept {
+        _arr = new char[3];
+        _currentCapacity = 3;
+        _currentSize = 1;
+        _arr[0] = '\0';
         *this = s;
-    }
-    String::String(const Vector<char>& v) noexcept {
-        stringVec = v;
     }
     String::String(const std::string& s) noexcept {
+        _arr = new char[3];
+        _currentCapacity = 3;
+        _currentSize = 1;
+        _arr[0] = '\0';
         *this = s;
     }
 
     String& String::operator=(const String& s) noexcept {
-        stringVec = s.stringVec;
+        this->clear();
+        if (this->capacity() < s.length()) {
+            this->reserve(s.capacity());
+        }
+        for (const auto& i : s)
+            this->pushBack(i);
         return *this;
     }
     String& String::operator=(String&& s) noexcept {
-        stringVec = s.stringVec;
+        _arr = s._arr;
+        s._arr = nullptr;
+        _currentSize = s.length()+1;
+        s._currentSize = 0;
+        _currentCapacity = s.capacity()+1;
+        s._currentCapacity = 0;
+
         return *this;
     }
-    constexpr String& String::operator=(const char* s) noexcept {
-        stringVec.clear();
+    String& String::operator=(const char* s) noexcept {
+        this->clear();
+        size_t len = strlen(s);
+        if (this->capacity() < len) {
+            this->reserve(len);
+        }
         if (s == nullptr)
             return *this;
         for (const char* ptr = s; *ptr != '\0'; ptr++)
-            stringVec.pushBack(*ptr);
+            this->pushBack(*ptr);
         return *this;
     }
     String& String::operator=(const std::string& s) {
-        stringVec.clear();
+        this->clear();
         for (const char& i : s)
-            stringVec.pushBack(i);
-        return *this;
-    }
-    String& String::operator=(const Vector<char>& s) {
-        stringVec = s;
-        return *this;
-    }
-    String& String::operator=(const std::initializer_list<char>& iList) noexcept {
-        stringVec = iList;
+            this->pushBack(i);
         return *this;
     }
 
 
     constexpr char& String::operator[](const size_t index) noexcept {
-        return stringVec[index];
+        return _arr[index];
     }
     constexpr char& String::operator[](const size_t index) const noexcept {
-        return stringVec[index];
+        return _arr[index];
     }
 
     String String::operator()(const size_t startIndex, const size_t endIndex) const {
-        if (startIndex >= stringVec.size())
+        if (startIndex >= this->length())
             throw OutOfRange("startIndex out of range");
-        if (endIndex > stringVec.size())
+        if (endIndex > this->length())
             throw OutOfRange("endIndex out of range");
         if (startIndex > endIndex)
             throw OutOfRange("startIndex can't be greater than endIndex");
-        return String(stringVec(startIndex, endIndex));
+        String x;
+        for (auto i = startIndex; i < endIndex; i++)
+            x.pushBack(_arr[i]);
+        return x;
     }
 
-    constexpr char& String::at(const size_t index) {
-        if (index >= stringVec.size())
+    char& String::at(const size_t index) {
+        if (index >= this->length())
             throw OutOfRange("index out of range");
-        return stringVec[index];
+        return _arr[index];
     }
-    constexpr char& String::at(const size_t index) const {
-        if (index >= stringVec.size())
+    char& String::at(const size_t index) const {
+        if (index >= this->length())
             throw OutOfRange("index out of range");
-        return stringVec[index];
+        return _arr[index];
     }
 
-    const char* String::cstr() noexcept {
-        stringVec.pushBack('\0');
-        return stringVec.data();
-    }
     const char* String::cstr() const noexcept {
-        Vector<char> temp = stringVec;
-        temp.pushBack('\0');
-        return temp.data();
+        return _arr;
     }
 
-    Vector<char>& String::vectorData() noexcept {
-        return stringVec;
-    }
-    Vector<char> String::vectorData() const noexcept {
-        return stringVec;
-    }
-
-    char* String::begin() noexcept {
-        return stringVec.begin();
-    }
     char* String::begin() const noexcept {
-        return stringVec.begin();
+        return _arr;
     }
 
-    char* String::end() noexcept {
-        return stringVec.end();
-    }
     char* String::end() const noexcept {
-        return stringVec.end();
+        return &_arr[this->length()];
     }
 
-    const bool String::empty() noexcept {
-        return stringVec.empty();
+    const bool String::empty() const noexcept {
+        return _currentSize == 0;
     }
 
-    size_t String::capacity() noexcept {
-        return stringVec.capacity();
+    size_t String::capacity() const noexcept {
+        return _currentCapacity-1;
     }
 
     const size_t String::length() const noexcept {
-        return stringVec.size();
+        return _currentSize-1;
     }
 
-    constexpr void String::reserve(const size_t newCapacity) noexcept {
-        stringVec.reserve(newCapacity);
+    void String::reserve(const size_t newCapacity) {
+        if (newCapacity < _currentCapacity) {
+            throw LengthError("newCapacity can't be less than currentCapacity");
+        }
+        char* temp = new char[newCapacity+1];
+        for (auto i = 0; i < _currentSize; i++)
+            temp[i] = _arr[i];
+
+        delete[] _arr;
+        _arr = temp;
+
+        _currentCapacity = newCapacity;
     }
-    constexpr void String::shrinkToFit() noexcept {
-        stringVec.shrinkToFit();
+    void String::shrinkToFit() noexcept {
+        char* temp = new char[_currentSize];
+        _currentCapacity = _currentSize;
+        for (auto i = 0; i < _currentSize; i++)
+            temp[i] = _arr[i];
+
+        delete[] _arr;
+        _arr = temp;
     }
 
-    String& String::operator+=(const String s) noexcept {
-        stringVec.insert(stringVec.size(), s.stringVec);
+    String& String::operator+=(const String& s) noexcept {
+        for (const char& i : s)
+            this->pushBack(i);
         return *this;
     }
 
     constexpr String& String::operator+=(const char* s) noexcept {
+        if (s == nullptr)
+            return *this;
         for (const char* ptr = s; *ptr != '\0'; ptr++)
-            stringVec.pushBack(*ptr);
+            this->pushBack(*ptr);
         return *this;
     }
 
-    constexpr void String::pushBack(const char val) noexcept {
-        stringVec.pushBack(val);
+    void String::pushBack(const char val) noexcept {
+        if (this->length() >= this->capacity()) {
+            size_t newCap = this->capacity() + (this->capacity() / 2) + 2;
+            this->reserve(newCap);
+        }
+        _arr[this->length()] = val;
+        _arr[_currentSize] = '\0';
+        _currentSize++;
     }
 
     void String::insert(const size_t index, const String& s) {
-        stringVec.insert(index, s.stringVec);
+        for (auto it = s.end() - 1; it != s.begin() - 1; it--)
+            insert(index, *it);
     }
     void String::insert(size_t index, const char* s) {
-        if (index > stringVec.size())
+        if (index >= this->length())
             throw OutOfRange("index out of range");
         for (const char* ptr = s; *ptr != '\0'; ptr++)
-            stringVec.insert(index++, *ptr);
+            this->insert(index++, *ptr);
     }
-    void String::insert(size_t index, const char c) {
-        stringVec.insert(index, { c });
-    }
-    constexpr void String::insert(const size_t index, const Vector<char>& vector) {
-        stringVec.insert(index, vector);
-    }
-    constexpr void String::insert(const size_t index, const std::initializer_list<char>& initializerList) {
-        stringVec.insert(index, initializerList);
+    void String::insert(size_t index, char c) {
+        if (index > this->length())
+            throw OutOfRange("Index out of range");
+
+        _currentSize++;
+        if (this->length() > this->capacity()) {
+            size_t newCap = this->capacity() + (this->capacity() / 2) + 2;
+            this->reserve(newCap);
+        }
+        char lastVal;
+        for (auto i = index; i < this->length(); i++) {
+            lastVal = _arr[i];
+            _arr[i] = c;
+            c = lastVal;
+        }
+        _arr[_currentSize] = '\0';
     }
 
     void String::popBack() {
-        stringVec.popBack();
+        if (this->length() == 0)
+            throw LengthError("Can't popBack on empty Vector");
+
+        _currentSize--;
     }
 
     void String::pop(const size_t index) {
-        stringVec.pop(index);
+        if (index >= this->length())
+            throw OutOfRange("Index out of range");
+        _currentSize--;
+        for (auto i = index; i < this->length(); i++)
+            _arr[i] = _arr[i + 1];
     }
     void String::pop(const size_t startIndex, const size_t endIndex) {
-        stringVec.pop(startIndex, endIndex);
+        if (startIndex >= this->length())
+            throw OutOfRange("startIndex out of range");
+        if (endIndex > this->length())
+            throw OutOfRange("endIndex out of range");
+        if (startIndex > endIndex)
+            throw OutOfRange("startIndex can't be greater than endIndex");
+
+        size_t diff = endIndex - startIndex;
+        _currentSize -= diff;
+        for (auto i = startIndex; i < this->length(); i++)
+            _arr[i] = _arr[i + diff];
     }
 
     const void String::clear() noexcept {
-        stringVec.clear();
+        _currentSize = 1;
+        _arr[0] = '\0';
     }
 
     const bool String::contains(const String& target) noexcept {
@@ -214,34 +271,99 @@ namespace Database {
     }
 
     long long String::binarySearch(const char target) noexcept {
-        return stringVec.binarySearch(target);
+        long long low = 0;
+        long long high = this->length() - 1;
+        long long mid;
+
+        while (low <= high)
+        {
+            mid = (low + high) / 2;
+
+            if (_arr[mid] == target)
+                return mid;
+            else if (_arr[mid] > target)
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return -1;
     }
 
     long long String::linearSearch(const char target) noexcept {
-        return stringVec.linearSearch(target);
+        for (auto i = 0; i < this->length(); i++)
+            if (_arr[i] == target)
+                return i;
+        return -1;
     }
     long long String::linearSearchR(const char target) noexcept {
-        return stringVec.linearSearchR(target);
+        for (long long i = this->length() - 1; i > -1; i--)
+            if (_arr[i] == target)
+                return i;
+        return -1;
     }
 
-    constexpr void String::mergeSort() noexcept {
-        stringVec.mergeSort();
+    void String::mergeSort() noexcept {
+        if (this->length() == 1)
+            return;
+
+        String start;
+        start = this->operator()(0, this->length() / 2);
+        String end;
+        end = this->operator()(this->length() / 2, this->length());
+
+        start.mergeSort();
+        end.mergeSort();
+
+        clear();
+
+        size_t startPos = 0, endPos = 0;
+
+        while (startPos != start.length() && endPos != end.length()) {
+            if (start[startPos] < end[endPos]) {
+                pushBack(start[startPos]);
+                startPos++;
+            }
+            else {
+                pushBack(end[endPos]);
+                endPos++;
+            }
+        }
+
+        for (;startPos != start.length(); startPos++)
+            pushBack(start[startPos]);
+        for (;endPos != end.length(); endPos++)
+            pushBack(end[endPos]);
+
+        return;
     }
 
-    constexpr void String::bubbleSort() noexcept {
-        stringVec.bubbleSort();
+    void String::bubbleSort() noexcept {
+        char temp;
+        for (auto i = 0; i < this->length(); i++)
+        {
+            for (auto j = 0; j < this->length() - i - 1; j++)
+            {
+                if (_arr[j] > _arr[j + 1])
+                {
+                    temp = _arr[j + 1];
+                    _arr[j + 1] = _arr[j];
+                    _arr[j] = temp;
+                }
+            }
+        }
+        return;
     }
 
     const Vector<String> String::split(const char splitElement) const noexcept {
         Vector<String> splitStrings;
         String currentString;
-        for (const char& c : stringVec) {
-            if (c == splitElement) {
+        for (size_t i = 0; i < this->length(); i++) {
+            if (_arr[i] == splitElement && !currentString.empty()) {
                 splitStrings.pushBack(currentString);
                 currentString.clear();
             }
             else {
-                currentString.pushBack(c);
+                currentString.pushBack(_arr[i]);
             }
         }
         splitStrings.pushBack(currentString);
@@ -250,9 +372,9 @@ namespace Database {
 
     const void String::remove(const char element) noexcept {
         String removedString;
-        for (const char& c : stringVec)
-            if (c != element)
-                removedString.pushBack(c);
+        for (size_t i = 0; i < this->length(); i++)
+            if (_arr[i] != element)
+                removedString.pushBack(_arr[i]);
         *this = std::move(removedString);
     }
 }
@@ -283,10 +405,16 @@ namespace Database {
     
     //
     const bool operator==(const String& lsh, const String& rsh) noexcept {
-        return lsh.stringVec == rsh.stringVec;
+        if (lsh.length() != rsh.length())
+            return false;
+
+        for (auto i = 0; i < lsh.length(); i++)
+            if (lsh[i] != rsh[i])
+                return false;
+        return true;
     }
     const bool operator!=(const String& lsh, const String& rsh) noexcept {
-        return lsh.stringVec != rsh.stringVec;
+        return !(lsh == rsh);
     }
 
     //

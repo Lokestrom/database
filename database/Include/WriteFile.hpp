@@ -17,6 +17,7 @@ namespace Database
     public:
         WriteFile();
         WriteFile(const String& filename);
+        WriteFile(WriteFile<T>&& writeFile);
 
         ~WriteFile();
 

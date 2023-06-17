@@ -4,6 +4,7 @@ Athor: Loke Strøm
 #include "Exception.hpp"
 #include "string.hpp"
 #include <fstream>
+#include "..\WriteFile.hpp"
 
 
 namespace Database {
@@ -18,7 +19,15 @@ namespace Database {
 	}
 
 	template<typename T>
+	WriteFile<T>::WriteFile(WriteFile<T>&& writeFile) {
+		file = writeFile.file;
+		writeFile.file = nullptr;
+	}
+
+	template<typename T>
 	WriteFile<T>::~WriteFile() {
+		if (file == nullptr)
+			return;
 		if (file->is_open()) {
 			file->close();
 		}

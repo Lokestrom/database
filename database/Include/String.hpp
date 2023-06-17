@@ -9,21 +9,20 @@ Athor: Loke Strøm
 namespace Database {
     class String {
     private:
-        Vector<char> stringVec;
+        char* _arr = nullptr;
+        size_t _currentSize = 0, _currentCapacity = 0;
+
     public:
         constexpr String() noexcept;
         String(const String& s) noexcept;
         String(String&& s) noexcept;
-        constexpr String(const char* s) noexcept;
-        String(const Vector<char>& v) noexcept;
+        String(const char* s) noexcept;
         String(const std::string& s) noexcept;
 
         String& operator=(const String& s) noexcept;
         String& operator=(String&& s) noexcept;
-        constexpr String& operator=(const char* s) noexcept;
+        String& operator=(const char* s) noexcept;
         String& operator=(const std::string& s);
-        String& operator=(const Vector<char>& s);
-        String& operator=(const std::initializer_list<char>& iList) noexcept;
 
 
         //element accses
@@ -32,46 +31,36 @@ namespace Database {
 
         String operator()(const size_t startIndex, const size_t endIndex) const;
 
-        constexpr char& at(const size_t index);
-        constexpr char& at(const size_t index) const;
+        char& at(const size_t index);
+        char& at(const size_t index) const;
 
-        const char* cstr() noexcept;
         const char* cstr() const noexcept;
 
-        Vector<char>& vectorData() noexcept;
-        Vector<char> vectorData() const noexcept;
-
-
         //iterator
-        char* begin() noexcept;
         char* begin() const noexcept;
-
-        char* end() noexcept;
         char* end() const noexcept;
 
         //capacity
-        const bool empty() noexcept;
+        const bool empty() const noexcept;
 
-        size_t capacity() noexcept;
+        size_t capacity() const noexcept;
 
         const size_t length() const noexcept;
 
-        constexpr void reserve(const size_t newCapacity) noexcept;
+        void reserve(const size_t newCapacity);
 
-        constexpr void shrinkToFit() noexcept;
+        void shrinkToFit() noexcept;
 
 
         //operations
-        String& operator+=(const String s) noexcept;
+        String& operator+=(const String& s) noexcept;
         constexpr String& operator+=(const char* s) noexcept;
 
-        constexpr void pushBack(const char val) noexcept;
+        void pushBack(const char val) noexcept;
 
         void insert(const size_t index, const String& s);
         void insert(size_t index, const char* s);
         void insert(size_t index, const char c);
-        constexpr void insert(const size_t index, const Vector<char>& vector);
-        constexpr void insert(const size_t index, const std::initializer_list<char>& initializerList);
 
         void popBack();
 
@@ -90,8 +79,8 @@ namespace Database {
         long long linearSearchR(const char target) noexcept;
 
         //sort
-        constexpr void mergeSort() noexcept;
-        constexpr void bubbleSort() noexcept;
+        void mergeSort() noexcept;
+        void bubbleSort() noexcept;
 
 
         const Vector<String> split(const char splitElement) const noexcept;

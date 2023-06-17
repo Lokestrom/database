@@ -21,6 +21,7 @@ namespace Database
     public:
         ReadFile();
         ReadFile(const String& fileName);
+        ReadFile(ReadFile<T>&& readFile);
         ~ReadFile();
 
         void open(const String& fileName);
