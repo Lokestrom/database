@@ -17,8 +17,8 @@ namespace Database {
         _arr[0] = '\0';
     }
     String::String(const String& s) noexcept {
-        _arr = new char[3];
-        _currentCapacity = 3;
+        _arr = new char[s._currentSize];
+        _currentCapacity = s._currentSize;
         _currentSize = 1;
         _arr[0] = '\0';
         *this = s;
@@ -27,15 +27,16 @@ namespace Database {
         *this = std::move(s);
     }
     String::String(const char* s) noexcept {
-        _arr = new char[3];
-        _currentCapacity = 3;
+        size_t len = strlen(s) + 1;
+        _arr = new char[len];
+        _currentCapacity = len;
         _currentSize = 1;
         _arr[0] = '\0';
         *this = s;
     }
     String::String(const std::string& s) noexcept {
-        _arr = new char[3];
-        _currentCapacity = 3;
+        _arr = new char[s.length() + 1];
+        _currentCapacity = s.length() + 1;
         _currentSize = 1;
         _arr[0] = '\0';
         *this = s;
@@ -43,7 +44,13 @@ namespace Database {
 
     String& String::operator=(const String& s) noexcept {
         this->clear();
-        if (this->capacity() < s.length()) {
+        if (_arr == nullptr) {
+            _arr = new char[s._currentSize];
+            _currentCapacity = s._currentSize;
+            _currentSize = 1;
+            _arr[0] = '\0';
+        }
+        else if (this->capacity() < s.length()) {
             this->reserve(s.capacity());
         }
         for (const auto& i : s)
@@ -53,17 +60,23 @@ namespace Database {
     String& String::operator=(String&& s) noexcept {
         _arr = s._arr;
         s._arr = nullptr;
-        _currentSize = s.length()+1;
+        _currentSize = s._currentSize;
         s._currentSize = 0;
-        _currentCapacity = s.capacity()+1;
+        _currentCapacity = s._currentCapacity;
         s._currentCapacity = 0;
 
         return *this;
     }
     String& String::operator=(const char* s) noexcept {
         this->clear();
-        size_t len = strlen(s);
-        if (this->capacity() < len) {
+        size_t len = strlen(s) + 1;
+        if (_arr == nullptr) {
+            _arr = new char[len];
+            _currentCapacity = len;
+            _currentSize = 1;
+            _arr[0] = '\0';
+        }
+        else if (this->capacity() < len) {
             this->reserve(len);
         }
         if (s == nullptr)
@@ -74,6 +87,15 @@ namespace Database {
     }
     String& String::operator=(const std::string& s) {
         this->clear();
+        if (_arr == nullptr) {
+            _arr = new char[s.length()+1];
+            _currentCapacity = s.length() + 1;
+            _currentSize = 1;
+            _arr[0] = '\0';
+        }
+        else if (this->capacity() < s.length() + 1) {
+            this->reserve(s.length() + 1);
+        }
         for (const char& i : s)
             this->pushBack(i);
         return *this;
@@ -124,7 +146,7 @@ namespace Database {
     }
 
     const bool String::empty() const noexcept {
-        return _currentSize == 0;
+        return _currentSize == 1;
     }
 
     size_t String::capacity() const noexcept {
@@ -135,14 +157,13 @@ namespace Database {
         return _currentSize-1;
     }
 
-    void String::reserve(const size_t newCapacity) {
+    void String::reserve(size_t newCapacity) {
         if (newCapacity < _currentCapacity) {
             throw LengthError("newCapacity can't be less than currentCapacity");
         }
-        char* temp = new char[newCapacity+1];
+        char* temp = new char[++newCapacity];
         for (auto i = 0; i < _currentSize; i++)
             temp[i] = _arr[i];
-
         delete[] _arr;
         _arr = temp;
 
@@ -239,6 +260,8 @@ namespace Database {
     }
 
     const void String::clear() noexcept {
+        if (_arr == nullptr)
+            return;
         _currentSize = 1;
         _arr[0] = '\0';
     }
@@ -366,7 +389,8 @@ namespace Database {
                 currentString.pushBack(_arr[i]);
             }
         }
-        splitStrings.pushBack(currentString);
+        if(!currentString.empty())
+            splitStrings.pushBack(currentString);
         return splitStrings;
     }
 
