@@ -8,4 +8,5 @@ A library for some data structures and storing data.<br>
 * WriteFile
 * ReadFile
 * EditFile
+* CSV conversions
 #### [Documentation for Database](https://github.com/Lokestrom/documentationForCPP)
