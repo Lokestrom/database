@@ -4,7 +4,10 @@
 
 namespace Database {
 
+    template<typename T>
     String csvTodbFile(String fileName);
+    template<typename T>
+    String dbTocsvFile(String fileName);
 
     /*class AlgorythemsFile
     {
@@ -14,3 +17,4 @@ namespace Database {
     };*/
 }
 
+#include "TemplateFiles/Algorythems.tpp"

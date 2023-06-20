@@ -1,26 +1,56 @@
-#include "AlgorythemsFile.hpp"
-
 #include "ReadFile.hpp"
 #include "WriteFile.hpp"
 
 namespace Database {
+    template<typename T>
     String csvTodbFile(String fileName) {
         std::ifstream csvFile(toSTD(fileName));
-        WriteFile<double> dbFile(fileName.split('.')[0] + ".db");
+        WriteFile<T> dbFile(fileName.split('.')[0] + ".db");
 
         String data;
         getline(csvFile, data);
         dbFile.addcolumns(data.split(','));
 
         while (getline(csvFile, data)) {
-            Vector<double> ldData;
-            for (String i : data.split(','))
+            Vector<T> ldData;
+            for (const String& i : data.split(','))
                 ldData.pushBack(STold(i));
             dbFile.addData(ldData);
         }
         csvFile.close();
         dbFile.close();
         return fileName.split('.')[0] + ".db";
+    }
+
+    template<typename T>
+    String dbTocsvFile(String fileName) {
+        ReadFile<T> dbFile(fileName);
+        std::ofstream csvFile(toSTD(fileName.split('.')[0] + ".csv"));
+        String line;
+
+        for (const auto& i : dbFile.getColumnNames())
+            line += i + ",";
+        line.popBack();
+        csvFile << line << std::endl;
+        
+        for (auto i = 0;; i++) {
+            Vector<T> row;
+            try{
+                dbFile.getRow(row, i);
+            }
+            catch (const Exception)
+            {
+                dbFile.close();
+                csvFile.close();
+                break;
+            }
+            line.clear();
+            for (const auto& i : row)
+                line += toS(i) + ",";
+            csvFile << line << std::endl;
+        }
+
+        return fileName.split('.')[0] + ".csv";
     }
 
     /*void AlgorythemsFile::mergeSortFileNum(std::string fileName, std::string columnName)
