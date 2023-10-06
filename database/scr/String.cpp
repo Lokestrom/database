@@ -85,7 +85,7 @@ namespace Database {
             this->pushBack(*ptr);
         return *this;
     }
-    String& String::operator=(const std::string& s) {
+    String& String::operator=(const std::string& s) noexcept {
         this->clear();
         if (_arr == nullptr) {
             _arr = new char[s.length()+1];
@@ -266,7 +266,19 @@ namespace Database {
         _arr[0] = '\0';
     }
 
-    const bool String::contains(const String& target) noexcept {
+    const void String::lower() noexcept {
+        for (char& i : *this)
+            if (i <= 'Z' && i >= 'A')
+                i += 32;
+    }
+
+    const void String::upper() noexcept {
+        for (char& i : *this)
+            if (i <= 'z' && i >= 'a')
+                i -= 32;
+    }
+
+    const bool String::contains(const String& target) const noexcept {
         bool isSubS = false;
         for (auto i = 0; i < (*this).length(); i++) {
             if ((*this)[i] == target[0]) {
@@ -281,19 +293,7 @@ namespace Database {
         return false;
     }
 
-    const void String::lower() noexcept {
-        for (char& i : *this)
-            if (i <= 'Z' && i >= 'A')
-                i += 32;
-    }
-
-    const void String::upper() noexcept {
-        for (char& i : *this)
-            if (i <= 'z' && i >= 'a')
-                i -= 32;
-    }
-
-    long long String::binarySearch(const char target) noexcept {
+    long long String::binarySearch(const char target) const noexcept {
         long long low = 0;
         long long high = this->length() - 1;
         long long mid;
@@ -312,13 +312,13 @@ namespace Database {
         return -1;
     }
 
-    long long String::linearSearch(const char target) noexcept {
+    long long String::linearSearch(const char target) const noexcept {
         for (auto i = 0; i < this->length(); i++)
             if (_arr[i] == target)
                 return i;
         return -1;
     }
-    long long String::linearSearchR(const char target) noexcept {
+    long long String::linearSearchR(const char target) const noexcept {
         for (long long i = this->length() - 1; i > -1; i--)
             if (_arr[i] == target)
                 return i;
@@ -469,7 +469,7 @@ namespace Database {
         return input;
     }
 
-    std::string toSTD(const String& s) {
+    std::string toSTD(const String& s) noexcept {
         std::string r;
         r.reserve(s.length());
         for (const char& c : s)
@@ -478,56 +478,56 @@ namespace Database {
     }
 
     //tos
-    String toS(const int x) {
+    String toS(const int x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const long x) {
+    String toS(const long x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const long long x){
+    String toS(const long long x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const unsigned x){
+    String toS(const unsigned x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const unsigned long x){
+    String toS(const unsigned long x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const unsigned long long x){
+    String toS(const unsigned long long x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const double x) {
+    String toS(const double x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
         s = ss.str();
         return s;
     }
-    String toS(const long double x) {
+    String toS(const long double x) noexcept {
         std::stringstream ss;
         String s;
         ss << x;
@@ -536,56 +536,56 @@ namespace Database {
     }
 
     //to number
-    int SToi(const String& s) {
+    int SToi(const String& s) noexcept {
         std::stringstream ss;
         int x;
         ss << s;
         ss >> x;
         return x;
     }
-    long STol(const String& s) {
+    long STol(const String& s) noexcept {
         std::stringstream ss;
         long x;
         ss << s;
         ss >> x;
         return x;
     }
-    long long SToll(const String& s) {
+    long long SToll(const String& s) noexcept {
         std::stringstream ss;
         long long x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned STou(const String& s) {
+    unsigned STou(const String& s) noexcept {
         std::stringstream ss;
         unsigned x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned long SToul(const String& s) {
+    unsigned long SToul(const String& s) noexcept {
         std::stringstream ss;
         unsigned long x;
         ss << s;
         ss >> x;
         return x;
     }
-    unsigned long long SToull(const String& s){
+    unsigned long long SToull(const String& s) noexcept {
         std::stringstream ss;
         unsigned long long x;
         ss << s;
         ss >> x;
         return x;
     }
-    double STod(const String& s){
+    double STod(const String& s) noexcept {
         std::stringstream ss;
         double x;
         ss << s;
         ss >> x;
         return x;
     }
-    long double STold(const String& s){
+    long double STold(const String& s) noexcept {
         std::stringstream ss;
         long double x;
         ss << s;
@@ -594,7 +594,7 @@ namespace Database {
     }
 
     //subStringIndex
-    long long substringIndex(const String& s, const String& subS) {
+    long long substringIndex(const String& s, const String& subS) noexcept {
         long long isSubS = 0;
         for (auto i = 0; i < s.length(); i++) {
             if (s[i] == subS[0]) {
@@ -609,14 +609,14 @@ namespace Database {
         return -1;
     }
 
-    bool canStringConvertToNumber(const String& s) {
+    bool canStringConvertToNumber(const String& s) noexcept {
         for (const char& i : s)
             if (i != '0' && i != '1' && i != '2' && i != '3' && i != '4' && i != '5' && i != '6' && i != '7' && i != '8' && i != '9' && i != '.' && i != '-')
                 return false;
         return true;
     }
 
-    bool getline(std::ifstream& file, String& string)
+    bool getline(std::ifstream& file, String& string) noexcept
     {
         if (file.eof())
             return false;

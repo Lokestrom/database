@@ -4,7 +4,7 @@ Athor: Loke Strøm
 #include "Exception.hpp"
 
 namespace Database {
-    Exception::Exception(const char* ExceptionMsg) {
+    Exception::Exception(const char* ExceptionMsg) noexcept {
         auto i = 0;
         for (; ExceptionMsg[i] != '\0'; i++);
         if (msg != nullptr)
@@ -15,7 +15,7 @@ namespace Database {
         }
         msg[i] = '\0';
     }
-    Exception::~Exception() {
+    Exception::~Exception() noexcept {
         delete[] msg;
     }
 
@@ -23,13 +23,18 @@ namespace Database {
         return msg;
     }
 
-    OutOfRange::OutOfRange(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+    OutOfRange::OutOfRange(const char* ExceptionMsg) noexcept 
+        : Exception(ExceptionMsg) {};
 
-	InvalidArgument::InvalidArgument(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+	InvalidArgument::InvalidArgument(const char* ExceptionMsg) noexcept
+        : Exception(ExceptionMsg) {};
 
-	LengthError::LengthError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+	LengthError::LengthError(const char* ExceptionMsg) noexcept 
+        : Exception(ExceptionMsg) {};
 
-    SystemError::SystemError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+    SystemError::SystemError(const char* ExceptionMsg) noexcept 
+        : Exception(ExceptionMsg) {};
 
-    WriteFileError::WriteFileError(const char* ExceptionMsg) : Exception(ExceptionMsg) {};
+    WriteFileError::WriteFileError(const char* ExceptionMsg) noexcept 
+        : Exception(ExceptionMsg) {};
 } 

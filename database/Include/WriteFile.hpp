@@ -15,18 +15,18 @@ namespace Database
         std::ofstream* file;
 
     public:
-        WriteFile();
-        WriteFile(const String& filename);
-        WriteFile(WriteFile<T>&& writeFile);
+        WriteFile() noexcept;
+        WriteFile(const String& filename) noexcept;
+        WriteFile(WriteFile<T>&& writeFile) noexcept;
 
-        ~WriteFile();
+        ~WriteFile() noexcept;
 
         void open(const String& filename);
         void close();
 
-        void addcolumns(const Vector<String>& columnNames);
+        void addcolumns(const Vector<String>& columnNames) noexcept;
 
-        void addData(const Vector<T>& data);
+        void addData(const Vector<T>& data) noexcept;
     };
 }
 

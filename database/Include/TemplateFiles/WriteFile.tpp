@@ -10,22 +10,22 @@ Athor: Loke Strøm
 namespace Database {
 
 	template<typename T>
-	WriteFile<T>::WriteFile() {
+	WriteFile<T>::WriteFile() noexcept {
 		file = new std::ofstream();
 	}
 	template<typename T>
-	WriteFile<T>::WriteFile(const String& filename) {
+	WriteFile<T>::WriteFile(const String& filename) noexcept {
 		file = new std::ofstream(toSTD(filename), std::ios::binary);
 	}
 
 	template<typename T>
-	WriteFile<T>::WriteFile(WriteFile<T>&& writeFile) {
+	WriteFile<T>::WriteFile(WriteFile<T>&& writeFile) noexcept {
 		file = writeFile.file;
 		writeFile.file = nullptr;
 	}
 
 	template<typename T>
-	WriteFile<T>::~WriteFile() {
+	WriteFile<T>::~WriteFile() noexcept {
 		if (file == nullptr)
 			return;
 		if (file->is_open()) {
@@ -49,7 +49,7 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::addcolumns(const Vector<String>& columnNames) {
+	void WriteFile<T>::addcolumns(const Vector<String>& columnNames) noexcept {
 		size_t s = columnNames.size();
 		file->write(reinterpret_cast<const char*>(&s), sizeof(unsigned int));
 		for (const String& i : columnNames) {
@@ -60,7 +60,7 @@ namespace Database {
 	}
 
 	template<typename T>
-	void WriteFile<T>::addData(const Vector<T>& data) {
+	void WriteFile<T>::addData(const Vector<T>& data) noexcept {
 		for (T i : data) {
 			file->write(reinterpret_cast<const char*>(&i),sizeof(i));
 		}

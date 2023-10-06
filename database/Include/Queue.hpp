@@ -4,26 +4,32 @@ Athor: Loke Strøm
 #pragma once
 
 namespace Database {
-	template <typename T>
-	struct node;
 
 	template <typename T>
 	class Queue {
-	private:
-		node<T>* front = nullptr;
-		node<T>* back = nullptr;
 	public:
-		Queue();
-		~Queue();
+		Queue() noexcept;
+		~Queue() noexcept;
 
-		void pushOn(T val);
+		T& viewFront();
+		T& viewBack();
+
+		void pushOn(T val) noexcept;
 		T pushOff();
 
-		unsigned int size();
-		bool empty();
-		void clear();
-
+		unsigned int size() const noexcept;
+		bool empty() const noexcept;
+		void clear() noexcept;
 		
+	private:
+
+		struct node {
+			T val = 0;
+			node<T>* next = nullptr;
+		};
+
+		node<T>* front = nullptr;
+		node<T>* back = nullptr;
 	};
 }
 

@@ -19,10 +19,10 @@ namespace Database
         const char splitByte = char(178);
 
     public:
-        ReadFile();
-        ReadFile(const String& fileName);
-        ReadFile(ReadFile<T>&& readFile);
-        ~ReadFile();
+        ReadFile() noexcept;
+        ReadFile(const String& fileName) noexcept;
+        ReadFile(ReadFile<T>&& readFile) noexcept;
+        ~ReadFile() noexcept;
 
         void open(const String& fileName);
         void close();

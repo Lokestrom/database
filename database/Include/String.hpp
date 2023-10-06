@@ -22,7 +22,7 @@ namespace Database {
         String& operator=(const String& s) noexcept;
         String& operator=(String&& s) noexcept;
         String& operator=(const char* s) noexcept;
-        String& operator=(const std::string& s);
+        String& operator=(const std::string& s) noexcept;
 
 
         //element accses
@@ -73,10 +73,10 @@ namespace Database {
         const void upper() noexcept;
 
         //search
-        const bool contains(const String& target) noexcept;
-        long long binarySearch(const char target) noexcept;
-        long long linearSearch(const char target) noexcept;
-        long long linearSearchR(const char target) noexcept;
+        const bool contains(const String& target) const noexcept;
+        long long binarySearch(const char target) const noexcept;
+        long long linearSearch(const char target) const noexcept;
+        long long linearSearchR(const char target) const noexcept;
 
         //sort
         void mergeSort() noexcept;
@@ -103,29 +103,29 @@ namespace Database {
 
     //extra String fungtions
 
-    std::string toSTD(const String& s);
+    std::string toSTD(const String& s) noexcept;
 
-    String toS(int x);
-    String toS(long x);
-    String toS(long long x);
-    String toS(unsigned x);
-    String toS(unsigned long x);
-    String toS(unsigned long long x);
-    String toS(double x);
-    String toS(long double x);
+    String toS(int x) noexcept;
+    String toS(long x) noexcept;
+    String toS(long long x) noexcept;
+    String toS(unsigned x) noexcept;
+    String toS(unsigned long x) noexcept;
+    String toS(unsigned long long x) noexcept;
+    String toS(double x) noexcept;
+    String toS(long double x) noexcept;
 
-    int SToi(const String& s);
-    long STol(const String& s);
-    long long SToll(const String& s);
-    unsigned STou(const String& s);
-    unsigned long SToul(const String& s);
-    unsigned long long SToull(const String& s);
-    double STod(const String& s);
-    long double STold(const String& s);
+    int SToi(const String& s) noexcept;
+    long STol(const String& s) noexcept;
+    long long SToll(const String& s) noexcept;
+    unsigned STou(const String& s) noexcept;
+    unsigned long SToul(const String& s) noexcept;
+    unsigned long long SToull(const String& s) noexcept;
+    double STod(const String& s) noexcept;
+    long double STold(const String& s) noexcept;
 
-    long long substringIndex(const String& s, const String& subS);
-    bool canStringConvertToNumber(const String& x);
-    bool getline(std::ifstream& file, String& string);
+    long long substringIndex(const String& s, const String& subS) noexcept;
+    bool canStringConvertToNumber(const String& x) noexcept;
+    bool getline(std::ifstream& file, String& string) noexcept;
 
     String lower(const String& s) noexcept;
     String upper(const String& s) noexcept;

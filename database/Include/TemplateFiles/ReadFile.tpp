@@ -7,12 +7,12 @@ Athor: Loke Strøm
 namespace Database
 {
 	template<typename T>
-	ReadFile<T>::ReadFile() {
+	ReadFile<T>::ReadFile() noexcept {
 		file = new std::ifstream();
 	}
 
 	template<typename T>
-	ReadFile<T>::ReadFile(const String& fileName) {
+	ReadFile<T>::ReadFile(const String& fileName) noexcept {
 		ReadFile::fileName = fileName;
 		file = new std::ifstream(toSTD(fileName), std::ios::binary);
 		unsigned int columnNummber = 0;
@@ -34,7 +34,7 @@ namespace Database
 	}
 
 	template <typename T>
-	ReadFile<T>::ReadFile(ReadFile<T>&& readFile) {
+	ReadFile<T>::ReadFile(ReadFile<T>&& readFile) noexcept {
 		file = readFile.file;
 		readFile.file = nullptr;
 		fileName = std::move(readFile.fileName);
@@ -43,7 +43,7 @@ namespace Database
 	}
 
 	template<typename T>
-	ReadFile<T>::~ReadFile() {
+	ReadFile<T>::~ReadFile() noexcept {
 		if (file->is_open())
 			file->close();
 		delete file;
@@ -57,14 +57,14 @@ namespace Database
 	}
 
 	template<typename T>
-	void ReadFile<T>::close() {
+	void ReadFile<T>::close() noexcept {
 		if (file->is_open())
 			file->close();
 		file->close();
 	}
 
 	template<typename T>
-	bool ReadFile<T>::isOpen() {
+	bool ReadFile<T>::isOpen() noexcept {
 		return file->is_open();
 	}
 

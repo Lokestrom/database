@@ -12,15 +12,15 @@ namespace Database{
 
     public:
 
-        constexpr Vector();
-        constexpr Vector(const Vector<T>& vector);
+        constexpr Vector() noexcept;
+        constexpr Vector(const Vector<T>& vector) noexcept;
         constexpr Vector(Vector<T>&& vector) noexcept;
-        constexpr Vector(const std::initializer_list<T> initializerList);
-        constexpr Vector(const std::vector<T>& vector);
-        constexpr Vector(T&& arr, size_t size);
-        constexpr Vector(const size_t capacity);
-        constexpr Vector(const size_t count, const T value);
-        ~Vector();
+        constexpr Vector(const std::initializer_list<T> initializerList) noexcept;
+        constexpr Vector(const std::vector<T>& vector) noexcept;
+        constexpr Vector(T&& arr, size_t size) noexcept;
+        constexpr Vector(const size_t capacity) noexcept;
+        constexpr Vector(const size_t count, const T value) noexcept;
+        ~Vector() noexcept;
 
         constexpr T& operator[] (const size_t index) noexcept;
         constexpr T& operator[] (const size_t index) const noexcept;
@@ -39,8 +39,8 @@ namespace Database{
         constexpr size_t size() const noexcept;
         constexpr size_t capacity() const noexcept;
         constexpr void reserve(const size_t newCapacity);
-        constexpr T* data();
-        constexpr T* data() const;
+        constexpr T* data() noexcept;
+        constexpr T* data() const noexcept;
         constexpr void shrinkToFit() noexcept;
 
         constexpr T* begin() noexcept;
@@ -63,9 +63,9 @@ namespace Database{
         constexpr Vector<T>& mergeSort() noexcept;
         constexpr Vector<T>& bubbleSort() noexcept;
 
-        constexpr long long binarySearch(const T target) noexcept;
-        constexpr long long linearSearch(const T target) noexcept;
-        constexpr long long linearSearchR(const T target) noexcept;
+        constexpr long long binarySearch(const T target) const noexcept;
+        constexpr long long linearSearch(const T target) const noexcept;
+        constexpr long long linearSearchR(const T target) const noexcept;
         constexpr long long binarySearch(const T target) const noexcept;
         constexpr long long linearSearch(const T target) const noexcept;
         constexpr long long linearSearchR(const T target) const noexcept;

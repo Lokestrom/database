@@ -6,19 +6,13 @@ Athor: Loke Strøm
 namespace Database
 {
 	template <typename T>
-	struct node {
-		T val = 0;
-		node<T>* next = nullptr;
-	};
-
-	template <typename T>
-	Queue<T>::Queue() {
+	Queue<T>::Queue() noexcept {
 		front = nullptr;
 		back = nullptr;
 	}
 
 	template <typename T>
-	Queue<T>::~Queue() {
+	Queue<T>::~Queue() noexcept {
 		if (front == nullptr)
 			return;
 		node<T>* lastNode = front;
@@ -29,8 +23,23 @@ namespace Database
 		delete back;
 	}
 
+	template<typename T>
+	inline T& Queue<T>::viewFront()
+	{
+		if (front == nullptr)
+			throw LengthError("Can't return the front of empty queue");
+		return front->val;
+	}
+	template<typename T>
+	inline T& Queue<T>::viewBack()
+	{
+		if (front == nullptr)
+			throw LengthError("Can't return the back of queue with only 1 element");
+		return back->val;
+	}
+
 	template <typename T>
-	void Queue<T>::pushOn(T val)
+	void Queue<T>::pushOn(T val) noexcept
 	{
 		if (front == nullptr) {
 			front = new node<T>();
@@ -67,7 +76,7 @@ namespace Database
 	}
 
 	template <typename T>
-	unsigned int Queue<T>::size()
+	unsigned int Queue<T>::size() const noexcept
 	{
 		unsigned int count = 0;
 		for (node<T>* i = front; i != back; i = i->next)
@@ -76,7 +85,7 @@ namespace Database
 	}
 
 	template <typename T>
-	bool Queue<T>::empty()
+	bool Queue<T>::empty() const noexcept
 	{
 		if (front == nullptr)
 			return true;
@@ -84,7 +93,7 @@ namespace Database
 	}
 
 	template <typename T>
-	void Queue<T>::clear()
+	void Queue<T>::clear() noexcept
 	{
 		node<T> lastNode = nullptr;
 		for (node<T>* i = front; i != back; i = i->next) {

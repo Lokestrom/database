@@ -8,7 +8,7 @@ Athor: Loke Strøm
 namespace Database {
 
     template <typename T>
-    constexpr Vector<T>::Vector()
+    constexpr Vector<T>::Vector() noexcept
     {
         if(arr != nullptr)
             delete[] arr;
@@ -18,22 +18,22 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(const Vector<T>& vector){
+    constexpr Vector<T>::Vector(const Vector<T>& vector) noexcept {
         *this = vector;
     }
     template <typename T>
-    constexpr Vector<T>::Vector(Vector<T>&& vector) noexcept{
+    constexpr Vector<T>::Vector(Vector<T>&& vector) noexcept {
         *this = vector;
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList)
+    constexpr Vector<T>::Vector(const std::initializer_list<T> initializerList) noexcept
     {
         *this = initializerList;
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(const std::vector<T>& vector) {
+    constexpr Vector<T>::Vector(const std::vector<T>& vector) noexcept {
         reserve(vector.size());
         for (const T& i : vector) {
             pushBack(i);
@@ -41,7 +41,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr Vector<T>::Vector(T&& arr, size_t size){
+    constexpr Vector<T>::Vector(T&& arr, size_t size) noexcept {
         *this->arr = arr;
         *this->currentSize = size;
         *this->currentCapacity = size;
@@ -49,7 +49,7 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(const size_t capacity)
+    constexpr Vector<T>::Vector(const size_t capacity) noexcept
         : currentCapacity(capacity)
     {
         if(arr != nullptr)
@@ -58,14 +58,14 @@ namespace Database {
     }
 
     template <typename T>
-    constexpr Vector<T>::Vector(const size_t count, const T value) {
+    constexpr Vector<T>::Vector(const size_t count, const T value) noexcept {
         reserve(count);
         for (auto i = 0; i < count; i++)
             pushBack(value);
     }
 
     template <typename T>
-    Vector<T>::~Vector()
+    Vector<T>::~Vector() noexcept
     {
         if(arr != nullptr)
             delete[] arr;
@@ -244,7 +244,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr T* Vector<T>::data() {
+    constexpr T* Vector<T>::data() noexcept{
         return arr;
     }
 
@@ -419,7 +419,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::binarySearch(const T target) noexcept {
+    constexpr long long Vector<T>::binarySearch(const T target) const noexcept {
         long long low = 0;
         long long high = currentSize - 1;
         long long mid;
@@ -439,7 +439,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::linearSearch(const T target) noexcept {
+    constexpr long long Vector<T>::linearSearch(const T target) const noexcept {
         for (auto i = 0; i < currentSize; i++)
             if (arr[i] == target)
                 return i;
@@ -447,7 +447,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr long long Vector<T>::linearSearchR(const T target) noexcept {
+    constexpr long long Vector<T>::linearSearchR(const T target) const noexcept {
         for (long long i = currentSize-1; i > -1; i--)
             if (arr[i] == target)
                 return i;
