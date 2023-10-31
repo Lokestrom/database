@@ -15,8 +15,8 @@ namespace Database
 	Queue<T>::~Queue() noexcept {
 		if (front == nullptr)
 			return;
-		node<T>* lastNode = front;
-		for (node<T>* i = front->next; i != back; i = i->next) {
+		node* lastNode = front;
+		for (node* i = front->next; i != back; i = i->next) {
 			delete lastNode;
 			lastNode = i;
 		}
@@ -42,17 +42,17 @@ namespace Database
 	void Queue<T>::pushOn(T val) noexcept
 	{
 		if (front == nullptr) {
-			front = new node<T>();
+			front = new node();
 			front->val = val;
 			return;
 		}
 		if (back == nullptr) {
-			back = new node<T>();
+			back = new node();
 			back->val = val;
 			front->next = back;
 			return;
 		}
-		node<T>* newNode = new node<T>();
+		node* newNode = new node();
 		newNode->val = val;
 		newNode->next = nullptr;
 		back->next = newNode;
@@ -66,7 +66,7 @@ namespace Database
 			throw LengthError("Can't pushOff an empty queue");
 
 		T returnVal = front->val;
-		node<T>* newNode = front->next;
+		node* newNode = front->next;
 		delete front;
 		front = newNode;
 		if (back == front) {
@@ -79,7 +79,7 @@ namespace Database
 	unsigned int Queue<T>::size() const noexcept
 	{
 		unsigned int count = 0;
-		for (node<T>* i = front; i != back; i = i->next)
+		for (node* i = front; i != back; i = i->next)
 			count++;
 		return count;
 	}
@@ -95,8 +95,8 @@ namespace Database
 	template <typename T>
 	void Queue<T>::clear() noexcept
 	{
-		node<T> lastNode = nullptr;
-		for (node<T>* i = front; i != back; i = i->next) {
+		node lastNode = nullptr;
+		for (node* i = front; i != back; i = i->next) {
 			if (lastNode != nullptr)
 				delete lastNode;
 			lastNode = i;

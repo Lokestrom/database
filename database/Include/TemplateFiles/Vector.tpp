@@ -249,7 +249,7 @@ namespace Database {
     }
 
     template<typename T>
-    constexpr T* Vector<T>::data() const {
+    constexpr T* Vector<T>::data() const noexcept{
         return arr;
     }
 
@@ -452,21 +452,5 @@ namespace Database {
             if (arr[i] == target)
                 return i;
         return -1;
-    }
-
-
-    template<typename T>
-    constexpr long long Vector<T>::binarySearch(const T target) const noexcept {
-        return binarySearch(target);
-    }
-
-    template<typename T>
-    constexpr long long Vector<T>::linearSearch(const T target) const  noexcept {
-        return linearSearch(target);
-    }
-
-    template<typename T>
-    constexpr long long Vector<T>::linearSearchR(const T target) const  noexcept {
-        return linearSearchR(target);
     }
 }

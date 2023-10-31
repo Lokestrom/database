@@ -42,6 +42,11 @@ namespace Database {
         *this = s;
     }
 
+    String::~String() noexcept
+    {
+        delete[] _arr;
+    }
+
     String& String::operator=(const String& s) noexcept {
         this->clear();
         if (_arr == nullptr) {

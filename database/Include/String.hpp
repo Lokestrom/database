@@ -19,6 +19,8 @@ namespace Database {
         String(const char* s) noexcept;
         String(const std::string& s) noexcept;
 
+        ~String() noexcept;
+
         String& operator=(const String& s) noexcept;
         String& operator=(String&& s) noexcept;
         String& operator=(const char* s) noexcept;

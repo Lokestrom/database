@@ -66,9 +66,6 @@ namespace Database{
         constexpr long long binarySearch(const T target) const noexcept;
         constexpr long long linearSearch(const T target) const noexcept;
         constexpr long long linearSearchR(const T target) const noexcept;
-        constexpr long long binarySearch(const T target) const noexcept;
-        constexpr long long linearSearch(const T target) const noexcept;
-        constexpr long long linearSearchR(const T target) const noexcept;
     };
 
     template <class T>

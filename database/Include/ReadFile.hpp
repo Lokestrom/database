@@ -25,8 +25,8 @@ namespace Database
         ~ReadFile() noexcept;
 
         void open(const String& fileName);
-        void close();
-        bool isOpen();
+        void close() noexcept;
+        bool isOpen() noexcept;
 
         void getAllDataFromColumn(Vector<T>& data, const String& columnName) noexcept;
         void getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, const String& columnName, T value) noexcept;

@@ -25,11 +25,11 @@ namespace Database {
 
 		struct node {
 			T val = 0;
-			node<T>* next = nullptr;
+			node* next = nullptr;
 		};
 
-		node<T>* front = nullptr;
-		node<T>* back = nullptr;
+		node* front = nullptr;
+		node* back = nullptr;
 	};
 }
 
