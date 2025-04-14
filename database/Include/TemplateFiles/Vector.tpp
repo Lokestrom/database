@@ -23,7 +23,12 @@ namespace Database {
     }
     template <typename T>
     constexpr Vector<T>::Vector(Vector<T>&& vector) noexcept {
-        *this = vector;
+        this->arr = vector.arr;
+        this->currentSize = vector.currentSize;
+        this->currentCapacity = vector.currentCapacity;
+        vector.arr = nullptr;
+        vector.currentSize = 0;
+        vector.currentCapacity = 0;
     }
 
     template <typename T>
@@ -114,8 +119,6 @@ namespace Database {
 
     template<typename T>
     constexpr Vector<T>& Vector<T>::operator= (Vector<T>&& vector) noexcept {
-
-
         this->arr = vector.arr;
         this->currentSize = vector.currentSize;
         this->currentCapacity = vector.currentCapacity;

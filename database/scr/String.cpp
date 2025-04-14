@@ -222,18 +222,16 @@ namespace Database {
         if (index > this->length())
             throw OutOfRange("Index out of range");
 
-        _currentSize++;
-        if (this->length() > this->capacity()) {
+        if (this->length() >= this->capacity()) {
             size_t newCap = this->capacity() + (this->capacity() / 2) + 2;
             this->reserve(newCap);
         }
-        char lastVal;
-        for (auto i = index; i < this->length(); i++) {
-            lastVal = _arr[i];
-            _arr[i] = c;
-            c = lastVal;
+        for (auto i = _currentSize; i > index; --i) {
+            _arr[i] = _arr[i - 1];
         }
-        _arr[_currentSize] = '\0';
+		_currentSize++;
+        _arr[index] = c;
+        _arr[_currentSize-1] = '\0';
     }
 
     void String::popBack() {
