@@ -5,6 +5,6 @@
 /database/database.vcxproj.filters
 /database/database.vcxproj.user
 
-#others
-/bin/database.pdb
-/bin/intermediats
+#build files
+/bin
+/build
