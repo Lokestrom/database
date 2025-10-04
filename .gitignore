@@ -1,9 +1,10 @@
 #vs files
 /.vs
 /database.sln
-/database/database.vcxproj
-/database/database.vcxproj.filters
-/database/database.vcxproj.user
+/database.vcxproj
+/database.vcxproj.filters
+/database.vcxproj.user
+/CMakeSettings.json
 
 #build files
 /bin
