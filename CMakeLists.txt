@@ -30,5 +30,5 @@ set(targets Database ${testNames})
 
 foreach(target ${targets})
     target_include_directories(${target}
-        PRIVATE ${CMAKE_SOURCE_DIR}/include/Database)
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/Database)
 endforeach()
