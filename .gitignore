@@ -5,7 +5,11 @@
 /database.vcxproj.filters
 /database.vcxproj.user
 /CMakeSettings.json
+/CMakePresets.json
+/.editorconfig
+/myspell.dic
 
 #build files
 /bin
 /build
+/out

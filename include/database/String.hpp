@@ -1,9 +1,11 @@
 /*
-Athor: Loke Strøm
+Author: Loke Strøm
 */
 #pragma once
 
 #include <string>
+#include <vector>
+#include <filesystem>
 #include "Vector.hpp"
 
 namespace Database {
@@ -13,7 +15,7 @@ namespace Database {
         size_t _currentSize = 0, _currentCapacity = 0;
 
     public:
-        constexpr String() noexcept;
+        String() noexcept;
         String(const String& s) noexcept;
         String(String&& s) noexcept;
         String(const char* s) noexcept;
@@ -27,7 +29,7 @@ namespace Database {
         String& operator=(const std::string& s) noexcept;
 
 
-        //element accses
+        //element accesses
         constexpr char& operator[](const size_t index) noexcept;
         constexpr char& operator[](const size_t index) const noexcept;
 
@@ -85,10 +87,10 @@ namespace Database {
         void bubbleSort() noexcept;
 
 
-        const Vector<String> split(const char splitElement) const noexcept;
+        const std::vector<String> split(const char splitElement) const noexcept;
         const void remove(const char element) noexcept;
 
-        //non member fungtions
+        //non member functions
         const friend bool operator==(const String& lhs, const String& rhs) noexcept;
         const friend bool operator!=(const String& lhs, const String& rhs) noexcept;
 
@@ -103,7 +105,84 @@ namespace Database {
         friend std::ifstream& operator>>(std::ifstream& input, String& s) noexcept;
     };
 
-    //extra String fungtions
+	class CharSpan {
+	public:
+		constexpr CharSpan() noexcept : _data(nullptr), _size(0) {}
+
+		constexpr CharSpan(const char* s) noexcept
+			: _data(s),
+			_size(s ? std::char_traits<char>::length(s) : 0) {}
+
+		constexpr CharSpan(const char* s, std::size_t n) noexcept
+			: _data(s), _size(n) {}
+
+		constexpr CharSpan(std::string_view sv) noexcept
+			: _data(sv.data()), _size(sv.size()) {}
+
+		template<std::convertible_to<std::string_view> T>
+		constexpr CharSpan(const T& t) noexcept
+			: CharSpan(std::string_view(t)) {}
+
+		template<typename T>
+		CharSpan(const T& str) {
+			constructor(*this, str);
+		}
+
+		template<typename T>
+		static void constructor(CharSpan& span, const T& str) {
+			static_assert(false && "Must define the Database::CharSpan::constructor function for the type");
+		}
+
+		constexpr const char* begin() const noexcept {
+			return _data;
+		}
+		constexpr const char* end() const noexcept {
+			return _data + _size;
+		}
+
+		constexpr const size_t size() const noexcept {
+			return _size;
+		}
+
+		constexpr const char operator[](size_t index) const noexcept{
+			return _data[index];
+		}
+
+		friend constexpr bool operator==(const CharSpan& lhs, const CharSpan& rhs) noexcept  {
+			return lhs._size == rhs._size && std::ranges::equal(lhs, rhs);
+		}
+		friend constexpr bool operator!=(const CharSpan& lhs, const CharSpan& rhs) noexcept {
+			return !(lhs == rhs);
+		}
+
+		template<std::ranges::range R>
+		friend bool operator==(const CharSpan& lhs, R&& rhs) noexcept {
+			return std::ranges::size(rhs) == lhs._size &&
+				std::ranges::equal(lhs, rhs);
+		}
+
+		template<std::ranges::range R>
+		friend bool operator==(R&& lhs, const CharSpan& rhs) noexcept {
+			return std::ranges::size(lhs) == rhs._size &&
+				std::ranges::equal(lhs, rhs);
+		}
+
+		template<std::ranges::range R>
+		friend bool operator!=(const CharSpan& lhs, R&& rhs) noexcept {
+			return !(lhs == rhs);
+		}
+
+		template<std::ranges::range R>
+		friend bool operator!=(R&& lhs, const CharSpan& rhs) noexcept {
+			return !(rhs == lhs);
+		}
+
+	private:
+		const char* _data;
+		size_t _size;
+	};
+
+    //extra String functions
 
     std::string toSTD(const String& s) noexcept;
 

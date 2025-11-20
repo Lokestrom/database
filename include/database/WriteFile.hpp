@@ -5,29 +5,57 @@ Athor: Loke Strøm
 
 #include "Vector.hpp"
 #include "String.hpp"
+#include "concepts.hpp"
+#include "traits.hpp"
+
+#include <fstream>
+
 namespace Database
 {
-    template<typename T>
-    class WriteFile
-    {
-    private:
-        const char splitByte = char(178);
-        std::ofstream* file;
+    namespace newImplementation {
+        template<BinarySerializable T>
+        class WriteFile {
+        public:
+            WriteFile() noexcept;
+            template<validfstreamFilePathFormat FilePathFormat>
+            WriteFile(const FilePathFormat& filename) noexcept;
 
-    public:
-        WriteFile() noexcept;
-        WriteFile(const String& filename) noexcept;
-        WriteFile(WriteFile<T>&& writeFile) noexcept;
+            WriteFile(const WriteFile<T>&) = delete;
+            WriteFile& operator=(const WriteFile<T>&) = delete;
+            WriteFile(WriteFile<T>&& writeFile) noexcept = default;
+            WriteFile& operator=(WriteFile<T>&&) noexcept = default;
 
-        ~WriteFile() noexcept;
+            ~WriteFile() noexcept = default;
 
-        void open(const String& filename);
-        void close();
+            template<validfstreamFilePathFormat FilePathFormat>
+            void open(const FilePathFormat& filename) noexcept;
+            bool is_open() const noexcept;
+            void close() noexcept;
+            
+            template<StringIndexable container>
+            void addColumns(const container& columnNames) noexcept;
+            void addColumns(const std::initializer_list<CharSpan>& names) noexcept;
 
-        void addcolumns(const Vector<String>& columnNames) noexcept;
+            template<typename Container>
+                requires IterableArray<Container, T>
+            void addData(const Container& data) noexcept;
 
-        void addData(const Vector<T>& data) noexcept;
-    };
+            const unsigned int getColumCount() const noexcept;
+
+            bool fail() const noexcept;
+            bool bad() const noexcept;
+
+        private:
+            template<validfstreamFilePathFormat FilePathFormat>
+            void setup(const FilePathFormat& path) noexcept;
+        private:
+            std::ofstream _file;
+            unsigned int _columnCount;
+#ifdef _DEBUG
+            bool dataWritten;
+#endif
+        };
+    }
 }
 
 #include "TemplateFiles/WriteFile.tpp"
