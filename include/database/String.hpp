@@ -6,213 +6,290 @@ Author: Loke Strøm
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <concepts>
 #include "Vector.hpp"
+#include "exceptionHandeling.hpp"
 
-namespace Database {
-    class String {
-    private:
-        char* _arr = nullptr;
-        size_t _currentSize = 0, _currentCapacity = 0;
+namespace Database
+{
+class CharSpan;
 
-    public:
-        String() noexcept;
-        String(const String& s) noexcept;
-        String(String&& s) noexcept;
-        String(const char* s) noexcept;
-        String(const std::string& s) noexcept;
+class String {
+public:
+	String();
+	String(const String& s);
+	String(String&& s) noexcept;
+	String(const char* s);
+	String(const char* s, size_t length);
+	String(const CharSpan& span);
+	String(const std::string& s);
 
-        ~String() noexcept;
+	~String() noexcept;
 
-        String& operator=(const String& s) noexcept;
-        String& operator=(String&& s) noexcept;
-        String& operator=(const char* s) noexcept;
-        String& operator=(const std::string& s) noexcept;
+	String& operator=(const String& s);
+	String& operator=(String&& s) noexcept;
+	String& operator=(const char* s);
+	String& operator=(const CharSpan& span);
+	String& operator=(const std::string& s);
 
+	//element accesses
+	[[nodiscard]]
+	char& operator[](const size_t index) noexcept;
+	[[nodiscard]]
+	const char& operator[](const size_t index) const noexcept;
+	[[nodiscard]]
+	Expected<String> operator()(const size_t startIndex, const size_t endIndex) const NOEXCEPT;
 
-        //element accesses
-        constexpr char& operator[](const size_t index) noexcept;
-        constexpr char& operator[](const size_t index) const noexcept;
+	[[nodiscard]]
+	CharSpan span(const size_t startIndex, const size_t endIndex) const noexcept;
 
-        String operator()(const size_t startIndex, const size_t endIndex) const;
+	[[nodiscard]]
+	Expected<char&> at(const size_t index) NOEXCEPT;
+	[[nodiscard]]
+	Expected<const char&> at(const size_t index) const NOEXCEPT;
 
-        char& at(const size_t index);
-        char& at(const size_t index) const;
-
-        const char* cstr() const noexcept;
-
-        //iterator
-        char* begin() const noexcept;
-        char* end() const noexcept;
-
-        //capacity
-        const bool empty() const noexcept;
-
-        size_t capacity() const noexcept;
-
-        const size_t length() const noexcept;
-
-        void reserve(const size_t newCapacity);
-
-        void shrinkToFit() noexcept;
+	[[nodiscard]]
+	char* cstr() noexcept;
+	[[nodiscard]]
+	const char* cstr() const noexcept;
 
 
-        //operations
-        String& operator+=(const String& s) noexcept;
-        constexpr String& operator+=(const char* s) noexcept;
+	//iterator
+	[[nodiscard]]
+	char* begin() noexcept;
+	[[nodiscard]]
+	char* end() noexcept;
+	[[nodiscard]]
+	const char* begin() const noexcept;
+	[[nodiscard]]
+	const char* end() const noexcept;
 
-        void pushBack(const char val) noexcept;
+	//capacity
+	[[nodiscard]]
+	const bool isEmpty() const noexcept;
+	[[nodiscard]]
+	size_t capacity() const noexcept;
+	[[nodiscard]]
+	const size_t length() const noexcept;
 
-        void insert(const size_t index, const String& s);
-        void insert(size_t index, const char* s);
-        void insert(size_t index, const char c);
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> reserve(const size_t newCapacity) NOEXCEPT;
 
-        void popBack();
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> shrinkToFit() NOEXCEPT;
 
-        void pop(const size_t index);
-        void pop(const size_t startIndex, const size_t endIndex);
+	//operations
+	String& operator+=(const String& s);
+	String& operator+=(const char* s);
 
-        const void clear() noexcept;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> pushBack(const char val) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> insert(const size_t index, const String& s) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> insert(const size_t index, const char* s) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> insert(const size_t index, const char c) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> insert(const size_t index, const char* c, const size_t len) NOEXCEPT;
 
-        const void lower() noexcept;
-        const void upper() noexcept;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> popBack() NOEXCEPT;
 
-        //search
-        const bool contains(const String& target) const noexcept;
-        long long binarySearch(const char target) const noexcept;
-        long long linearSearch(const char target) const noexcept;
-        long long linearSearchR(const char target) const noexcept;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> pop(const size_t index) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> pop(const size_t startIndex, const size_t endIndex) NOEXCEPT;
 
-        //sort
-        void mergeSort() noexcept;
-        void bubbleSort() noexcept;
+	void clear() noexcept;
+
+	void lower() noexcept;
+	void upper() noexcept;
+
+	//search
+	[[nodiscard]]
+	bool contains(const String& target) const noexcept;
+	[[nodiscard]]
+	bool contains(const char target) const noexcept;
+	[[nodiscard]]
+	size_t binarySearch(const char target) const noexcept;
+	[[nodiscard]]
+	size_t linearSearch(const char target) const noexcept;
+	[[nodiscard]]
+	size_t linearSearchR(const char target) const noexcept;
 
 
-        const std::vector<String> split(const char splitElement) const noexcept;
-        const void remove(const char element) noexcept;
+	//TODO: implement mergesort in o(1) space
+	// saves heap allocation and can make it totally noexcept
+	//sort
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> mergeSort() NOEXCEPT;
+	void bubbleSort() noexcept;
 
-        //non member functions
-        const friend bool operator==(const String& lhs, const String& rhs) noexcept;
-        const friend bool operator!=(const String& lhs, const String& rhs) noexcept;
+	Expected<std::vector<String>> split(const char splitElement) const NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> remove(const char element, size_t count) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> remove(const char element) NOEXCEPT;
 
-        const friend String operator+(const String& l, const String& r) noexcept;
-        const friend String operator+(const String& l, const char* r) noexcept;
-        const friend String operator+(const String& l, const char r) noexcept;
-        const friend String operator+(const char* l, const String& r) noexcept;
+	//non member functions
+	friend bool operator==(const String& lhs, const String& rhs) noexcept;
+	friend bool operator!=(const String& lhs, const String& rhs) noexcept;
 
-        friend std::ostream& operator<<(std::ostream& output, const String& s) noexcept;
-        friend std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept;
-        friend std::istream& operator>>(std::istream& input, String& s) noexcept;
-        friend std::ifstream& operator>>(std::ifstream& input, String& s) noexcept;
-    };
+	friend String operator+(const String& l, const String& r);
+	friend String operator+(const String& l, const char* r);
+	friend String operator+(const String& l, const char r);
+	friend String operator+(const char* l, const String& r);
 
-	class CharSpan {
-	public:
-		constexpr CharSpan() noexcept : _data(nullptr), _size(0) {}
+	friend std::ostream& operator<<(std::ostream& output, const String& s) noexcept;
+	friend std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept;
+	friend std::istream& operator>>(std::istream& input, String& s) noexcept;
+	friend std::ifstream& operator>>(std::ifstream& input, String& s) noexcept;
 
-		constexpr CharSpan(const char* s) noexcept
-			: _data(s),
-			_size(s ? std::char_traits<char>::length(s) : 0) {}
+private:
+	void copyCharArray(const char* s, size_t len) noexcept;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> allocateNewArray(size_t newCapacity) NOEXCEPT;
 
-		constexpr CharSpan(const char* s, std::size_t n) noexcept
-			: _data(s), _size(n) {}
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> newArray(const char* s, size_t len) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> resizeArray(size_t newCapacity) NOEXCEPT;
+	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
+		Expected<void> resizeIfNeeded(size_t newExpectedSize) NOEXCEPT;
 
-		constexpr CharSpan(std::string_view sv) noexcept
-			: _data(sv.data()), _size(sv.size()) {}
+private:
+	char* _arr = nullptr;
+	size_t _currentSize = 0, _currentCapacity = 0;
+};
 
-		template<std::convertible_to<std::string_view> T>
-		constexpr CharSpan(const T& t) noexcept
-			: CharSpan(std::string_view(t)) {}
+class CharSpan {
+public:
+	constexpr CharSpan() noexcept : _data(nullptr), _size(0) {}
 
-		template<typename T>
-		CharSpan(const T& str) {
-			constructor(*this, str);
-		}
+	constexpr CharSpan(const char* s) noexcept
+		: _data(s),
+		_size(s ? std::char_traits<char>::length(s) : 0) {}
 
-		template<typename T>
-		static void constructor(CharSpan& span, const T& str) {
-			static_assert(false && "Must define the Database::CharSpan::constructor function for the type");
-		}
+	constexpr CharSpan(const char* s, std::size_t n) noexcept
+		: _data(s), _size(n) {}
 
-		constexpr const char* begin() const noexcept {
-			return _data;
-		}
-		constexpr const char* end() const noexcept {
-			return _data + _size;
-		}
+	CharSpan(String& str) noexcept
+		: _data(str.cstr()), _size(str.length()) {}
 
-		constexpr const size_t size() const noexcept {
-			return _size;
-		}
+	constexpr CharSpan(std::string_view sv) noexcept
+		: _data(sv.data()), _size(sv.size()) {}
 
-		constexpr const char operator[](size_t index) const noexcept{
-			return _data[index];
-		}
+	template<std::convertible_to<std::string_view> T>
+	constexpr CharSpan(T& t) noexcept
+		: CharSpan(std::string_view(t)) {}
 
-		friend constexpr bool operator==(const CharSpan& lhs, const CharSpan& rhs) noexcept  {
-			return lhs._size == rhs._size && std::ranges::equal(lhs, rhs);
-		}
-		friend constexpr bool operator!=(const CharSpan& lhs, const CharSpan& rhs) noexcept {
-			return !(lhs == rhs);
-		}
+	template<typename T>
+	CharSpan(const T& str) {
+		constructor(*this, str);
+	}
 
-		template<std::ranges::range R>
-		friend bool operator==(const CharSpan& lhs, R&& rhs) noexcept {
-			return std::ranges::size(rhs) == lhs._size &&
-				std::ranges::equal(lhs, rhs);
-		}
+	template<typename T>
+	static void constructor(CharSpan& span, const T& str) {
+		static_assert(false && "Must define the Database::CharSpan::constructor function for the type");
+	}
 
-		template<std::ranges::range R>
-		friend bool operator==(R&& lhs, const CharSpan& rhs) noexcept {
-			return std::ranges::size(lhs) == rhs._size &&
-				std::ranges::equal(lhs, rhs);
-		}
+	constexpr const char* begin() const noexcept {
+		return _data;
+	}
+	constexpr const char* end() const noexcept {
+		return _data + _size;
+	}
 
-		template<std::ranges::range R>
-		friend bool operator!=(const CharSpan& lhs, R&& rhs) noexcept {
-			return !(lhs == rhs);
-		}
+	constexpr const size_t size() const noexcept {
+		return _size;
+	}
 
-		template<std::ranges::range R>
-		friend bool operator!=(R&& lhs, const CharSpan& rhs) noexcept {
-			return !(rhs == lhs);
-		}
+	constexpr const char& operator[](size_t index) const noexcept {
+		return _data[index];
+	}
 
-	private:
-		const char* _data;
-		size_t _size;
-	};
+	friend constexpr bool operator==(const CharSpan& lhs, const CharSpan& rhs) noexcept {
+		return lhs._size == rhs._size && std::ranges::equal(lhs, rhs);
+	}
+	friend constexpr bool operator!=(const CharSpan& lhs, const CharSpan& rhs) noexcept {
+		return !(lhs == rhs);
+	}
 
-    //extra String functions
+	template<std::ranges::range R>
+	friend bool operator==(const CharSpan& lhs, R&& rhs) noexcept {
+		return std::ranges::size(rhs) == lhs._size &&
+			std::ranges::equal(lhs, rhs);
+	}
 
-    std::string toSTD(const String& s) noexcept;
+	template<std::ranges::range R>
+	friend bool operator==(R&& lhs, const CharSpan& rhs) noexcept {
+		return std::ranges::size(lhs) == rhs._size &&
+			std::ranges::equal(lhs, rhs);
+	}
 
-    String toS(int x) noexcept;
-    String toS(long x) noexcept;
-    String toS(long long x) noexcept;
-    String toS(unsigned x) noexcept;
-    String toS(unsigned long x) noexcept;
-    String toS(unsigned long long x) noexcept;
-    String toS(double x) noexcept;
-    String toS(long double x) noexcept;
+	template<std::ranges::range R>
+	friend bool operator!=(const CharSpan& lhs, R&& rhs) noexcept {
+		return !(lhs == rhs);
+	}
 
-    int SToi(const String& s) noexcept;
-    long STol(const String& s) noexcept;
-    long long SToll(const String& s) noexcept;
-    unsigned STou(const String& s) noexcept;
-    unsigned long SToul(const String& s) noexcept;
-    unsigned long long SToull(const String& s) noexcept;
-    double STod(const String& s) noexcept;
-    long double STold(const String& s) noexcept;
+	template<std::ranges::range R>
+	friend bool operator!=(R&& lhs, const CharSpan& rhs) noexcept {
+		return !(rhs == lhs);
+	}
 
-    long long substringIndex(const String& s, const String& subS) noexcept;
-    bool canStringConvertToNumber(const String& x) noexcept;
-    bool getline(std::ifstream& file, String& string) noexcept;
+private:
+	const char* _data;
+	size_t _size;
+};
 
-    String lower(const String& s) noexcept;
-    String upper(const String& s) noexcept;
+//extra String functions
+[[nodiscard]]
+Expected<std::string> toSTD(const String& s) NOEXCEPT;
+
+template<typename T>
+concept Streamable = requires(T a, std::stringstream ss) {
+	{ ss << a } -> std::same_as<std::stringstream&>;
+};
+
+template<Streamable T>
+[[nodiscard]] Expected<String> toS(T&& x) NOEXCEPT {
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
+	std::stringstream ss;
+	ss << std::forward<T>(x);
+	return ss.str();
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
+}
+
+template<typename T>
+concept StreamExtractable = requires(std::stringstream ss, T x) {
+	{ ss >> x } -> std::same_as<std::stringstream&>;
+};
+
+template<StreamExtractable T>
+[[nodiscard]] T STo(const String& s) NOEXCEPT {
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
+	T x{};
+	std::stringstream ss(s.cstr());
+	ss >> x;
+	return x;
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
+}
+
+[[nodiscard]]
+size_t substringIndex(const String& s, const String& subS) noexcept;
+[[nodiscard]]
+bool canStringConvertToNumber(const String& x) noexcept;
+[[nodiscard]]
+Expected<bool> getline(std::ifstream& file, String& string) NOEXCEPT;
+
+[[nodiscard]]
+Expected<String> lower(const String& s) NOEXCEPT;
+[[nodiscard]]
+Expected<String> upper(const String& s) NOEXCEPT;
 }
 
 template<>
 struct std::hash<Database::String> {
-    size_t operator()(Database::String const& s) const noexcept;
+	size_t operator()(const Database::String& s) const;
 };

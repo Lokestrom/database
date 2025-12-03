@@ -22,7 +22,7 @@ namespace Database {
 	template<typename Container>
 	struct ContainerTraits {
 		/* must return a container which should have the specified capacity*/
-		static Container constructCapacity(unsigned long long capacity)
+		static Container constructCapacity(size_t capacity)
 		{
 			Container c;
 			c.reserve(capacity);
@@ -32,6 +32,7 @@ namespace Database {
 		/* 
 		* must append element to the end of the container
 		* must increase the capacity if full
+		* should be noexcept if called on after constructCapacity or reserve until capacity is full
 		*/
 		template<typename T>
 		static void pushBack(Container& c, const T& element)
@@ -42,7 +43,7 @@ namespace Database {
 		/*
 		* should set the capacity to the specified capacity
 		*/
-		static void reserve(Container& c, unsigned long long newCapacity)
+		static void reserve(Container& c, size_t newCapacity)
 		{
 			c.reserve(newCapacity);
 		}
@@ -50,20 +51,15 @@ namespace Database {
 		/*
 		* must return the amount of elements in the container
 		*/
-		static const unsigned long long size(const Container& c) {
+		static const size_t size(const Container& c) {
 			return c.size();
-		}
-		/*
-		* must return the size of the container that must be known at compile time
-		*/
-		static consteval unsigned long long size() {
-			return 0;
 		}
 
 		/*
 		* must return a reference to the element at the specified index
+		* should be noexcept when index is in range
 		*/
-		static auto& at(Container& c, unsigned long long index) {
+		static auto& at(Container& c, size_t index) {
 			return c[index];
 		}
 
@@ -92,7 +88,7 @@ namespace Database {
 		/*
 		* must return a reference to the last element of the container
 		*/
-		static auto& endElement(Container& c) {
+		static auto& endElement(const Container& c) {
 			return ContainerTraits<Container>::at(c, ContainerTraits<Container>::size(c) - 1);
 		}
 	};
@@ -106,15 +102,15 @@ namespace Database {
 		std::ranges::range<C> &&
 		std::same_as<std::ranges::range_value_t<C>, T> &&
 		requires(C c) {
-			{ ContainerTraits<C>::size(c) } -> std::convertible_to<unsigned long long>;
+			{ ContainerTraits<C>::size(c) } -> std::convertible_to<size_t>;
 	};
 
 	template<typename C, typename T>
 	concept ArrayConcept =
 		std::ranges::range<C> &&
-		requires(C c, const C cc, unsigned long long i) {
+		requires(C c, const C cc, size_t i) {
 			{ ContainerTraits<C>::at(c, i) } -> std::same_as<T&>;
-			{ ContainerTraits<C>::size() } -> std::convertible_to<unsigned long long>;
+			{ ContainerTraits<C>::size(cc) } -> std::convertible_to<size_t>;
 	} &&
 		!requires(C c, const T& elem) {
 			{ ContainerTraits<C>::pushBack(c, elem) };
@@ -123,11 +119,11 @@ namespace Database {
 	template<typename C, typename T>
 	concept DynamicArrayConcept =
 		std::ranges::range<C> &&
-		requires(C c, const C cc, const T& elem, unsigned long long cap) {
+		requires(C c, const C cc, const T& elem, size_t cap) {
 			{ ContainerTraits<C>::constructCapacity(cap) } -> std::same_as<C>;
 			{ ContainerTraits<C>::pushBack(c, elem) };
 			{ ContainerTraits<C>::reserve(c, cap) };
-			{ ContainerTraits<C>::size(cc) } -> std::convertible_to<unsigned long long>;
+			{ ContainerTraits<C>::size(cc) } -> std::convertible_to<size_t>;
 			{ ContainerTraits<C>::safeMove(c, c) };
 			{ ContainerTraits<C>::clear(c) };
 			{ ContainerTraits<C>::at(c, cap) } -> std::same_as<T&>;
@@ -138,9 +134,13 @@ namespace Database {
 	concept MapConcept =
 		std::ranges::range<C> &&
 		requires(C c) {
-			{ ContainerTraits<C>::size(c) } -> std::convertible_to<unsigned long long>;
+			{ ContainerTraits<C>::size(c) } -> std::convertible_to<size_t>;
 	};
 
+	// IDEA: remove the nested ones and just use 
+	// requires DynamicArrayConcept<Container, range_value_t<Container>> && 
+	//		DynamicArrayConcept<range_value_t<Container>, T>
+	// directly
 	template<typename Container, typename T>
 	concept NestedDynamicArray =
 		DynamicArrayConcept<Container, range_value_t<Container>> &&
@@ -166,29 +166,54 @@ namespace Database {
 		(ArrayConcept<Container, T> || DynamicArrayConcept<Container, T>) &&
 		MapConcept<range_value_t<Container>, T>;
 
-	/*template<typename T>
-	struct ContainerTratis<std::vector<T>> {
-		static Container constructCapasity(unsigned long long capasity) {
-			Container c;
-			c.reserve(capasity);
-			return c;
+	template<class F, class... Args>
+	constexpr bool InvocableNoexceptV =
+		noexcept(std::declval<F>()(std::declval<Args>()...));
+	
+	template<typename Container>
+	constexpr bool TraitAtNoexceptV =
+		noexcept(ContainerTraits<Container>::at(std::declval<Container&>(), 0));
+
+	template<typename Container>
+	constexpr bool TraitClearNoexceptV =
+		noexcept(ContainerTraits<Container>::clear(std::declval<Container&>()));
+
+	template<typename Container, typename T>
+	constexpr bool TraitPushBackNoexceptV =
+		noexcept(ContainerTraits<Container>::pushBack(std::declval<Container&>(), std::declval<T>()));
+
+	template<typename Container>
+	constexpr bool TraitReserveNoexceptV =
+		noexcept(ContainerTraits<Container>::reserve(std::declval<Container&>(), 0));
+
+	template<typename Container>
+	constexpr bool TraitConstructCapacityNoexceptV =
+		noexcept(ContainerTraits<Container>::constructCapacity(0));
+	
+	template<typename T>
+	struct ContainerTraits<HeapArray<T>> {
+		static T& at(HeapArray<T>& c, size_t index) noexcept {
+			return c[index];
 		}
-	};*/
+		static size_t size(const HeapArray<T>& c) noexcept {
+			return c.size();
+		}
+	};
 	
 	template<typename T, size_t _size>
 	struct ContainerTraits<std::array<T, _size>>{
-		static T& at(std::array<T, _size>& c, unsigned long long index) {
+		static T& at(std::array<T, _size>& c, size_t index) noexcept {
 			return c[index];
 		}
 
-		static consteval unsigned long long size() {
+		static constexpr size_t size(const std::array<T, _size>& c) noexcept {
 			return _size;
 		}
 	};
 
 	template<TrivialElement T>
 	struct ContainerTraits<Vector<T>> {
-		static Vector<T> constructCapacity(unsigned long long capacity)
+		static Vector<T> constructCapacity(size_t capacity)
 		{
 			return Vector<T>(capacity);
 		}
@@ -198,28 +223,33 @@ namespace Database {
 			v.pushBack(element);
 		}
 
-		static void reserve(Vector<T>& v, unsigned long long newCapacity)
+		static void reserve(Vector<T>& v, size_t newCapacity)
 		{
 			v.reserve(newCapacity);
 		}
 
-		static unsigned long long size(const Vector<T>& v) {
+		static size_t size(const Vector<T>& v) noexcept {
 			return v.size();
 		}
 
-		static T& at(Vector<T>& c, unsigned long long index) {
+		static T& at(Vector<T>& c, size_t index) noexcept {
 			return c[index];
 		}
 
-		static void safeMove(Vector<T>& newOwner, Vector<T>& oldOwner) {
+		static void safeMove(Vector<T>& newOwner, Vector<T>& oldOwner) noexcept {
+			newOwner = std::move(oldOwner);
+			oldOwner = Vector<T>();
+		}
+
+		static void destructiveMove(Vector<T>& newOwner, Vector<T>& oldOwner) noexcept {
 			newOwner = std::move(oldOwner);
 		}
 
-		static void clear(Vector<T>& c) {
+		static void clear(Vector<T>& c) noexcept {
 			c.clear();
 		}
 
-		static T& endElement(Vector<T>& v) {
+		static T& endElement(Vector<T>& v) noexcept {
 			return ContainerTraits<Vector<T>>::at(v, ContainerTraits<Vector<T>>::size(v) - 1);
 		}
 	};

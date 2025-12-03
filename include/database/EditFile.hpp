@@ -15,8 +15,7 @@ namespace Database
         String _fileName;
         Vector<String> columnNames;
         size_t dataStart;
-        const char splitByte = char(178);
-
+        const char splitByte = char(31);
 
     public:
         EditFile();

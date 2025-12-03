@@ -1,8 +1,8 @@
 /*
 Author: Loke Strøm
 */
-#include "Exception.hpp"
 #include "ReadFile.hpp"
+#include "exceptionHandeling.hpp"
 
 #include <assert.h>
 #include <algorithm>
@@ -10,148 +10,6 @@ Author: Loke Strøm
 
 namespace Database
 {
-	/*template<typename T>
-	ReadFile<T>::ReadFile() noexcept 
-		: file()
-	{
-	}
-
-	template<typename T>
-	ReadFile<T>::ReadFile(const String& fileName) noexcept 
-		: fileName(fileName), file(toSTD(fileName), ::std::ios::binary)
-	{
-		unsigned int columnNummber = 0;
-		file.read(reinterpret_cast<char*>(&columnNummber), sizeof(unsigned int));
-		dataStart = 4;
-		String temps;
-		char* tempc = new char[1];
-		for (int i = 0; i < columnNummber;) {
-			file.read(tempc, sizeof(char));
-			dataStart++;
-			if (tempc[0] == splitByte) {
-				ColumnNames.pushBack(temps);
-				temps.clear();
-				i++;
-				continue;
-			}
-			temps.pushBack(tempc[0]);
-		}
-	}
-
-	template <typename T>
-	ReadFile<T>::ReadFile(ReadFile<T>&& readFile) noexcept {
-		file = std::move(readFile.file);
-		fileName = std::move(readFile.fileName);
-		dataStart = readFile.dataStart;
-		ColumnNames = std::move(readFile.ColumnNames);
-	}
-
-	template<typename T>
-	ReadFile<T>::~ReadFile() noexcept {
-		if (file.is_open())
-			file.close();
-	}
-
-	template<typename T>
-	void ReadFile<T>::open(const String& fileName) {
-		if (file.is_open())
-			throw SystemError("A file is alredy open");
-		this(fileName);
-	}
-
-	template<typename T>
-	void ReadFile<T>::close() noexcept {
-		if (file.is_open())
-			file.close();
-		file.close();
-	}
-
-	template<typename T>
-	bool ReadFile<T>::isOpen() noexcept {
-		return file.is_open();
-	}
-
-	template<typename T>
-	void ReadFile<T>::getAllDataFromColumn(Vector<T>& data, const String& columnName) noexcept {
-		file.clear();
-		file.seekg(dataStart, ::std::ios::beg);
-		data.clear();
-		T x;
-		auto columnNummber = ColumnNames.linearSearch(columnName);
-		for (auto i = 0; file.read(reinterpret_cast<char*>(&x), sizeof(T)); i++) {
-			if (i == columnNummber)
-				data.pushBack(x);
-			if (i == ColumnNames.size()-1)
-				i = -1;
-		}
-	}
-
-	template<typename T>
-	void ReadFile<T>::getAllRowsWhereColumnIsEqualeToAValue(Vector<Vector<T>>& data, const String& columnName, T value) noexcept
-	{
-		file.clear();
-		file.seekg(dataStart, ::std::ios::beg);
-		data.clear();
-		T x;
-		auto columnNumber = ColumnNames.linearSearch(columnName);
-		data.pushBack(Vector<T>(ColumnNames.size()));
-		for (auto i = 0; !file.eof();) {
-			for (auto j = 0; j < ColumnNames.size(); j++) {
-				file.read(reinterpret_cast<char*>(&x), sizeof(T));
-				data[i].pushBack(x);
-				if (j != columnNumber)
-					continue;
-				if (x != value) {
-					data[i].clear();
-					for (j++; j < ColumnNames.size(); j++)
-						file.read(reinterpret_cast<char*>(&x), sizeof(T));
-					break;
-				}
-			}
-			if (!data[i].empty()) {
-				data.pushBack(Vector<T>(ColumnNames.size()));
-				i++;
-			}
-
-		}
-		data.popBack(); 
-	}
-
-	template<typename T>
-	void ReadFile<T>::getRow(Vector<T>& data, unsigned int row) {
-		file.clear();
-		file.seekg(dataStart + (row * sizeof(T) * ColumnNames.size()), ::std::ios::beg);
-
-		data.clear();
-		if(data.size() < ColumnNames.size())
-			data.reserve(ColumnNames.size());
-		T x;
-		for (auto i = 0; i < ColumnNames.size(); i++) {
-			if (file.eof())
-				throw InvalidArgument("Row does not exist in file");
-			file.read(reinterpret_cast<char*>(&x), sizeof(T));
-			data.pushBack(x);
-		}
-	}
-
-	template<typename T>
-	void ReadFile<T>::getAll(Vector<Vector<T>>& data) noexcept {
-		file.clear();
-		file.seekg(dataStart, ::std::ios::beg);
-		data.clear();
-		T x;
-		for (auto i = 0; !file.eof(); i++) {
-			data.pushBack(Vector<T>(ColumnNames.size()));
-			for (auto j = 0; j < ColumnNames.size() && file.read(reinterpret_cast<char*>(&x), sizeof(T)); j++)
-				data[i].pushBack(x);
-		}
-	}
-
-	template<typename T>
-	std::vector<String> ReadFile<T>::getColumnNames() noexcept {
-		return ColumnNames;
-	}*/
-
 	template<BinarySerializable T>
 	template<validfstreamFilePathFormat FilePathFormat>
 	Database::newImplementation::ReadFile<T>::ReadFile(const FilePathFormat& fileName)
@@ -182,7 +40,9 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires DynamicArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::getColumn(Container& data, const::std::string& columnName) {
+	void newImplementation::ReadFile<T>::getColumn(Container& data, const::std::string& columnName) 
+		noexcept(TraitReserveNoexceptV<Container>)
+	{
 		assert(contains(columnName) && "the file does not contain a column of this name");
 		
 		ContainerTraits<Container>::reserve(data, _rowCount);
@@ -198,9 +58,10 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires ArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::getColumn(Container& data, const std::string& columnName) {
+	void newImplementation::ReadFile<T>::getColumn(Container& data, const std::string& columnName) noexcept
+	{
 		assert(contains(columnName) && "the file does not contain a column of this name");
-		assert(ContainerTraits<Container>::size() < _rowCount && "container is not big enough");
+		assert(ContainerTraits<Container>::size() >= _rowCount && "container is not big enough");
 
 		unsigned int columnNumber = column(columnName);
 		moveReader(columnNumber * sizeof(T));
@@ -215,77 +76,79 @@ namespace Database
 	template<typename Container>
 		requires DynamicArrayConcept<Container, T>
 	void newImplementation::ReadFile<T>::getColumn(Container& data, 
-		const std::string& columnName, std::function<bool(const Container&)> condition) {
+		const std::string& columnName, std::function<bool(const Container&)> condition) 
+	{
 		assert(contains(columnName) && "the file does not contain a column of this name");
 
 		moveReader(0);
 		unsigned int columnNumber = column(columnName);
-		Container temp = ContainerTraits<Container>::constructCapacity(columnCount());
+		HeapArray rowData(columnCount());
 		for (auto i = 0; i < _rowCount; i++) {
-			readRow(temp);
-			if(condition(temp))
-				ContainerTraits<Container>::pushBack(data, temp[columnNumber]);
+			readRow(rowData);
+			if(condition(rowData))
+				ContainerTraits<Container>::pushBack(data, rowData[columnNumber]);
 		}
 	}
 
 	template<BinarySerializable T>
 	template<typename Container, StringIndexable StringContainer>
 		requires NestedDynamicArray<Container, T>
-	void newImplementation::ReadFile<T>::getColumns(Container& data, const StringContainer& columnNames) {
+	void newImplementation::ReadFile<T>::getColumns(Container& data, const StringContainer& columnNames) 
+	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
 		assert(std::ranges::all_of(columnNames, [&](const auto& name) {return contains(name); }) &&
 			"one or more of the names does not exist in the file");
 
 		OuterContainerTraits::reserve(data, columnNames.size());
-		Container temp = InnerContainerTraits::constructCapacity(columnCount());
-		unsigned int* columnNumbers = new unsigned int[columnNames.size()];
+		HeapArray columnOrder(columnNames.size());
 		for (auto i = 0; i < columnNames.size(); i++) {
-			columnNumbers[i] = column(columnNames[i]);
+			columnOrder[i] = column(columnNames[i]);
 			OuterContainerTraits::pushBack(data,
-				InnerContainerTraits::constructCapacity(columnNames.size()));
+				InnerContainerTraits::constructCapacity(_rowCount));
 		}
+		HeapArray rowData(columnCount());
 		moveReader(0);
 		for (auto row = 0; row < _rowCount; row++) {
-			readRow(temp);
+			readRow(rowData);
 			for (auto column = 0; column < columnNames.size(); column++)
 				InnerContainerTraits::pushBack(OuterContainerTraits::at(data, column),
-					temp[columnNumbers[row]]);
+					rowData[columnOrder[column]]);
 		}
-		delete[] columnNumbers;
 	}
 
 	template<BinarySerializable T>
 	template<typename Container, StringIndexable StringContainer>
 		requires NestedArray<Container, T>
-	void newImplementation::ReadFile<T>::getColumns(Container& data, const StringContainer& columnNames) {
+	void newImplementation::ReadFile<T>::getColumns(Container& data, const StringContainer& columnNames) noexcept {
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
 		assert(std::ranges::all_of(columnNames, [&](const auto& name) {return contains(name); }) &&
 			"one or more of the names does not exist in the file");
-		assert(OuterContainerTraits::size() < columnCount() && "container has to few columns");
-		assert(InnerContainerTraits::size() < _rowCount && "container has to few rows");
+		assert(OuterContainerTraits::size() >= columnCount() && "container has to few columns");
+		assert(InnerContainerTraits::size() >= _rowCount && "container has to few rows");
 
-		unsigned int columnNumbers[OuterContainerTraits::size()];
+		unsigned int columnOrder[OuterContainerTraits::size()];
 		for (auto i = 0; i < columnNames.size(); i++) {
-			columnNumbers[i] = column(columnNames[i]);
+			columnOrder[i] = column(columnNames[i]);
 		}
 		moveReader(0);
 		Vector temp(columnCount());
 		for (auto row = 0; row < _rowCount; row++) {
 			readRow(temp);
 			for (auto column = 0; column < columnNames.size(); column++)
-				InnerContainerTraits::at(OuterContainerTraits::at(data, column), row) = temp[columnNumbers[column]];
+				InnerContainerTraits::at(OuterContainerTraits::at(data, column), row) = temp[columnOrder[column]];
 		}
 	}
 
 	template<BinarySerializable T>
 	template<typename Container>
 		requires DynamicArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::getRow(Container& data, unsigned long long row) noexcept
+	void newImplementation::ReadFile<T>::getRow(Container& data, size_t row) 
+		noexcept(TraitReserveNoexceptV<Container>)
 	{
 		assert(row <= _rowCount && "The specified row is outside the buffer");
-		ContainerTraits<Container>::reserve(data, _columnNames.size());
+		ContainerTraits<Container>::reserve(data, columnCount());
 		moveReader(rowLengthBytes() * row);
 		readRow(data);
 	}
@@ -293,9 +156,9 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires ArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::getRow(Container& data, unsigned long long row) noexcept {
+	void newImplementation::ReadFile<T>::getRow(Container& data, size_t row) noexcept {
 		assert(row <= _rowCount && "The specified row is outside the buffer");
-		assert(ContainerTraits<Container>::size());
+		assert(ContainerTraits<Container>::size(data) >= columnCount() && "Array must have a size equal to the column count");
 		moveReader(rowLengthBytes() * row);
 		readRow(data);
 	}
@@ -303,7 +166,7 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires DynamicArrayConcept<Container, T>
-	bool newImplementation::ReadFile<T>::getRow(Container& data, ::std::function<bool(const Container&)> condition) noexcept
+	bool newImplementation::ReadFile<T>::getRow(Container& data, std::function<bool(const Container&)> condition)
 	{
 		moveReader(0);
 		ContainerTraits<Container>::reserve(data, columnCount());
@@ -319,7 +182,7 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires ArrayConcept<Container, T>
-	bool newImplementation::ReadFile<T>::getRow(Container& data, std::function<bool(const Container&)> condition) noexcept
+	bool newImplementation::ReadFile<T>::getRow(Container& data, std::function<bool(const Container&)> condition)
 	{
 		moveReader(0);
 		for (auto i = 0; i < _rowCount; i++) {
@@ -333,44 +196,47 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires NestedDynamicArray<Container, T>
-	void newImplementation::ReadFile<T>::getRows(Container& data, std::function<bool(const range_value_t<Container>&)> condition) noexcept
+	void newImplementation::ReadFile<T>::getRows(Container& data, std::function<bool(const range_value_t<Container>&)> condition)
 	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
 
 		moveReader(0);
 		OuterContainerTraits::pushBack(data,
-			InnerContainerTraits::constructCapacity(_columnNames.size()));
+			InnerContainerTraits::constructCapacity(columnCount()));
 		for (auto i = 0; i < _rowCount; i++) {
 			readRow(OuterContainerTraits::endElement(data));
 			if (condition(OuterContainerTraits::endElement(data)))
 				OuterContainerTraits::pushBack(data,
-					InnerContainerTraits::constructCapacity(_columnNames.size()));
+					InnerContainerTraits::constructCapacity(columnCount()));
 			InnerContainerTraits::clear(OuterContainerTraits::endElement(data));
 		}
 	}
 	template<BinarySerializable T>
 	template<typename Container>
 		requires DynamicArrayArray<Container, T>
-	void newImplementation::ReadFile<T>::getRows(Container& data, std::function<bool(const range_value_t<Container>&)> condition) noexcept {
+	void newImplementation::ReadFile<T>::getRows(Container& data, std::function<bool(const range_value_t<Container>&)> condition) 
+		noexcept(TraitReserveNoexceptV<Container> && TraitConstructCapacityNoexceptV<range_value_t<Container>>)
+	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
 		
 		moveReader(0);
 		OuterContainerTraits::pushBack(data,
-			InnerContainerTraits::constructCapacity(_columnNames.size()));
+			InnerContainerTraits::constructCapacity(columnCount()));
 		for (auto i = 0; i < _rowCount; i++) {
 			readRow(OuterContainerTraits::endElement(data));
 			if (condition(OuterContainerTraits::endElement(data)))
 				OuterContainerTraits::pushBack(data,
-					InnerContainerTraits::constructCapacity(_columnNames.size()));
+					InnerContainerTraits::constructCapacity(columnCount()));
 		}
 	}
 
 	template<BinarySerializable T>
 	template<typename Container>
 		requires NestedDynamicArray<Container, T>
-	void newImplementation::ReadFile<T>::getAllColumns(Container& data) noexcept
+	void newImplementation::ReadFile<T>::getAllColumns(Container& data) 
+		noexcept(TraitReserveNoexceptV<Container> && TraitConstructCapacityNoexceptV<range_value_t<Container>>)
 	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
@@ -395,8 +261,8 @@ namespace Database
 	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
-		assert(OuterContainerTraits::size() == _columnNames.size());
-		assert(InnerContainerTraits::size() == _rowCount);
+		assert(OuterContainerTraits::size(data) >= _columnNames.size());
+		assert(InnerContainerTraits::size(data) >= _rowCount);
 
 		moveReader(0);
 
@@ -410,7 +276,8 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires NestedDynamicArray<Container, T>
-	void newImplementation::ReadFile<T>::getAllRows(Container& data) noexcept
+	void newImplementation::ReadFile<T>::getAllRows(Container& data)
+		noexcept(TraitReserveNoexceptV<Container> && TraitConstructCapacityNoexceptV<range_value_t<Container>>)
 	{
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
@@ -430,8 +297,8 @@ namespace Database
 	void newImplementation::ReadFile<T>::getAllRows(Container& data) noexcept {
 		using OuterContainerTraits = ContainerTraits<Container>;
 		using InnerContainerTraits = ContainerTraits<range_value_t<Container>>;
-		assert(OuterContainerTraits::size() == _rowCount);
-		assert(InnerContainerTraits::size() == _columnNames.size());
+		assert(OuterContainerTraits::size(data) >= _rowCount);
+		assert(InnerContainerTraits::size(data) >= _columnNames.size());
 
 		moveReader(0);
 		for (auto i = 0; i < _rowCount; i++) {
@@ -440,7 +307,7 @@ namespace Database
 	}
 
 	template<BinarySerializable T>
-	const::std::vector<::std::string>& Database::newImplementation::ReadFile<T>::getColumnNames() const noexcept
+	const::std::vector<String>& Database::newImplementation::ReadFile<T>::getColumnNames() const noexcept
 	{
 		return _columnNames;
 	}
@@ -449,7 +316,7 @@ namespace Database
 		return _columnNames.size();
 	}
 	template<BinarySerializable T>
-	const bool newImplementation::ReadFile<T>::contains(const CharSpan& name) {
+	const bool newImplementation::ReadFile<T>::contains(const CharSpan& name) const noexcept{
 		return std::find(_columnNames.begin(), _columnNames.end(), name) != _columnNames.end();
 	}
 	template<BinarySerializable T>
@@ -458,13 +325,13 @@ namespace Database
 		return columnCount() * sizeof(T);
 	}
 	template<BinarySerializable T>
-	const unsigned long long Database::newImplementation::ReadFile<T>::dataLengthBytes() const noexcept
+	const size_t Database::newImplementation::ReadFile<T>::dataLengthBytes() const noexcept
 	{
 		return _rowCount * rowLengthBytes();
 	}
 
 	template<BinarySerializable T>
-	const unsigned long long newImplementation::ReadFile<T>::itemOffsetBytes(unsigned int column) const noexcept
+	const size_t newImplementation::ReadFile<T>::itemOffsetBytes(unsigned int column) const noexcept
 	{
 		return column * sizeof(T);
 	}
@@ -475,7 +342,7 @@ namespace Database
 	}
 
 	template<BinarySerializable T>
-	void newImplementation::ReadFile<T>::moveReader(::std::streamoff offset, ::std::ios_base::seekdir dir)
+	void newImplementation::ReadFile<T>::moveReader(::std::streamoff offset, ::std::ios_base::seekdir dir) noexcept
 	{
 		_file.seekg(offset + (dir == ::std::ios::beg) * _dataStart, dir);
 	}
@@ -483,7 +350,7 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 	requires DynamicArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::readRow(Container& data)
+	void newImplementation::ReadFile<T>::readRow(Container& data) noexcept
 	{
 		for (int i = 0; i < columnCount(); i++)
 			ContainerTraits<Container>::pushBack(data, readItem());
@@ -492,13 +359,14 @@ namespace Database
 	template<BinarySerializable T>
 	template<typename Container>
 		requires ArrayConcept<Container, T>
-	void newImplementation::ReadFile<T>::readRow(Container& data) {
+	void newImplementation::ReadFile<T>::readRow(Container& data) noexcept
+	{
 		for (int i = 0; i < columnCount(); i++)
 			ContainerTraits<Container>::at(data, i) = readItem();
 	}
 
 	template<BinarySerializable T>
-	T newImplementation::ReadFile<T>::readItem()
+	T newImplementation::ReadFile<T>::readItem() noexcept
 	{
 		T x;
 		_file.read(reinterpret_cast<char*>(&x), sizeof(T));
@@ -513,20 +381,25 @@ namespace Database
 		_columnNames.reserve(columnNumber);
 		_dataStart = 4;
 
-		std::string temps;
+		String temps;
 		char tempc;
 		for (int i = 0; i < columnNumber; _dataStart++) {
 			_file.read(&tempc, sizeof(char));
 			if (tempc == Database::_splitByte) {
+				temps.shrinkToFit();
 				_columnNames.push_back(temps);
 				temps.clear();
 				i++;
 				continue;
 			}
-			temps.push_back(tempc);
+			temps.pushBack(tempc);
 		}
 
-		auto size = ::std::filesystem::file_size(filePath);
+		auto size = std::filesystem::file_size(filePath);
+		if (rowLengthBytes() == 0) {
+			_rowCount = 0;
+			return;
+		}
 		_rowCount = (size - _dataStart) / rowLengthBytes();
 	}
 }
