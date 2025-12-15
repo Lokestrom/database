@@ -141,6 +141,14 @@ void testSplit() {
 	checkString(parts[3], ":four");
 }
 
+void testConvertions(){
+	String a = toS(1);
+	checkString(a, "1");
+
+	int b = STo<int>(a);
+	checkString(a, "1");
+}
+
 int main() {
 	testConstructor();
 	testAssignment();

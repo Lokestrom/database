@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(FORCE_THROW_EXCEPTION "Forces throwing" OFF)
-option(FORCE_RETURN_EXCEPTIONS "Forces return exceptions where posible" ON)
+option(FORCE_RETURN_EXCEPTIONS "Forces return exceptions where posible" OFF)
 
 include(CheckCXXSourceCompiles)
 

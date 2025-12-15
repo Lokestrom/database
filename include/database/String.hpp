@@ -263,7 +263,7 @@ Expected<std::string> toSTD(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEP
 
 template<typename T>
 concept Streamable = requires(const T& a, std::stringstream ss) {
-	{ ss << a } -> std::same_as<std::stringstream&>;
+	{ ss << a };
 };
 
 template<Streamable T>
@@ -280,7 +280,7 @@ concept StreamExtractable = requires(std::stringstream ss, T x) {
 	{ ss >> x } -> std::same_as<std::stringstream&>;
 };
 
-template<StreamExtractable T>
+template<typename T>
 [[nodiscard]] T STo(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	T x;
