@@ -67,7 +67,7 @@ const T& Vector<T>::operator[] (const size_t index) const noexcept {
 }
 
 template <TrivialElement T>
-Expected<Vector<T>> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) const NOEXCEPT {
+Expected<Vector<T>> Vector<T>::operator() (const size_t startIndex, const size_t endIndex) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (endIndex > _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("endIndex out of range");
 	if (startIndex > endIndex)
@@ -113,14 +113,14 @@ Vector<T>& Vector<T>::operator+= (const Vector<T>& vector) {
 }
 
 template <TrivialElement T>
-Expected<T&> Vector<T>::at(const size_t index) NOEXCEPT {
+Expected<T&> Vector<T>::at(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index >= _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	return _arr[index];
 }
 
 template <TrivialElement T>
-Expected<const T&> Vector<T>::at(const size_t index) const NOEXCEPT {
+Expected<const T&> Vector<T>::at(const size_t index) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index >= _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	return _arr[index];
@@ -147,12 +147,12 @@ size_t Vector<T>::capacity() const noexcept {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::shrinkToFit() NOEXCEPT {
+Expected<void> Vector<T>::shrinkToFit() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeArray(_currentSize));
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::reserve(const size_t newCapacity) NOEXCEPT {
+Expected<void> Vector<T>::reserve(const size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (newCapacity == _currentCapacity) {
 		return;
 	}
@@ -193,21 +193,21 @@ const T* Vector<T>::end() const noexcept {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::pushBack(const T& val) NOEXCEPT {
+Expected<void> Vector<T>::pushBack(const T& val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeIfNeeded(_currentSize + 1));
 	_arr[_currentSize] = val;
 	_currentSize++;
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::popBack() NOEXCEPT {
+Expected<void> Vector<T>::popBack() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (_currentSize == 0)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Can't popBack on empty Vector");
 	_currentSize--;
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::insert(const size_t index, T val) NOEXCEPT {
+Expected<void> Vector<T>::insert(const size_t index, T val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index > _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 
@@ -218,7 +218,7 @@ Expected<void> Vector<T>::insert(const size_t index, T val) NOEXCEPT {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::insert(const size_t index, const Vector<T>& vector) NOEXCEPT {
+Expected<void> Vector<T>::insert(const size_t index, const Vector<T>& vector) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index > _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeIfNeeded(_currentSize + vector.size()));
@@ -229,7 +229,7 @@ Expected<void> Vector<T>::insert(const size_t index, const Vector<T>& vector) NO
 
 
 template<TrivialElement T>
-Expected<void> Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) NOEXCEPT {
+Expected<void> Vector<T>::insert(const size_t index, const std::initializer_list<T> initializerList) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index > _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeIfNeeded(_currentSize + initializerList.size()));
@@ -239,7 +239,7 @@ Expected<void> Vector<T>::insert(const size_t index, const std::initializer_list
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::pop(const size_t index) NOEXCEPT {
+Expected<void> Vector<T>::pop(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index >= _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	std::memmove(&_arr[index], &_arr[index + 1], (_currentSize - index) * sizeof(T));
@@ -247,7 +247,7 @@ Expected<void> Vector<T>::pop(const size_t index) NOEXCEPT {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::pop(const size_t startIndex, const size_t endIndex) NOEXCEPT {
+Expected<void> Vector<T>::pop(const size_t startIndex, const size_t endIndex) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (endIndex > _currentSize)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("endIndex out of range");
 	if (startIndex > endIndex)
@@ -259,7 +259,7 @@ Expected<void> Vector<T>::pop(const size_t startIndex, const size_t endIndex) NO
 
 
 template<TrivialElement T>
-Expected<void> Vector<T>::mergeSort() NOEXCEPT {
+Expected<void> Vector<T>::mergeSort() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	static_assert(std::totally_ordered<T> && "Type must be totally ordered");
 	if (this->size() == 1)
 		return;
@@ -358,7 +358,7 @@ void Vector<T>::copyArray(const T* s, size_t len) noexcept {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::allocateNewArray(size_t newCapacity) NOEXCEPT {
+Expected<void> Vector<T>::allocateNewArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	delete[] _arr;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	_arr = new T[newCapacity];
@@ -367,13 +367,13 @@ Expected<void> Vector<T>::allocateNewArray(size_t newCapacity) NOEXCEPT {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::newArray(const T* s, size_t len) NOEXCEPT {
+Expected<void> Vector<T>::newArray(const T* s, size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(allocateNewArray(len));
 	copyArray(s, len);
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::resizeArray(size_t newCapacity) NOEXCEPT {
+Expected<void> Vector<T>::resizeArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	T* temp = new T[newCapacity];
 	std::memcpy(temp, _arr, _currentSize * sizeof(T));
@@ -384,7 +384,7 @@ Expected<void> Vector<T>::resizeArray(size_t newCapacity) NOEXCEPT {
 }
 
 template<TrivialElement T>
-Expected<void> Vector<T>::resizeIfNeeded(size_t newExpectedSize) NOEXCEPT {
+Expected<void> Vector<T>::resizeIfNeeded(size_t newExpectedSize) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (newExpectedSize > _currentCapacity) {
 		size_t newCap = newExpectedSize + (newExpectedSize / 2) + 2;
 		DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeArray(newCap));
@@ -405,6 +405,13 @@ HeapArray<T>::HeapArray(T* data, size_t size)
 	: _size(size), _arr(new T[size])
 {
 	std::copy(data, data + size, _arr);
+}
+
+template<TrivialElement T>
+HeapArray<T>::HeapArray(const T& value, size_t size) 
+	: _size(size), _arr(new T[size])
+{
+	std::fill_n(_arr, _size, value);
 }
 
 template<TrivialElement T>

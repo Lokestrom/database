@@ -2,17 +2,12 @@
 
 #include <concepts>
 #include <vector>
+
+#include "concepts.hpp"
 #include "exceptionHandeling.hpp"
 
 namespace Database
 {
-
-template <typename T>
-concept TrivialElement =
-std::is_trivially_destructible_v<T> &&
-std::is_trivially_copyable_v<T>;
-
-
 template <TrivialElement T>
 class HeapArray;
 
@@ -31,7 +26,7 @@ public:
 
 	T& operator[] (const size_t index) noexcept;
 	const T& operator[] (const size_t index) const noexcept;
-	Expected<Vector<T>> operator() (const size_t startIndex, const size_t endIndex) const NOEXCEPT;
+	Expected<Vector<T>> operator() (const size_t startIndex, const size_t endIndex) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	Vector<T>& operator= (const Vector<T>& vector);
 	Vector<T>& operator= (Vector<T>&& vector) noexcept;
@@ -40,9 +35,9 @@ public:
 	Vector<T>& operator+= (const Vector<T>& vector);
 
 	[[nodiscard]]
-	Expected<T&> at(const size_t index) NOEXCEPT;
+	Expected<T&> at(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	[[nodiscard]]
-	Expected<const T&> at(const size_t index) const NOEXCEPT;
+	Expected<const T&> at(const size_t index) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	[[nodiscard]]
 	bool empty() const noexcept;
 	[[nodiscard]]
@@ -52,13 +47,13 @@ public:
 	[[nodiscard]]
 	size_t capacity() const noexcept;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> reserve(const size_t newCapacity) NOEXCEPT;
+	Expected<void> reserve(const size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	[[nodiscard]]
 	T* data() noexcept;
 	[[nodiscard]]
 	const T* data() const noexcept;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> shrinkToFit() NOEXCEPT;
+	Expected<void> shrinkToFit() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	[[nodiscard]]
 	T* begin() noexcept;
@@ -71,23 +66,23 @@ public:
 	const T* end() const noexcept;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> pushBack(const T& val) NOEXCEPT;
-	Expected<void> popBack() NOEXCEPT;
+	Expected<void> pushBack(const T& val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
+	Expected<void> popBack() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> insert(const size_t index, T val) NOEXCEPT;
+	Expected<void> insert(const size_t index, T val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
 	Expected<void> insert(const size_t index, const Vector<T>& vector);
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
 	Expected<void> insert(const size_t index, const std::initializer_list<T> initializerList);
 
-	Expected<void> pop(const size_t index) NOEXCEPT;
-	Expected<void> pop(const size_t startIndex, const size_t endIndex) NOEXCEPT;
+	Expected<void> pop(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
+	Expected<void> pop(const size_t startIndex, const size_t endIndex) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	//TODO: implement mergesort in o(1) space
 	// saves heap allocation and can make it totally noexcept
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> mergeSort() NOEXCEPT;
+	Expected<void> mergeSort() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	void bubbleSort() noexcept;
 
 	size_t binarySearch(const T target) const noexcept;
@@ -111,13 +106,13 @@ public:
 private:
 	void copyArray(const T* s, size_t len) noexcept;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> allocateNewArray(size_t newCapacity) NOEXCEPT;
+	Expected<void> allocateNewArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> newArray(const T* s, size_t len) NOEXCEPT;
+	Expected<void> newArray(const T* s, size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> resizeArray(size_t newCapacity) NOEXCEPT;
+	Expected<void> resizeArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-	Expected<void> resizeIfNeeded(size_t newExpectedSize) NOEXCEPT;
+	Expected<void> resizeIfNeeded(size_t newExpectedSize) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	T* _arr = nullptr;
 	size_t _currentSize = 0, _currentCapacity = 0;
@@ -126,9 +121,10 @@ private:
 template<TrivialElement T>
 class HeapArray {
 public:
-	HeapArray() = delete;
+	HeapArray() noexcept : _arr(nullptr), _size(0) {};
 	HeapArray(size_t size);
 	HeapArray(T* data, size_t size);
+	HeapArray(const T& value, size_t size);
 	~HeapArray() noexcept;
 
 	HeapArray(const HeapArray<T>& other);

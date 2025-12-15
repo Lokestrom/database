@@ -7,6 +7,7 @@ A lightweight C++ library providing a collection of data structures and utilitie
 * Vector
 * HeapArray
 * Queue
+* AtomicStaticQueue(SPSC)
 * WriteFile
 * ReadFile
 

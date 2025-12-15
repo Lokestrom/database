@@ -78,7 +78,7 @@ const char& String::operator[](const size_t index) const noexcept {
 	return _arr[index];
 }
 
-Expected<String> String::operator()(const size_t startIndex, const size_t endIndex) const NOEXCEPT {
+Expected<String> String::operator()(const size_t startIndex, const size_t endIndex) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (startIndex >= this->length())
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("startIndex out of range");
 	if (endIndex > this->length())
@@ -143,13 +143,13 @@ const size_t String::length() const noexcept {
 	return _currentSize - 1;
 }
 
-Expected<void> String::reserve(size_t newCapacity) NOEXCEPT {
+Expected<void> String::reserve(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (newCapacity < _currentCapacity) {
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("newCapacity can't be less than currentCapacity");
 	}
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeArray(newCapacity + 1));
 }
-Expected<void> String::shrinkToFit() NOEXCEPT {
+Expected<void> String::shrinkToFit() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeArray(_currentSize));
 }
 
@@ -163,20 +163,20 @@ String& String::operator+=(const char* s) {
 	return *this;
 }
 
-Expected<void> String::pushBack(const char val) NOEXCEPT {
+Expected<void> String::pushBack(const char val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeIfNeeded(_currentSize + 1));
 	_arr[this->length()] = val;
 	_arr[_currentSize] = '\0';
 	_currentSize++;
 }
 
-Expected<void> String::insert(const size_t index, const String& s) NOEXCEPT {
+Expected<void> String::insert(const size_t index, const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(insert(index, s.cstr(), s.length()));
 }
-Expected<void> String::insert(size_t index, const char* s) NOEXCEPT {
+Expected<void> String::insert(size_t index, const char* s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(insert(index, s, std::char_traits<char>::length(s)));
 }
-Expected<void> String::insert(const size_t index, char c) NOEXCEPT {
+Expected<void> String::insert(const size_t index, char c) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index > this->length())
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeIfNeeded(_currentSize + 1));
@@ -185,7 +185,7 @@ Expected<void> String::insert(const size_t index, char c) NOEXCEPT {
 	_currentSize++;
 }
 
-Expected<void> String::insert(const size_t index, const char* c, const size_t len) NOEXCEPT {
+Expected<void> String::insert(const size_t index, const char* c, const size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index > this->length())
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 
@@ -195,7 +195,7 @@ Expected<void> String::insert(const size_t index, const char* c, const size_t le
 	_currentSize += len;
 }
 
-Expected<void> String::popBack() NOEXCEPT {
+Expected<void> String::popBack() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (this->length() == 0)
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Can't popBack on empty Vector");
 
@@ -203,13 +203,13 @@ Expected<void> String::popBack() NOEXCEPT {
 	_arr[_currentSize - 1] = '\0';
 }
 
-Expected<void> String::pop(const size_t index) NOEXCEPT {
+Expected<void> String::pop(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (index >= this->length())
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Index out of range");
 	_currentSize--;
 	std::memmove(&_arr[index], &_arr[index + 1], _currentSize - index);
 }
-Expected<void> String::pop(const size_t startIndex, const size_t endIndex) NOEXCEPT {
+Expected<void> String::pop(const size_t startIndex, const size_t endIndex) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (endIndex > this->length())
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("endIndex out of range");
 	if (startIndex > endIndex)
@@ -283,14 +283,26 @@ size_t String::linearSearch(const char target) const noexcept {
 			return i;
 	return this->length();
 }
+size_t String::linearSearch(const String& target) const noexcept {
+	for (auto i = 0; i < this->length() - target._currentSize; i++)
+		if (span(i, i + target.length()) == target)
+			return i;
+	return this->length();
+}
 size_t String::linearSearchR(const char target) const noexcept {
 	for (long long i = this->length() - 1; i > -1; i--)
 		if (_arr[i] == target)
 			return i;
 	return this->length();
 }
+size_t String::linearSearchR(const String& target) const noexcept {
+	for (long long i = this->length() - 1; i > -1 + target.length(); i--)
+		if (span(i - target.length(), i) == target)
+			return i - target.length();
+	return this->length();
+}
 
-Expected<void> String::mergeSort() NOEXCEPT {
+Expected<void> String::mergeSort() DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (this->length() == 1)
 		return;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
@@ -337,7 +349,7 @@ void String::bubbleSort() noexcept {
 	}
 }
 
-Expected<std::vector<String>> String::split(const char splitElement) const NOEXCEPT {
+Expected<std::vector<String>> String::split(const char splitElement) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	std::vector<String> splitStrings;
 	String currentString;
@@ -355,7 +367,29 @@ Expected<std::vector<String>> String::split(const char splitElement) const NOEXC
 	return splitStrings;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 }
-Expected<void> String::remove(const char element) NOEXCEPT {
+Expected<std::vector<String>> String::split(const String& splitStr) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
+		std::vector<String> splitStrings;
+	String currentString;
+	for (size_t i = 0; i < this->length() - splitStr.length(); i++) {
+		if (span(i, i + splitStr.length()) == splitStr) {
+			if (!currentString.isEmpty()) {
+				splitStrings.push_back(currentString);
+				currentString.clear();
+			}
+			i += splitStr.length() - 1;
+		}
+		else if (span(i, i + splitStr.length()) != splitStr) {
+			DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(currentString.pushBack(_arr[i]));
+		}
+	}
+	if (!currentString.isEmpty())
+		splitStrings.push_back(currentString);
+	return splitStrings;
+	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
+}
+
+Expected<void> String::remove(const char element) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	String removedString;
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(removedString.reserve(this->length()));
@@ -367,7 +401,7 @@ Expected<void> String::remove(const char element) NOEXCEPT {
 	*this = std::move(removedString);
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 }
-Expected<void> String::remove(const char element, size_t count) NOEXCEPT {
+Expected<void> String::remove(const char element, size_t count) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (count > this->length()) {
 		DATABASE_EXCEPTION_HANDLING_THROW_ERROR("Count can't be greater than length");
 	}
@@ -395,18 +429,18 @@ void String::copyCharArray(const char* s, size_t len) noexcept {
 	_currentSize = len + 1;
 }
 
-Expected<void> String::allocateNewArray(size_t newCapacity) NOEXCEPT {
+Expected<void> String::allocateNewArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	delete[] _arr;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	_arr = new char[newCapacity];
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 	_currentCapacity = newCapacity;
 }
-Expected<void> String::newArray(const char* s, size_t len) NOEXCEPT {
+Expected<void> String::newArray(const char* s, size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(allocateNewArray(len + 1));
 	copyCharArray(s, len);
 }
-Expected<void> String::resizeArray(size_t newCapacity) NOEXCEPT {
+Expected<void> String::resizeArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	char* temp = new char[newCapacity];
 	std::memcpy(temp, _arr, _currentSize);
@@ -415,7 +449,7 @@ Expected<void> String::resizeArray(size_t newCapacity) NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 	_currentCapacity = newCapacity;
 }
-Expected<void> String::resizeIfNeeded(size_t newExpectedSize) NOEXCEPT {
+Expected<void> String::resizeIfNeeded(size_t newExpectedSize) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	if (newExpectedSize >= _currentCapacity) {
 		size_t newCap = newExpectedSize + (newExpectedSize / 2) + 2;
 		DATABASE_EXCEPTION_HANDLING_PROPEGATE_ERROR(resizeArray(newCap));
@@ -459,33 +493,44 @@ bool operator!=(const String& lsh, const String& rsh) noexcept {
 	return !(lsh == rsh);
 }
 
-std::ostream& operator<<(std::ostream& output, const String& s) noexcept {
-	for (const char& i : s)
-		output << i;
-	return output;
-}
-std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept {
-	for (const char& i : s)
-		output << i;
+std::ostream& operator<<(std::ostream& output, const String& s) {
+	output << s.cstr();
 	return output;
 }
 
-std::istream& operator>>(std::istream& input, String& s) noexcept {
-	char* buff = new char[1024];
-	input.getline(buff, 1024);
-	s = buff;
-	delete[] buff;
-	return input;
-}
-std::ifstream& operator>>(std::ifstream& input, String& s) noexcept {
-	char* buff = new char[1024];
-	input.getline(buff, 1024);
-	s = buff;
-	delete[] buff;
-	return input;
+std::istream& operator>>(std::istream& is, String& s) {
+	s.clear();
+
+	std::istream::sentry sentry(is);
+	if (!sentry)
+		return is;
+
+	std::streamsize limit = is.width();
+	if (limit <= 0 || limit > static_cast<std::streamsize>(std::numeric_limits<size_t>::max()-1))
+		limit = std::numeric_limits<size_t>::max()-1;
+
+	std::streambuf* buf = is.rdbuf();
+
+	while (limit-- > 0) {
+		int c = buf->sgetc();
+
+		if (c == std::char_traits<char>::eof()) {
+			is.setstate(std::ios::eofbit);
+			break;
+		}
+
+		if (std::isspace(static_cast<unsigned char>(c)))
+			break;
+
+		s.pushBack(static_cast<char>(c));
+		buf->sbumpc();
+	}
+
+	is.width(0);
+	return is;
 }
 
-Expected<std::string> toSTD(const String& s) NOEXCEPT {
+Expected<std::string> toSTD(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	std::string r;
 	r.reserve(s.length());
@@ -517,7 +562,7 @@ bool canStringConvertToNumber(const String& s) noexcept {
 	return true;
 }
 
-Expected<bool> getline(std::ifstream& file, String& string) NOEXCEPT {
+Expected<bool> getline(std::ifstream& file, String& string) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	if (file.eof())
 		return false;
@@ -527,7 +572,7 @@ Expected<bool> getline(std::ifstream& file, String& string) NOEXCEPT {
 	return true;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 }
-Expected<String> lower(const String& s) NOEXCEPT {
+Expected<String> lower(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	String ans = s;
 	for (char& i : ans)
@@ -536,7 +581,7 @@ Expected<String> lower(const String& s) NOEXCEPT {
 	return ans;
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 }
-Expected<String> upper(const String& s) NOEXCEPT {
+Expected<String> upper(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	String ans = s;
 	for (char& i : ans)

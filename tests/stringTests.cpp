@@ -96,6 +96,10 @@ void testSearch() {
 	assert(str.linearSearch('z') == str.length());
 	assert(str.linearSearchR('a') == 10);
 
+	assert(str.linearSearch("ab") == 0);
+	assert(str.linearSearch("abc") == str.length());
+	assert(str.linearSearchR("ca") == 4);
+
 	String sortedStr("abbbbbcdefffffghijklm");
 	assert(sortedStr.binarySearch('c') == 6);
 	assert(sortedStr.binarySearch('y') == sortedStr.length());
@@ -126,6 +130,15 @@ void testSplit() {
 	checkString(parts[1], "two");
 	checkString(parts[2], "three");
 	checkString(parts[3], "four");
+
+
+	String str2("::one::two::three:::four::");
+	parts = str2.split("::");
+	assert(parts.size() == 4);
+	checkString(parts[0], "one");
+	checkString(parts[1], "two");
+	checkString(parts[2], "three");
+	checkString(parts[3], ":four");
 }
 
 int main() {

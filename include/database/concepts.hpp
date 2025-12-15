@@ -6,6 +6,7 @@
 
 namespace Database
 {
+class CharSpan;
 inline constexpr char _splitByte = char(31);
 
 template<typename T>
@@ -28,6 +29,11 @@ concept TextLike =
 
 template<typename T>
 concept BinarySerializable =
+	std::is_trivially_copyable_v<T>;
+
+template <typename T>
+concept TrivialElement =
+	std::is_trivially_destructible_v<T> &&
 	std::is_trivially_copyable_v<T>;
 
 }

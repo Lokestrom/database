@@ -8,6 +8,7 @@
 /CMakePresets.json
 /.editorconfig
 /myspell.dic
+/cpp.hint
 
 #build files
 /bin

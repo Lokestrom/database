@@ -38,15 +38,15 @@ public:
 	[[nodiscard]]
 	const char& operator[](const size_t index) const noexcept;
 	[[nodiscard]]
-	Expected<String> operator()(const size_t startIndex, const size_t endIndex) const NOEXCEPT;
+	Expected<String> operator()(const size_t startIndex, const size_t endIndex) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	[[nodiscard]]
 	CharSpan span(const size_t startIndex, const size_t endIndex) const noexcept;
 
 	[[nodiscard]]
-	Expected<char&> at(const size_t index) NOEXCEPT;
+	Expected<char&> at(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	[[nodiscard]]
-	Expected<const char&> at(const size_t index) const NOEXCEPT;
+	Expected<const char&> at(const size_t index) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	[[nodiscard]]
 	char* cstr() noexcept;
@@ -73,33 +73,33 @@ public:
 	const size_t length() const noexcept;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> reserve(const size_t newCapacity) NOEXCEPT;
+		Expected<void> reserve(const size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> shrinkToFit() NOEXCEPT;
+		Expected<void> shrinkToFit() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	//operations
 	String& operator+=(const String& s);
 	String& operator+=(const char* s);
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> pushBack(const char val) NOEXCEPT;
+		Expected<void> pushBack(const char val) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> insert(const size_t index, const String& s) NOEXCEPT;
+		Expected<void> insert(const size_t index, const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> insert(const size_t index, const char* s) NOEXCEPT;
+		Expected<void> insert(const size_t index, const char* s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> insert(const size_t index, const char c) NOEXCEPT;
+		Expected<void> insert(const size_t index, const char c) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> insert(const size_t index, const char* c, const size_t len) NOEXCEPT;
+		Expected<void> insert(const size_t index, const char* c, const size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> popBack() NOEXCEPT;
+		Expected<void> popBack() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> pop(const size_t index) NOEXCEPT;
+		Expected<void> pop(const size_t index) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> pop(const size_t startIndex, const size_t endIndex) NOEXCEPT;
+		Expected<void> pop(const size_t startIndex, const size_t endIndex) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	void clear() noexcept;
 
@@ -116,21 +116,26 @@ public:
 	[[nodiscard]]
 	size_t linearSearch(const char target) const noexcept;
 	[[nodiscard]]
+	size_t linearSearch(const String& target) const noexcept;
+	[[nodiscard]]
 	size_t linearSearchR(const char target) const noexcept;
+	[[nodiscard]]
+	size_t linearSearchR(const String& target) const noexcept;
 
 
 	//TODO: implement mergesort in o(1) space
 	// saves heap allocation and can make it totally noexcept
 	//sort
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> mergeSort() NOEXCEPT;
+		Expected<void> mergeSort() DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	void bubbleSort() noexcept;
 
-	Expected<std::vector<String>> split(const char splitElement) const NOEXCEPT;
+	Expected<std::vector<String>> split(const char splitElement) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
+	Expected<std::vector<String>> split(const String& splitStr) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> remove(const char element, size_t count) NOEXCEPT;
+		Expected<void> remove(const char element, size_t count) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> remove(const char element) NOEXCEPT;
+		Expected<void> remove(const char element) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	//non member functions
 	friend bool operator==(const String& lhs, const String& rhs) noexcept;
@@ -141,22 +146,20 @@ public:
 	friend String operator+(const String& l, const char r);
 	friend String operator+(const char* l, const String& r);
 
-	friend std::ostream& operator<<(std::ostream& output, const String& s) noexcept;
-	friend std::ofstream& operator<<(std::ofstream& output, const String& s) noexcept;
-	friend std::istream& operator>>(std::istream& input, String& s) noexcept;
-	friend std::ifstream& operator>>(std::ifstream& input, String& s) noexcept;
+	friend std::ostream& operator<<(std::ostream& output, const String& s);
+	friend std::istream& operator>>(std::istream& input, String& s);
 
 private:
 	void copyCharArray(const char* s, size_t len) noexcept;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> allocateNewArray(size_t newCapacity) NOEXCEPT;
+		Expected<void> allocateNewArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> newArray(const char* s, size_t len) NOEXCEPT;
+		Expected<void> newArray(const char* s, size_t len) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> resizeArray(size_t newCapacity) NOEXCEPT;
+		Expected<void> resizeArray(size_t newCapacity) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	DATABASE_EXCEPTION_HANDLING_VOID_EXPECTED_NODISCARD
-		Expected<void> resizeIfNeeded(size_t newExpectedSize) NOEXCEPT;
+		Expected<void> resizeIfNeeded(size_t newExpectedSize) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 private:
 	char* _arr = nullptr;
@@ -171,7 +174,7 @@ public:
 		: _data(s),
 		_size(s ? std::char_traits<char>::length(s) : 0) {}
 
-	constexpr CharSpan(const char* s, std::size_t n) noexcept
+	constexpr CharSpan(const char* s, size_t n) noexcept
 		: _data(s), _size(n) {}
 
 	CharSpan(String& str) noexcept
@@ -185,56 +188,63 @@ public:
 		: CharSpan(std::string_view(t)) {}
 
 	template<typename T>
-	CharSpan(const T& str) {
+	constexpr CharSpan(const T& str) {
 		constructor(*this, str);
 	}
 
 	template<typename T>
-	static void constructor(CharSpan& span, const T& str) {
+	static constexpr void constructor(CharSpan& span, const T& str) noexcept {
 		static_assert(false && "Must define the Database::CharSpan::constructor function for the type");
 	}
 
+	[[nodiscard]]
 	constexpr const char* begin() const noexcept {
 		return _data;
 	}
+	[[nodiscard]]
 	constexpr const char* end() const noexcept {
 		return _data + _size;
 	}
-
+	[[nodiscard]]
 	constexpr const size_t size() const noexcept {
 		return _size;
 	}
-
+	[[nodiscard]]
 	constexpr const char& operator[](size_t index) const noexcept {
 		return _data[index];
 	}
-
+	[[nodiscard]]
 	friend constexpr bool operator==(const CharSpan& lhs, const CharSpan& rhs) noexcept {
 		return lhs._size == rhs._size && std::ranges::equal(lhs, rhs);
 	}
+	[[nodiscard]]
 	friend constexpr bool operator!=(const CharSpan& lhs, const CharSpan& rhs) noexcept {
 		return !(lhs == rhs);
 	}
 
 	template<std::ranges::range R>
-	friend bool operator==(const CharSpan& lhs, R&& rhs) noexcept {
+	[[nodiscard]]
+	friend bool operator==(const CharSpan& lhs,const R& rhs) {
 		return std::ranges::size(rhs) == lhs._size &&
 			std::ranges::equal(lhs, rhs);
 	}
 
 	template<std::ranges::range R>
-	friend bool operator==(R&& lhs, const CharSpan& rhs) noexcept {
+	[[nodiscard]]
+	friend bool operator==(const R& lhs, const CharSpan& rhs) {
 		return std::ranges::size(lhs) == rhs._size &&
 			std::ranges::equal(lhs, rhs);
 	}
 
 	template<std::ranges::range R>
-	friend bool operator!=(const CharSpan& lhs, R&& rhs) noexcept {
+	[[nodiscard]]
+	friend bool operator!=(const CharSpan& lhs, const R& rhs) {
 		return !(lhs == rhs);
 	}
 
 	template<std::ranges::range R>
-	friend bool operator!=(R&& lhs, const CharSpan& rhs) noexcept {
+	[[nodiscard]]
+	friend bool operator!=(const R& lhs, const CharSpan& rhs) {
 		return !(rhs == lhs);
 	}
 
@@ -243,20 +253,24 @@ private:
 	size_t _size;
 };
 
+template<typename T>
+constexpr bool CharSpanConstructiorNoexceptV =
+	noexcept(CharSpan::constructor(std::declval<CharSpan>(), std::declval<T>()));
+
 //extra String functions
 [[nodiscard]]
-Expected<std::string> toSTD(const String& s) NOEXCEPT;
+Expected<std::string> toSTD(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 template<typename T>
-concept Streamable = requires(T a, std::stringstream ss) {
+concept Streamable = requires(const T& a, std::stringstream ss) {
 	{ ss << a } -> std::same_as<std::stringstream&>;
 };
 
 template<Streamable T>
-[[nodiscard]] Expected<String> toS(T&& x) NOEXCEPT {
+[[nodiscard]] Expected<String> toS(const T& x) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	std::stringstream ss;
-	ss << std::forward<T>(x);
+	ss << x;
 	return ss.str();
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_END
 }
@@ -267,9 +281,9 @@ concept StreamExtractable = requires(std::stringstream ss, T x) {
 };
 
 template<StreamExtractable T>
-[[nodiscard]] T STo(const String& s) NOEXCEPT {
+[[nodiscard]] T STo(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
-	T x{};
+	T x;
 	std::stringstream ss(s.cstr());
 	ss >> x;
 	return x;
@@ -281,12 +295,12 @@ size_t substringIndex(const String& s, const String& subS) noexcept;
 [[nodiscard]]
 bool canStringConvertToNumber(const String& x) noexcept;
 [[nodiscard]]
-Expected<bool> getline(std::ifstream& file, String& string) NOEXCEPT;
+Expected<bool> getline(std::ifstream& file, String& string) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 
 [[nodiscard]]
-Expected<String> lower(const String& s) NOEXCEPT;
+Expected<String> lower(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 [[nodiscard]]
-Expected<String> upper(const String& s) NOEXCEPT;
+Expected<String> upper(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 }
 
 template<>
