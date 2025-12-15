@@ -277,10 +277,10 @@ template<Streamable T>
 
 template<typename T>
 concept StreamExtractable = requires(std::stringstream ss, T x) {
-	{ ss >> x } -> std::same_as<std::stringstream&>;
+	{ ss >> x };
 };
 
-template<typename T>
+template<StreamExtractable T>
 [[nodiscard]] T STo(const String& s) DATABASE_EXCEPTION_HANDLING_NOEXCEPT {
 	DATABASE_EXCEPTION_HANDLING_HANDLE_EXCEPTION_BEGIN
 	T x;

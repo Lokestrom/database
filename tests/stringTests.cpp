@@ -141,7 +141,7 @@ void testSplit() {
 	checkString(parts[3], ":four");
 }
 
-void testConvertions(){
+void testConversions(){
 	String a = toS(1);
 	checkString(a, "1");
 
@@ -158,6 +158,7 @@ int main() {
 	testSort();
 	removeTests();
 	testSplit();
+	testConversions();
 
 	std::cout << "All tests passed!" << std::endl;
 	return 0;
