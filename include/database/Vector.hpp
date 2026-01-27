@@ -11,7 +11,6 @@ namespace Database
 template <TrivialElement T>
 class HeapArray;
 
-
 template <TrivialElement T>
 class Vector {
 public:
@@ -40,7 +39,6 @@ public:
 	Expected<const T&> at(const size_t index) const DATABASE_EXCEPTION_HANDLING_NOEXCEPT;
 	[[nodiscard]]
 	bool empty() const noexcept;
-	[[nodiscard]]
 	void clear() noexcept;
 	[[nodiscard]]
 	size_t size() const noexcept;
@@ -90,18 +88,18 @@ public:
 	size_t linearSearchR(const T target) const noexcept;
 
 public:
-	template<TrivialElement T>
-	friend bool operator== (const Vector<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const Vector<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator== (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator== (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const Vector<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const Vector<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept;
 
 private:
 	void copyArray(const T* s, size_t len) noexcept;
@@ -146,18 +144,18 @@ public:
 	T* data() noexcept;
 	const T* data() const noexcept;
 
-	template<TrivialElement T>
-	friend bool operator== (const HeapArray<T>& lhs, const HeapArray<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const HeapArray<T>& lhs, const HeapArray<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator== (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator== (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept;
-	template<TrivialElement T>
-	friend bool operator!= (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const HeapArray<U>& lhs, const HeapArray<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const HeapArray<U>& lhs, const HeapArray<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator== (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept;
+	template<TrivialElement U>
+	friend bool operator!= (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept;
 
 private:
 	T* _arr;

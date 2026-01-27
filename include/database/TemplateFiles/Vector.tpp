@@ -497,54 +497,54 @@ const T* HeapArray<T>::data() const noexcept {
 
 namespace Database
 {
-template <TrivialElement T>
-bool operator==(const Vector<T>& lhs, const Vector<T>& rhs) noexcept {
-	static_assert(std::equality_comparable<T> && "Type must be totally ordered");
+template <TrivialElement U>
+bool operator== (const Vector<U>& lhs, const Vector<U>& rhs) noexcept {
+	static_assert(std::equality_comparable<U> && "Type must be totally ordered");
 	if (lhs.size() != rhs.size())
 		return false;
 
-	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(T)) == 0;
+	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(U)) == 0;
 }
 
-template <TrivialElement T>
-bool operator!=(const Vector<T>& lhs, const Vector<T>& rhs) noexcept {
-	static_assert(std::equality_comparable<T> && "Type must be totally ordered");
+template <TrivialElement U>
+bool operator!=(const Vector<U>& lhs, const Vector<U>& rhs) noexcept {
+	static_assert(std::equality_comparable<U> && "Type must be totally ordered");
 	return !(lhs == rhs);
 }
-template <TrivialElement T>
-bool operator== (const HeapArray<T>& lhs, const HeapArray<T>& rhs) noexcept {
-	static_assert(std::equality_comparable<T> && "Type must be totally ordered");
+template <TrivialElement U>
+bool operator== (const HeapArray<U>& lhs, const HeapArray<U>& rhs) noexcept {
+	static_assert(std::equality_comparable<U> && "Type must be totally ordered");
 	if (lhs.size() != rhs.size())
 		return false;
 
-	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(T)) == 0;
+	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(U)) == 0;
 }
-template <TrivialElement T>
-bool operator!= (const HeapArray<T>& lhs, const HeapArray<T>& rhs) noexcept {
+template <TrivialElement U>
+bool operator!= (const HeapArray<U>& lhs, const HeapArray<U>& rhs) noexcept {
 	return !(lhs == rhs);
 }
-template <TrivialElement T>
-bool operator== (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept {
-	static_assert(std::equality_comparable<T> && "Type must be totally ordered");
+template <TrivialElement U>
+bool operator== (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept {
+	static_assert(std::equality_comparable<U> && "Type must be totally ordered");
 	if (lhs.size() != rhs.size())
 		return false;
 
-	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(T)) == 0;
+	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(U)) == 0;
 }
-template <TrivialElement T>
-bool operator!= (const HeapArray<T>& lhs, const Vector<T>& rhs) noexcept {
+template <TrivialElement U>
+bool operator!= (const HeapArray<U>& lhs, const Vector<U>& rhs) noexcept {
 	return !(lhs == rhs);
 }
-template <TrivialElement T>
-bool operator== (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept {
-	static_assert(std::equality_comparable<T> && "Type must be totally ordered");
+template <TrivialElement U>
+bool operator== (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept {
+	static_assert(std::equality_comparable<U> && "Type must be totally ordered");
 	if (lhs.size() != rhs.size())
 		return false;
 
-	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(T)) == 0;
+	return memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(U)) == 0;
 }
-template <TrivialElement T>
-bool operator!= (const Vector<T>& lhs, const HeapArray<T>& rhs) noexcept {
+template <TrivialElement U>
+bool operator!= (const Vector<U>& lhs, const HeapArray<U>& rhs) noexcept {
 	return !(lhs == rhs);
 }
 }

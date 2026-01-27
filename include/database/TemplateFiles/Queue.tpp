@@ -166,30 +166,27 @@ namespace Database
 {
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 AtomicStaticQueue<T, N>::AtomicStaticQueue() noexcept
-	: _front(0), _back(0), _count(0) {}
+	: _front(0), _back(0), _count(0) {
+	static_assert(N > 0, "Size N must be greater than 0");
+}
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 bool AtomicStaticQueue<T, N>::empty() const noexcept {
 	return _count.load(std::memory_order_acquire) == 0;
 }
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 bool AtomicStaticQueue<T, N>::full() const noexcept {
 	return _count.load(std::memory_order_acquire) == N;
 }
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 size_t AtomicStaticQueue<T, N>::size() const noexcept {
 	return _count.load(std::memory_order_acquire);
 }
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 void AtomicStaticQueue<T, N>::pushOn(const T& v) noexcept {
 	assert(!full() && "cant pushOn empty queue");
 
@@ -200,7 +197,6 @@ void AtomicStaticQueue<T, N>::pushOn(const T& v) noexcept {
 }
 
 template<TrivialElement T, size_t N>
-	requires(N != 0)
 T AtomicStaticQueue<T, N>::pushOff() noexcept {
 	assert(!empty() && "cant pushOff empty queue");
 

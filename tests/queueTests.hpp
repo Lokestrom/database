@@ -83,7 +83,8 @@ void atomicStaticQueueRaceCondition(std::vector<T> examples){
 				while (test.empty()) {
 					std::this_thread::yield();
 				}
-				assert(test.pushOff() == examples[i] && "issues in multi threading");
+				T value = test.pushOff();
+				assert(value == examples[i] && "issues in multi threading");
 				count++;
 			}
 		}
@@ -94,6 +95,7 @@ void atomicStaticQueueRaceCondition(std::vector<T> examples){
 
 	std::cout << "started race condition checker\n";
 	std::this_thread::sleep_for(std::chrono::seconds(10));
+	std::cout << "stopping\n";
 	stop = true;
 	onThread.join();
 	offThread.join();
