@@ -6,7 +6,6 @@
 #include <assert.h>
 
 using namespace Database;
-using namespace Database::newImplementation;
 
 template<BinarySerializable T>
 void testOpeningEmpty() {

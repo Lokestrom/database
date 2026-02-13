@@ -11,9 +11,6 @@
 namespace Database
 {
 
-namespace newImplementation
-{
-
 template<BinarySerializable T>
 template<validfstreamFilePathFormat FilePathFormat>
 WriteFile<T>::WriteFile(const FilePathFormat& filename) {
@@ -122,6 +119,5 @@ void WriteFile<T>::setup(const FilePathFormat& path) {
 	_file.open(path, std::ios::binary);
 	_columnCount = 0;
 	_file.write(reinterpret_cast<char*>(&_columnCount), sizeof(_columnCount));
-}
 }
 }

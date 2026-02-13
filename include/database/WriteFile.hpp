@@ -9,8 +9,6 @@
 
 namespace Database
 {
-namespace newImplementation
-{
 template<BinarySerializable T>
 class WriteFile {
 public:
@@ -55,7 +53,6 @@ private:
 	bool dataWritten = false;
 #endif
 };
-}
 }
 
 #include "TemplateFiles/WriteFile.tpp"
