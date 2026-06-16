@@ -47,3 +47,6 @@ The project uses CMake and requires C++ 23 or later.
 * Builds have been verified on Clang and MSVC.
 * When compiling without exceptions, the library automatically switches to return-based error handling.
 However, functions returning `std::expected` may still throw internally and call `std::terminate` if needed.
+
+## License
+This project is licensed under the MIT license, see the LICENSE file.
